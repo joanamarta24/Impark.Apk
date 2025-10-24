@@ -1,4 +1,8 @@
-package com.example.imparkapk.model
+package com.example.imparktcc.model
 
-class Usuario {
-}
+data class Usuario(
+    val id: String ="",
+    val nome: String ="",
+    val email: String ="",
+    val senha: String ="",
+)

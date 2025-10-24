@@ -1,4 +1,9 @@
-package com.example.imparkapk.model
+package com.example.imparktcc.model
 
-class Carro {
-}
+data class Carro(
+    val id: String = "",
+    val modelo: String = "",
+    val placa: String = "",
+    val cor: String = "",
+    val usuarioId: String = ""
+)
