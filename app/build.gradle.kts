@@ -1,7 +1,10 @@
+import org.gradle.kotlin.dsl.invoke
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    val gson_version = "2.11.0"
 }
 
 android {
@@ -40,7 +43,14 @@ android {
 }
 
 dependencies {
+    implementation("com.jvmbytes:logback-time-converter:1.0.0")
+     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+      //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.6.0")
+
+    implementation("com.google.code.gson:gson:")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -52,6 +62,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose.jvmstubs)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.room.runtime.jvm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,4 +70,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 }

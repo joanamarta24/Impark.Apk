@@ -1,4 +1,4 @@
-package com.example.imparkapk.entity
+package com.example.imparkapk.data.dao.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

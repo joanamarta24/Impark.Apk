@@ -1,10 +1,6 @@
 package com.example.imparktcc.ui.viewmodel
 
 import com.example.imparktcc.model.Usuario
-import kotlin.compareTo
-import kotlin.div
-import kotlin.plus
-import kotlin.text.compareTo
 
 
 enum class CampoFocado {
