@@ -1,6 +1,6 @@
 package com.example.imparktcc.cadastro
 
-data class CadastroUIState (
+data class adastroUIState (
     val email: String ="",
     val password: String = "",
     val isLoading: Boolean = false,
