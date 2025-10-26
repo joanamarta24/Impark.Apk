@@ -10,10 +10,14 @@ import com.example.imparkapk.data.dao.dao.AvaliacaoDao
 import com.example.imparkapk.data.dao.dao.CarroDao
 import com.example.imparkapk.data.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.dao.GerenteDao
-import com.example.imparkapk.data.dao.dao.ReservaDao
 import com.example.imparkapk.data.dao.dao.UsuarioDao
+import com.example.imparkapk.data.dao.entity.AvaliacaoEntity
 import com.example.imparkapk.data.dao.entity.CarroEntity
+import com.example.imparkapk.data.dao.entity.EstacionamentoEntity
+import com.example.imparkapk.data.dao.entity.GerenteEntity
+import com.example.imparkapk.data.dao.entity.ReservaEntity
 import com.example.imparkapk.data.dao.entity.UsuarioEntity
+import com.example.imparktcc.data.local.dao.ReservaDao
 
 
 @Database(
