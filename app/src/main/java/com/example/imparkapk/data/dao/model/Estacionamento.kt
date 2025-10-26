@@ -16,10 +16,10 @@ data class Estacionamento(
 ) {
     val estaAberto: Boolean
         get() {
-            // Lógica para verificar se está dentro do horário de funcionamento
-            return true // Implementar lógica real
+
+            return true
         }
 
-    val notaMedia: Double = 0.0 // Será calculada
-    val totalAvaliacoes: Int = 0 // Será calculado
+    val notaMedia: Double = 0.0
+    val totalAvaliacoes: Int = 0
 }

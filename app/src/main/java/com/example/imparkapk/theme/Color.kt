@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.theme
+package com.example.imparkapk.theme
 
 import androidx.compose.ui.graphics.Color
 
