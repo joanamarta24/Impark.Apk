@@ -26,6 +26,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,10 +37,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+
+
     }
 
     kotlinOptions {
         jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -48,13 +52,22 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8" // Use uma versão compatível
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 
 dependencies {
+
+    implementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
+
+    //Material Compose
+    implementation("androidx.compose.material:material:1.9.4")
+
     // Room Database
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material3)
     ksp("androidx.room:room-compiler:2.6.1")
 
     // Retrofit & GSON

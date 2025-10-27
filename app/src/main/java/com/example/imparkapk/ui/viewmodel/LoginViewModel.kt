@@ -1,15 +1,16 @@
-package com.example.imparkapk.ui.viewmodel
+package com.example.imparktcc.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Insert
 import com.example.imparkapk.UiState.LoginUiState
 import com.example.imparkapk.data.dao.repository.UsuarioRepository
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,3 +59,22 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    private fun validarCampos(): Boolean {
+        val emailValido = usuarioRepository.validarEmail(_uiState.value.email)
+        val senhaPreenchida = _uiState.value.senha.isNotBlank()
+
+        _uiState.update { it.copy(emailValido = emailValido) }
+
+        return emailValido && senhaPreenchida
+    }
+
+    fun limparErros() {
+        _uiState.update { it.copy(mensagemErro = "") }
+    }
+
+    fun resetState() {
+        _uiState.value = LoginUiState()
+    }
+}
+
