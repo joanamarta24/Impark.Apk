@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ch.qos.logback.classic.pattern.DateConverter
+import com.example.imparkapk.data.dao.converters.DateConverter
 import com.example.imparkapk.data.dao.dao.AvaliacaoDao
 import com.example.imparkapk.data.dao.dao.CarroDao
 import com.example.imparkapk.data.dao.dao.EstacionamentoDao

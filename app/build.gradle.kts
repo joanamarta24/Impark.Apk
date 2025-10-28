@@ -21,6 +21,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "junit:junit:4.13.2"
     }
 
     buildTypes {
@@ -57,6 +58,9 @@ android {
 }
 
 dependencies {
+    implementation("nome.do.grupo:nome-do-artefato:versao")
+
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     implementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
 

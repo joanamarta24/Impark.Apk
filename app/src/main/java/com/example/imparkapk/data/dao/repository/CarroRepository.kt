@@ -1,6 +1,9 @@
 package com.example.imparktcc.data.repository
 
+import com.example.imparkapk.data.dao.api.CarroApi
+import com.example.imparkapk.data.dao.dao.CarroDao
 import com.example.imparkapk.data.dao.entity.CarroEntity
+import com.example.imparkapk.data.dao.request.CarroRequest
 import com.example.imparktcc.data.local.dao.CarroDao
 import com.example.imparktcc.data.local.entity.CarroEntity
 import com.example.imparktcc.data.remote.api.CarroApi
