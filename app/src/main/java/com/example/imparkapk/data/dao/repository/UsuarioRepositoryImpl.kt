@@ -1,4 +1,18 @@
 package com.example.imparkapk.data.dao.repository
 
-class UsuarioRepositoryImpl {
+import com.example.imparkapk.data.dao.api.UsuarioApi
+import com.example.imparkapk.data.dao.dao.UsuarioDao
+import com.example.imparktcc.model.Usuario
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class UsuarioRepositoryImpl @Inject constructor(
+    private val usuarioDao: UsuarioDao,
+    private val usuarioApi: UsuarioApi
+):UsuarioRepository {
+    //Cache em memoria para simulacão
+    private val usuariosCache = mutableListOf<Usuario>()
+    private val codigosRecuperacao = mutableMapOf<String, String>() // email -> código
+    private var usuarioLogado: Usuario? = null
 }
