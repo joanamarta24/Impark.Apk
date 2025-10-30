@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.compose")
 
     // REMOVA: alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
@@ -58,11 +59,10 @@ android {
 }
 
 dependencies {
-    implementation("nome.do.grupo:nome-do-artefato:versao")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
 
-    implementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
+    androidTestImplementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
 
     //Material Compose
     implementation("androidx.compose.material:material:1.9.4")
