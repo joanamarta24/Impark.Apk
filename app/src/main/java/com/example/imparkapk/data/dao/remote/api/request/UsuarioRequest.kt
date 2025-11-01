@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.request
+package com.example.imparkapk.data.dao.remote.api.request
 
 import com.google.gson.annotations.SerializedName
 

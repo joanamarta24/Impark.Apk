@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.response
+package com.example.imparkapk.data.dao.remote.api.response
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date

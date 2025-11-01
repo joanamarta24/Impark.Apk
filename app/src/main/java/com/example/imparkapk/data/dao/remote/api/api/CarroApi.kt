@@ -1,7 +1,7 @@
-package com.example.imparkapk.data.dao.api
+package com.example.imparkapk.data.dao.remote.api.api
 
-import com.example.imparkapk.data.dao.request.CarroRequest
-import com.example.imparkapk.data.dao.response.CarroResponse
+import com.example.imparkapk.data.dao.remote.api.response.CarroResponse
+import com.example.imparkapk.data.dao.remote.api.request.CarroRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

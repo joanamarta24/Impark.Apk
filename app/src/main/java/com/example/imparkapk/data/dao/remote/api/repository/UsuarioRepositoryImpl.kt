@@ -1,6 +1,6 @@
-package com.example.imparkapk.data.dao.repository
+package com.example.imparkapk.data.dao.remote.api.repository
 
-import com.example.imparkapk.data.dao.api.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
 import com.example.imparkapk.data.dao.dao.UsuarioDao
 import com.example.imparktcc.model.Usuario
 import javax.inject.Inject

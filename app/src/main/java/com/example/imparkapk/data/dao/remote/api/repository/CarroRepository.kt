@@ -1,9 +1,9 @@
 package com.example.imparktcc.data.repository
 
-import com.example.imparkapk.data.dao.api.CarroApi
+import com.example.imparkapk.data.dao.remote.api.api.CarroApi
 import com.example.imparkapk.data.dao.dao.CarroDao
 import com.example.imparkapk.data.dao.entity.CarroEntity
-import com.example.imparkapk.data.dao.request.CarroRequest
+import com.example.imparkapk.data.dao.remote.api.request.CarroRequest
 import com.example.imparktcc.model.Carro
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.repository
+package com.example.imparkapk.data.dao.remote.api.repository
 
 import com.example.imparkapk.data.dao.model.Avaliacao
 import kotlinx.coroutines.flow.Flow

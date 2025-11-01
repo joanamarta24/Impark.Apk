@@ -1,11 +1,9 @@
-package com.example.imparkapk.data.dao.repository
+package com.example.imparkapk.data.dao.remote.api.repository
 
-import com.example.imparkapk.data.dao.api.EstacionamentoApi
+import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.model.Estacionamento
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import org.checkerframework.checker.regex.qual.Regex
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
