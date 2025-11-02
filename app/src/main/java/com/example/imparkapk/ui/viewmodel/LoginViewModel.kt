@@ -3,6 +3,7 @@ package com.example.imparktcc.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.UiState.LoginUiState
+import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
 import com.example.imparkapk.data.dao.remote.api.repository.UsuarioRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,51 +16,85 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val usuarioRepository: UsuarioRepository
+    private val usuarioRepository: UsuarioRepository,
+    private val usuarioApi: UsuarioApi,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
+
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
+    // Eventos para navegaçã
+    private val _navigateToHome = MutableStateFlow(false)
+    val navigateToHome: StateFlow<Boolean> = _navigateToHome.asStateFlow()
+
+
     fun onEmailChange(email: String) {
-        _uiState.update { it.copy(email = email, emailValido = true) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                email = email,
+                emailValido = usuarioRepository.validarEmail(email)
+            )
+        }
+        limparErros()
     }
+
 
     fun onSenhaChange(senha: String) {
         _uiState.update { it.copy(senha = senha) }
+        limparErros()
     }
 
     fun onLembrarMeChange(lembrar: Boolean) {
         _uiState.update { it.copy(lembrarMe = lembrar) }
     }
-
-    fun login(onSuccess: () -> Unit = {}) {
-        if (validarCampos()) {
-            _uiState.update { it.copy(isLoading = true, mensagemErro = "") }
-
+    fun login(){
+        if (!validarCampos()){
+            _uiState.update {
+                it.copy(mensagemErro = "Preencha todos os campos corretamente")
+                return
+            }
+        _uiState.update { it.copy(isLoading = true,  mensagemErro = "") }
             viewModelScope.launch {
-                val resultado = usuarioRepository.loginUsuario(_uiState.value.email, _uiState.value.senha)
-
-                resultado.fold(
-                    onSuccess = { usuario ->
-                        _uiState.update { it.copy(
-                            isLoading = false,
-                            loginSucesso = true,
-                            usuarioLogado = usuario
-                        ) }
-                        onSuccess()
-                    },
-                    onFailure = { erro ->
-                        _uiState.update { it.copy(
-                            isLoading = false,
-                            mensagemErro = erro.message ?: "Erro ao fazer login"
-                        ) }
+                try {
+                    val request = LoginRequest(
+                        email = _uiState.value.email,
+                        senha = _uiState.value.senha
+                    )
+                    val response = usuarioApi.login(request)
+                    if (response.isSuccessful){
+                        val loginResponse = response.body()
+                        val token = loginResponse?.token
+                        if (token != null){
+                            tokenManager.saveToken(token)
+                        }
                     }
-                )
+                }
+            }
+    }
+
+
+    fun login(email: String, senha: String) {
+        viewModelScope.launch {
+            try {
+                val response = usuarioApi.login(LoginRequest(email, senha))
+                if (response.isSuccessful) {
+                    val token = response.body()?.token
+                    token?.let { tokenManager.saveToken(it) }
+
+                }
+            } catch (e: Exception) {
+
             }
         }
     }
 
+    fun logout() {
+        tokenManager.clearToken()
+        // ✅ Navigate para tela de login
+    }
+}
     private fun validarCampos(): Boolean {
         val emailValido = usuarioRepository.validarEmail(_uiState.value.email)
         val senhaPreenchida = _uiState.value.senha.isNotBlank()

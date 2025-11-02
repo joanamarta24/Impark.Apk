@@ -7,8 +7,7 @@ data class LoginUiState(
     val isLoading: Boolean = false,
     val loginSucesso: Boolean = false,
     val emailValido: Boolean = true,
-    val mensagemErro: String = "",
-    val usuarioLogado: com.example.imparktcc.model.Usuario? = null
+    val mensagemErro: String = ""
 ) {
     val botaoLoginHabilitado: Boolean
         get() = email.isNotBlank() && senha.isNotBlank() && !isLoading
