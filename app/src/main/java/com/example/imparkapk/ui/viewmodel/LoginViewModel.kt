@@ -92,7 +92,7 @@ class LoginViewModel @Inject constructor(
 
     fun logout() {
         tokenManager.clearToken()
-        // ✅ Navigate para tela de login
+
     }
 }
     private fun validarCampos(): Boolean {

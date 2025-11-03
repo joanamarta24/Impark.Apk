@@ -1,4 +1,4 @@
-package com.example.imparktcc.ui
+package com.example.imparkApp.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -29,11 +29,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -115,9 +114,7 @@ fun CadastroCarroScreen(
                 visible = sucesso,
                 enter = slideInVertically(
                     initialOffsetY = { with(density) { -40.dp.roundToPx() } }
-                ) + expandVertically(
-                    expandFrom = LineHeightStyle.Alignment.Top
-                ) + fadeIn(initialAlpha = 0.3f),
+                ) + expandVertically(expandFrom = Alignment.Top) + fadeIn(initialAlpha = 0.3f),
                 exit = slideOutVertically() + shrinkVertically() + fadeOut()
             ) {
                 Text(
@@ -131,49 +128,49 @@ fun CadastroCarroScreen(
             }
         }
 
-        // Overlay de sucesso
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(animationSpec = tween(500)),
-            exit = fadeOut(animationSpec = tween(500))
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xAA000000))
+            // Overlay de sucesso
+            AnimatedVisibility(
+                visible = visible,
+                enter = fadeIn(animationSpec = tween(500)),
+                exit = fadeOut(animationSpec = tween(500))
             ) {
                 Box(
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
-                        .background(MaterialTheme.colorScheme.primary), // Cor corrigida
-                    contentAlignment = Alignment.Center
+                        .fillMaxSize()
+                        .background(Color(0xAA000000))
                 ) {
-                    Text(
-                        text = "Carro cadastrado!",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
+                            .background(MaterialTheme.colorScheme.primary), // Cor corrigida
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Carro cadastrado!",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
+            }
+        }
+
+        // LaunchedEffect para navegação automática
+        LaunchedEffect(sucesso) {
+            if (sucesso) {
+                delay(2000) // Reduzido para 2 segundos
+                sucesso = false
+                visible = false
+                onCadastroConcluido()
             }
         }
     }
 
-    // LaunchedEffect para navegação automática
-    LaunchedEffect(sucesso) {
-        if (sucesso) {
-            delay(2000) // Reduzido para 2 segundos
-            sucesso = false
-            visible = false
-            onCadastroConcluido()
+    @Preview (showBackground = true)
+    @Composable
+    fun PreviewCadastroCarro() {
+        MaterialTheme {
+            CadastroCarroScreen()
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCadastroCarro() {
-    MaterialTheme {
-        CadastroCarroScreen()
-    }
-}

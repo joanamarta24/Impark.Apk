@@ -1,6 +1,5 @@
 package com.example.imparkapk.data.dao.di
 
-import android.R.attr.level
 import android.icu.util.TimeUnit
 import com.example.imparkapk.data.dao.remote.api.api.CarroApi
 import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
@@ -16,15 +15,15 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 @Module
 @Inject(SingletonComponent::class)
 object NetworkModule {
     private const val BASE_URL = "https//api.impark.com/v1/"
-    private const val TIMEOUT_SECONDS = 30L
+    private const val TIMEOUT_SECONDS = 30
 
     @Provides
     @Singleton

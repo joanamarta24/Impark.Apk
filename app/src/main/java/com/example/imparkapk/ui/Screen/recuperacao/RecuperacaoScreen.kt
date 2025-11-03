@@ -1,4 +1,4 @@
-package com.example.imparkapk.Screen
+package com.example.imparkapk.ui.Screen.recuperacao
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,7 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.imparktcc.ui.viewmodel.RecuperacaoViewModel
+import com.example.imparkapk.ui.viewmodel.RecuperacaoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

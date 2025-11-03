@@ -60,12 +60,15 @@ android {
 
 dependencies {
 
+
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     androidTestImplementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
 
     //Material Compose
     implementation("androidx.compose.material:material:1.9.4")
+    implementation("androidx.compose.material:material-icons-extended:1.9.4")
+
 
     // Room Database
     implementation("androidx.room:room-runtime:2.6.1")
