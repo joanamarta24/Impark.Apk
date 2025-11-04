@@ -17,7 +17,7 @@ import com.example.imparkapk.data.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.entity.GerenteEntity
 import com.example.imparkapk.data.dao.entity.ReservaEntity
 import com.example.imparkapk.data.dao.entity.UsuarioEntity
-import com.example.imparktcc.data.local.dao.ReservaDao
+import com.example.imparkapk.data.dao.ReservaDao
 
 
 @Database(

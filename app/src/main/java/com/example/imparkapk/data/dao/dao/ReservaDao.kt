@@ -1,4 +1,4 @@
-package com.example.imparktcc.data.local.dao
+package com.example.imparkapk.data
 
 import androidx.room.*
 import com.example.imparkapk.data.dao.entity.ReservaEntity
