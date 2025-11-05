@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.remote.api.repository
 
+import com.example.imparkapk.data.UsuarioDao
 import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
-import com.example.imparkapk.data.dao.dao.UsuarioDao
 import com.example.imparkapk.data.dao.entity.UsuarioEntity
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest
 import com.example.imparktcc.model.Usuario

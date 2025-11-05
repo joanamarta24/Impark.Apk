@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("org.jetbrains.kotlin.plugin.compose")
-
-    // REMOVA: alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
@@ -22,13 +20,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner = "junit:junit:4.13.2"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -39,13 +35,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-
-
     }
 
     kotlinOptions {
         jvmTarget = "17"
-        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -53,47 +46,31 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8" // Use uma versão compatível
         kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 
 dependencies {
-
-
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation(libs.androidx.room.runtime.android)
 
-    androidTestImplementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
+    // Material 3 + ícones
+    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
 
-    //Material Compose
-    implementation("androidx.compose.material:material:1.9.4")
-    implementation("androidx.compose.material:material-icons-extended:1.9.4")
-
-
-    // Room Database
+    // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
-    implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.compose.material3)
     ksp("androidx.room:room-compiler:2.6.1")
-
-    // Retrofit & GSON
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.google.code.gson:gson:2.10.1")
 
     // Retrofit & OkHttp
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // Para SharedPreferences
+    // SharedPreferences
     implementation("androidx.preference:preference-ktx:1.2.1")
-
-    // Para Context injection
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    ksp("com.google.dagger:hilt-compiler:2.48.1")
 
     // Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.48.1")
@@ -108,23 +85,22 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
-    // Core AndroidX
+    // Core AndroidX e Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-
-    // Compose UI
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.foundation)
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
-    // Test
+    // Testes
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

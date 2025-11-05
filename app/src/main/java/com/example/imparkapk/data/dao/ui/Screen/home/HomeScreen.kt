@@ -12,6 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CarRental
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.TopAppBar
@@ -26,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +85,7 @@ fun HomeScreen(
                         title = "Estacionamentos",
                         subtitle = "Encontre vagas",
                         icon = Icons.Default.LocationOn,
-                        onClick = onNavigateToEstacionamentos,
+                        onClick = onNavigateToEstacionamento,
                         modifier = Modifier.weight(1f)
                     )
 

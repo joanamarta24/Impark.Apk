@@ -36,7 +36,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.imparkapk.ui.viewmodel.RecuperacaoViewModel
+import com.example.imparkapk.data.dao.ui.viewmodel.RecuperacaoViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
