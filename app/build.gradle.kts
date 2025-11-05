@@ -62,6 +62,7 @@ dependencies {
 
 
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation(libs.androidx.room.runtime.android)
 
     androidTestImplementation("androidx.navigation.safeargs.kotlin:androidx.navigation.safeargs.kotlin.gradle.plugin:2.6.0")
 

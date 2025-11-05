@@ -1,6 +1,7 @@
 package com.example.imparkapk.data.dao.model
 
 import java.util.Date
+
 enum class StatusReserva{
     PENDENTE,
     CONFIRMADA,
