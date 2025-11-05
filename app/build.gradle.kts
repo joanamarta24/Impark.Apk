@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,9 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
+    id ("com.android.application")
+    id ("com.google.gms.google-services")
+
 }
 
 android {
@@ -81,7 +86,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation ("com.google.firebase:firebase-bom:34.5.0")
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
