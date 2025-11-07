@@ -3,11 +3,9 @@ import org.gradle.kotlin.dsl.implementation
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
-    id ("com.android.application")
     id ("com.google.gms.google-services")
 
 }
