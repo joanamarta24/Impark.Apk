@@ -3,6 +3,7 @@ import org.gradle.kotlin.dsl.implementation
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
