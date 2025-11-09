@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+
         google {
             plugins{
                 id("androidx.navigation.safeargs.kotlin") version "2.8.5"
@@ -20,7 +21,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-
     }
 }
 
