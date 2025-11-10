@@ -10,6 +10,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CarroDao {
+    @Query("SELECT * FROM carros WHERE modelo LIKE :modelo AND ativo = 1")
+    suspend fun searchCarrosPorModelo(modelo: String): List<CarroEntity>
+
+    @Query("SELECT * FROM carros WHERE cor LIKE :cor AND ativo = 1")
+    suspend fun searchCarrosPorCor(cor: String): List<CarroEntity>
+
+    @Query("SELECT * FROM carros WHERE placa = :placa AND ativo = 1")
+    suspend fun getCarroPorPlaca(placa: String): CarroEntity?
     @Query("SELECT * FROM carros WHERE id = :id")
     suspend fun getCarroById(id: String): CarroEntity?
 

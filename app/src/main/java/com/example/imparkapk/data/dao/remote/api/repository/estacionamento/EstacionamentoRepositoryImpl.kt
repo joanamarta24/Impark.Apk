@@ -1,9 +1,10 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.estacionamento
 
 import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.model.Estacionamento
+import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

@@ -3,7 +3,7 @@ package com.example.imparkapk.data.dao.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.data.dao.model.Estacionamento
-import com.example.imparkapk.data.dao.remote.api.repository.EstacionamentoRepository
+import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

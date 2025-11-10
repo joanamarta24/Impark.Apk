@@ -1,10 +1,12 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.avaliacao
 
 import com.example.imparkapk.data.dao.dao.AvaliacaoDao
 import com.example.imparkapk.data.dao.model.Avaliacao
 import com.example.imparkapk.data.dao.remote.api.api.AvaliacaoApi
+import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository
 import kotlinx.coroutines.delay
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 

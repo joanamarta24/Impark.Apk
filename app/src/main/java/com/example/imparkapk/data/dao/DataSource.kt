@@ -1,9 +1,9 @@
 package com.example.imparkapk.data.dao
 
-import com.example.imparkapk.data.dao.remote.api.repository.AvaliacaoRepository
-import com.example.imparkapk.data.dao.remote.api.repository.EstacionamentoRepository
-import com.example.imparkapk.data.dao.remote.api.repository.ReservaRepository
-import com.example.imparkapk.data.dao.remote.api.repository.UsuarioRepository
+import com.example.imparkapk.data.dao.remote.api.repository.avaliacao.AvaliacaoRepository
+import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
+import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository
+import com.example.imparkapk.data.dao.remote.api.repository.usuario.UsuarioRepository
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton

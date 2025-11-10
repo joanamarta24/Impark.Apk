@@ -1,7 +1,6 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.avaliacao
 
 import com.example.imparkapk.data.dao.model.Avaliacao
-import kotlinx.coroutines.flow.Flow
 
 interface AvaliacaoRepository {
     // Operações básicas de avaliação
@@ -31,5 +30,3 @@ interface AvaliacaoRepository {
     //OPERAÇÕES EM LOTE
     suspend fun sincronizarAvaliacoes(usuarioId: String): Result<Boolean>
 }
-
-

@@ -1,8 +1,8 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.usuario
 
 import com.example.imparkapk.data.UsuarioDao
-import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
 import com.example.imparkapk.data.dao.entity.UsuarioEntity
+import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest
 import com.example.imparktcc.model.Usuario
 import kotlinx.coroutines.delay
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class UsuarioRepositoryImpl @Inject constructor(
     private val usuarioDao: UsuarioDao,
     private val usuarioApi: UsuarioApi
-):UsuarioRepository {
+): UsuarioRepository {
     //Cache em memoria para simulacão
     private val usuariosCache = mutableListOf<Usuario>()
     private val codigosRecuperacao = mutableMapOf<String, String>() // email -> código
@@ -319,10 +319,3 @@ class UsuarioRepositoryImpl @Inject constructor(
             )
         }
     }
-}
-
-
-
-
-
-

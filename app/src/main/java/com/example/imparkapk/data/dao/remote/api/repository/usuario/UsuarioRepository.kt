@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.usuario
 
 import com.example.imparktcc.model.Usuario
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +27,7 @@ interface UsuarioRepository {
     fun validarSenha(senha: String):Boolean
 
     // Operações em lote
-    fun getUsuariosAtivos():Flow<List<Usuario>>
+    fun getUsuariosAtivos(): Flow<List<Usuario>>
     suspend fun countUsuarios(): Result<Int>
     suspend fun buscarUsuariosPorNome(nome:String):Result<List<Usuario>>
 
@@ -41,5 +41,3 @@ interface UsuarioRepository {
     suspend fun desbloquearUsuario(id: String):Result<Boolean>
     suspend fun atualizarUtimoAcesso(id: String):Result<Boolean>
 }
-
-

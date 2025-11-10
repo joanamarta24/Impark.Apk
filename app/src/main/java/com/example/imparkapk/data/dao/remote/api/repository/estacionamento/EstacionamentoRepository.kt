@@ -1,7 +1,6 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.estacionamento
 
 import com.example.imparkapk.data.dao.model.Estacionamento
-import kotlinx.coroutines.flow.Flow
 
 interface EstacionamentoRepository {
     suspend fun cadastrarEstacionamento(estacionamento: Estacionamento): Boolean

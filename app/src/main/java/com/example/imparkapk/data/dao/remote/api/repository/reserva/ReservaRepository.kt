@@ -1,8 +1,6 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.reserva
 
 import com.example.imparkapk.data.dao.model.Reserva
-import kotlinx.coroutines.flow.Flow
-import java.net.IDN
 import java.util.Date
 
 interface ReservaRepository {
@@ -16,7 +14,7 @@ interface ReservaRepository {
     suspend fun confirmarReserva(reservaId: String): Boolean
 
     //Consultas
-    suspend fun getReservasPorData(data: Date,estacionamentoId: String): List<Reserva>
+    suspend fun getReservasPorData(data: Date, estacionamentoId: String): List<Reserva>
     suspend fun getReservasAtivasPorUsuario(usuarioId: String): List<Reserva>
     suspend fun getReservasFuturasPorUsuario(usuarioId: String): List<Reserva>
 

@@ -1,8 +1,9 @@
-package com.example.imparkapk.data.dao.remote.api.repository
+package com.example.imparkapk.data.dao.remote.api.repository.reserva
 
-import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
 import com.example.imparkapk.data.dao.model.Reserva
-import com.example.imparktcc.data.local.dao.ReservaDao
+import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
+import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository
+import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import kotlinx.coroutines.delay
 import java.util.Calendar
 import java.util.Date
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 class ReservaRepositoryImpl @Inject constructor(
     private val reservaDao: ReservaDao,
     private  val reservaApi: ReservaApi
-):ReservaRepository {
+): ReservaRepository {
     private val reservaCache = mutableListOf<Reserva>()
     private val estacionamentoRepository: EstacionamentoRepository
 

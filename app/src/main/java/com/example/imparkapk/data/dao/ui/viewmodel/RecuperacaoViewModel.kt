@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.imparkapk.data.dao.remote.api.repository.UsuarioRepository
+import com.example.imparkapk.data.dao.remote.api.repository.usuario.UsuarioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
