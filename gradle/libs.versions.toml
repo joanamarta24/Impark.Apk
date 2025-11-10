@@ -16,7 +16,7 @@ roomKtx = "2.8.3"
 foundation = "1.9.4"
 material3 = "1.4.0"
 roomRuntimeAndroid = "2.8.3"
-ksp = "1.9.24-1.0.20"
+ksp = "2.0.0-1.0.22"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
