@@ -51,6 +51,9 @@ android {
 }
 
 dependencies {
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23")
+
     // Core AndroidX e Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -78,6 +81,7 @@ dependencies {
 
     // Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.48.1")
+    implementation(libs.androidx.room.common.jvm)
     ksp("com.google.dagger:hilt-compiler:2.48.1")
 
     // Navigation

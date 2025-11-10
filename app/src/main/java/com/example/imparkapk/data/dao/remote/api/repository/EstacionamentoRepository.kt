@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface EstacionamentoRepository {
     suspend fun cadastrarEstacionamento(estacionamento: Estacionamento): Boolean
-    suspend fun getEstacionamentoPorId(id: String): Estacionamento?
-    suspend fun listarEstacionamentos(): List<Estacionamento>
-    suspend fun listarEstacionamentosComVagas(): List<Estacionamento>
-    suspend fun atualizarEstacionamento(estacionamento: Estacionamento): Boolean
-    suspend fun atualizarVagasDisponiveis(id: String, vagas: Int): Boolean
+    suspend fun getEstacionamentoPorId(id: String): Result<Estacionamento?>
+    suspend fun listarEstacionamentos(): Result<List<Estacionamento>>
+    suspend fun listarEstacionamentosComVagas(): Result<List<Estacionamento>>
+    suspend fun atualizarEstacionamento(estacionamento: Estacionamento): Result<Boolean>
+    suspend fun atualizarVagasDisponiveis(id: String, vagas: Int): Result<Boolean>
 
     //BUSCAS E FILTROS
     suspend fun buscarEstacionamentoPorId(id: String): Estacionamento?
@@ -24,7 +24,7 @@ interface EstacionamentoRepository {
     fun validarPreco(preco: Double): Boolean
 
     //METRICAS
-    suspend fun getMediaAvaliacoes(estacionamentoId: String): Double
-    suspend fun countEstacionamentos(): Int
-    suspend fun getTaxaOcupacao(estacionamentoId: String): Double
+    suspend fun getMediaAvaliacoes(estacionamentoId: String): Result<Double>
+    suspend fun countEstacionamentos(): Result<Int>
+    suspend fun getTaxaOcupacao(estacionamentoId: String): Result<Double>
 }

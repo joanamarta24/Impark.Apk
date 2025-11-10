@@ -47,6 +47,9 @@ data class EstacionamentoEntity(
     val dataCriacao: Date,
 
     @ColumnInfo(name = "data_atualizacao")
-    val dataAtualizacao: Date
+    val dataAtualizacao: Date,
+    val vagasTotal: Int,
+    val precoHora: Double,
+    val horarioFuncionamento: String
 
 )

@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface UsuarioRepository {
 
+    suspend fun buscarUsuarioPorNome(nome: String): List<Usuario>
+    suspend fun buscarUsuarioPorEmail(email: String): List<Usuario>
+    suspend fun buscarUsuarioPorTipo(tipo: String): List<Usuario>
 
     // Operações básicas de usuário
     suspend fun cadastrarUsuario(usuario: Usuario): Result<Boolean>

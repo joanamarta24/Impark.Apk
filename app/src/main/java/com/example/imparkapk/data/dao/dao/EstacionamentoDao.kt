@@ -6,11 +6,14 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.imparkapk.data.dao.entity.EstacionamentoEntity
+import com.example.imparkapk.data.dao.model.Estacionamento
 import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface EstacionamentoDao {
-    @Query("SELECT * FROM estacionamentos WHERE id= id")
+
+   @Query("SELECT * FROM estacionamentos WHERE id= id")
     suspend fun getEstacionamentoById(id: Int): Estacionamento?
 
     @Query("SELECT* FROM estacionamentos WHERE ativo = 1")

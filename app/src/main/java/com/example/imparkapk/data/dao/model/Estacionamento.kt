@@ -109,6 +109,7 @@ data class Estacionamento(
     }
 
     /*RETORNA OS SERVIÇOS COMO TEXTO SEPARADO POR VIRGULA*/
+
     val servicosTexto: String
         get() = servicos.take(3).joinToString { "," }
 
@@ -164,22 +165,27 @@ enum class StatusVagas{
 fun List<Estacionamento>.filtarAbertos(): List<Estacionamento>{
     return this.filter { it.estaAberto }
 }
+
 /*FILTRAR OS ESTACIONAMENTOS COM VAGAS DISPONÍVEIS*/
 fun List<Estacionamento>.filtrarComVagas(): List<Estacionamento>{
     return this.filter { it.vagasDisponiveis >0 }
 }
+
 /*ORDENA POR MENOR PREÇO*/
 fun List<Estacionamento>.ordenarPorMenorPreco(): List<Estacionamento> {
     return this.sortedBy { it.valorHora }
 }
+
 /*ORDENA POR MAIOR NOTA*/
 fun List<Estacionamento>.ordenarPorMaiorNota(): List<Estacionamento> {
     return this.sortedByDescending { it.notaMedia }
 }
+
 /*ORDENA POR MAIS VAGAS DISPONÍVEIS*/
 fun List<Estacionamento>.ordenarPorMaisVagas(): List<Estacionamento> {
     return this.sortedByDescending { it.vagasDisponiveis }
 }
+
 /*BUSCA ESTACIONAMENTO POR NOME OU ENDEREÇO*/
 fun List<Estacionamento>.buscar(query: String): List<Estacionamento>{
     return this.filter {
@@ -187,6 +193,7 @@ fun List<Estacionamento>.buscar(query: String): List<Estacionamento>{
                 it.endereco.contains(query, ignoreCase = true)
 
     }
+
 }
 
 

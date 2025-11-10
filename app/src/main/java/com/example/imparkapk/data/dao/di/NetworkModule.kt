@@ -1,6 +1,6 @@
 package com.example.imparkapk.data.dao.di
 
-import android.icu.util.TimeUnit
+import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.dao.remote.api.api.CarroApi
 import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.dao.remote.api.api.GerenteApi
@@ -9,21 +9,24 @@ import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
 import com.google.firebase.BuildConfig
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
+import retrofit2.create
 import javax.inject.Singleton
 
 
+
 @Module
-@Inject(SingletonComponent::class)
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "https//api.impark.com/v1/"
-    private const val TIMEOUT_SECONDS = 30
+    private const val BASE_URL = "https://api.impark.com/v1/"
+    private const val TIMEOUT_SECONDS = 30L
+
 
     @Provides
     @Singleton
@@ -32,10 +35,11 @@ object NetworkModule {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
             } else {
-                HttpLoggingInterceptor.Level.NONE
+                HttpLoggingInterceptor.Level.BASIC
             }
         }
     }
+
 
     @Provides
     @Singleton
@@ -44,64 +48,58 @@ object NetworkModule {
             val request = chain.request().newBuilder()
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
-                // Adicione headers de autenticação se necessário
-                // .addHeader("Authorization", "Bearer $token")
+                .addHeader("User-Agent", "ImparkApp/${BuildConfig.VERSION_NAME}")
                 .build()
             chain.proceed(request)
         }
     }
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: Interceptor
+    ): OkHttpClient{
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(authInterceptor)
+            .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .build()
+    }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient{
-        val loggingInterceptor = HttpLoggingInterceptor().apply{
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-        return OkHttpClient.Builder()
-            .addInterceptor (loggingInterceptor)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Accept", "application/json")
-                    .build()
-                chain.proceed(request)
-            }
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-     @Provides
-     @Singleton
-     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit{
-         return Retrofit.Builder()
-             .build(BASE_URL)
-             .client(okHttpClient)
-             .addConverterFactory(GsonConverterFactory.create())
-     }
+
+    // Providers das APIs
+
     @Provides
     @Singleton
-    fun provideUsuarioApi(retrofit: Retrofit): UsuarioApi{
-        return retrofit.create(UsuarioApi::class.java)
-    }
+    fun provideUsuarioApi(retrofit: Retrofit): UsuarioApi = retrofit.create()
+
     @Provides
     @Singleton
-    fun provideCarroApi(retrofit: Retrofit): CarroApi{
-        return retrofit.create(CarroApi::class.java)
-    }
+    fun provideCarroApi(retrofit: Retrofit): CarroApi = retrofit.create()
+
     @Provides
     @Singleton
-    fun provideEstacionamentoApi(retrofit: Retrofit): EstacionamentoApi {
-        return retrofit.create(EstacionamentoApi::class.java)
-    }
+    fun provideEstacionamentoApi(retrofit: Retrofit): EstacionamentoApi = retrofit.create()
+
     @Provides
     @Singleton
-    fun provideReservaApi(retrofit: Retrofit): ReservaApi {
-        return retrofit.create(ReservaApi::class.java)
-    }
+    fun provideReservaApi(retrofit: Retrofit): ReservaApi = retrofit.create()
+
     @Provides
     @Singleton
-    fun provideGerenteApi(retrofit: Retrofit): GerenteApi{
-        return retrofit.create(GerenteApi::class.java)
-    }
+    fun  provideGerenteApi(retrofit: Retrofit): GerenteApi = retrofit.create()
+
+
 }
+private inline fun <reified T> Retrofit.create(): T = create(T::class.java)

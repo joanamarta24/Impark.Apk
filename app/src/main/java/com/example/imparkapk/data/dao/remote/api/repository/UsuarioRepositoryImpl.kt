@@ -42,6 +42,7 @@ class UsuarioRepositoryImpl @Inject constructor(
         )
     }
 
+
     override suspend fun cadastrarUsuario(usuario: Usuario): Result<Boolean> {
         return try {
             delay(2000)
@@ -270,6 +271,39 @@ class UsuarioRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+        override suspend fun buscarUsuarioPorNome(nome: String): List<Usuario> {
+            return try {
+                delay(500)
+                usuariosCache.filter {
+                    it.nome.contains(nome, ignoreCase = true)
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+
+        override suspend fun buscarUsuarioPorEmail(email: String): List<Usuario> {
+            return try {
+                delay(500)
+                usuariosCache.filter {
+                    it.email.equals(email, ignoreCase = true)
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+
+        override suspend fun buscarUsuarioPorTipo(tipo: String): List<Usuario> {
+            return try {
+                delay(500)
+                usuariosCache.filter {
+                    it.tipo.equals(tipo, ignoreCase = true)
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
 
         // Extension function para conversão (se estivesse usando Room)
 
@@ -286,6 +320,7 @@ class UsuarioRepositoryImpl @Inject constructor(
         }
     }
 }
+
 
 
 
