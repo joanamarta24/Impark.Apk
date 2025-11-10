@@ -52,7 +52,6 @@ class UsuarioRepositoryImpl @Inject constructor(
         )
     }
 
-    // ✅ MÉTODOS DE BUSCA IMPLEMENTADOS
     override suspend fun buscarUsuarioPorNome(nome: String): List<Usuario> {
         return try {
             delay(500)

@@ -5,6 +5,7 @@ import com.example.imparkapk.data.dao.model.Reserva
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import kotlinx.coroutines.delay
+import okhttp3.internal.notify
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
@@ -14,18 +15,10 @@ import javax.inject.Singleton
 @Singleton
 class ReservaRepositoryImpl @Inject constructor(
     private val reservaDao: ReservaDao,
-    private  val reservaApi: ReservaApi
+    private  val reservaApi: ReservaApi,
+    private val estacionamentoRepository: EstacionamentoRepository
 ): ReservaRepository {
     private val reservaCache = mutableListOf<Reserva>()
-    private val estacionamentoRepository: EstacionamentoRepository
-
-    @Inject
-    constructor(
-        reservaDao: ReservaDao,
-        reservaApi: ReservaApi,
-    ) : this(reservaDao, reservaApi) {
-        this.estacionamentoRepository = estacionamentoRepository
-    }
 
     init {
         //Dados de demonstração
@@ -98,6 +91,10 @@ class ReservaRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getReservaPorId(id: String): Result<Reserva?> {
+        return reservaCache.get()
+    }
+
     override suspend fun listaReservasPorUsuario(usuarioId: String): List<Reserva> {
         delay(1500)
         return reservaCache.filter { it.usuarioId == usuarioId }
@@ -156,6 +153,13 @@ class ReservaRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getReservasPorData(
+        data: Date,
+        estacionamentoId: String
+    ): List<Reserva> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getReservasAtivasPorUsuario(usuarioId: String): List<Reserva> {
         delay(700)
         return reservaCache.filter {
@@ -185,7 +189,7 @@ class ReservaRepositoryImpl @Inject constructor(
     }
     override suspend fun calcularValorReserva(estacionamentoId: String, horas: Int): Double {
         delay(800)
-        val estacionamento = estacionamentoRepository.getEstacionamentoPorId(estacionamentoId)
+        val estacionamento = estacionamentoRepository.buscarEstacionamentoPorId(estacionamentoId)
         return estacionamento?.valorHora?.times(horas) ?: 0.0
     }
 
