@@ -1,8 +1,8 @@
 package com.example.imparkapk.data.dao.remote.api.repository.reserva
 
+import com.example.imparkapk.data.ReservaDao
 import com.example.imparkapk.data.dao.model.Reserva
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
-import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import kotlinx.coroutines.delay
 import java.util.Calendar
