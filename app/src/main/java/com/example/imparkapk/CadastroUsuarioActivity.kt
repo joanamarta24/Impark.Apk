@@ -1,6 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-
-package com.example.imparkApp
+package com.example.imparkapk
 
 import android.os.Bundle
 import androidx.activity.compose.setContent

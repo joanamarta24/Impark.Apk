@@ -1,0 +1,50 @@
+package com.example.imparkapk.data.local.entity.usuarios
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import com.example.imparkapk.data.local.entity.EstacionamentoEntity
+import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
+import java.util.Date
+
+@Entity(
+    tableName = "gerente",
+    foreignKeys = [
+        ForeignKey(
+            entity = EstacionamentoEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["estacionamento_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class GerenteEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val id: Long,
+
+    @ColumnInfo(name = "nome")
+    val nome: String,
+
+    @ColumnInfo(name = "email")
+    val email: String,
+
+    @ColumnInfo(name = "senha")
+    val senha: String,
+
+    @ColumnInfo(name = "telefone")
+    val telefone: String,
+
+    @ColumnInfo(name = "data_nascimento")
+    val dataNascimento: Date,
+
+    @ColumnInfo(name = "tipo_usuario")
+    val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
+
+    @ColumnInfo(name = "estacionamento_id")
+    val estacionamentoId: String,
+
+    @ColumnInfo(name = "ativo")
+    val ativo: Boolean
+    )

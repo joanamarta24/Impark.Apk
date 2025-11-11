@@ -1,8 +1,6 @@
 package com.example.imparkapk.UiState
 
-import com.example.imparkapk.data.dao.remote.api.request.RedefinirSenhaRequest
-import com.example.imparktcc.model.TipoUsuario
-import com.example.imparktcc.model.Usuario
+import com.example.imparkapk.domain.model.Usuario
 
 data class UsuarioUiState(
     // Dados do usuário
