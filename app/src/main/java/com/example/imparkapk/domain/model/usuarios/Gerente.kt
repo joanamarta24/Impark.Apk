@@ -1,13 +1,17 @@
 package com.example.imparkapk.domain.model.usuarios
 
+import com.example.imparkapk.domain.model.Estacionamento
+import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
+import java.util.Date
+
 data class Gerente(
-    val id: String = "",
-    val usuarioId: String = "",
-    val estacionamentoId: String = "",
-    val nivelAcesso: Int = 1, // 1-Gerente, 2-Supervisor, 3-Funcionário
-    val ativo: Boolean = true
-) {
-    val isGerente: Boolean get() = nivelAcesso == 1
-    val isSupervisor: Boolean get() = nivelAcesso == 2
-    val isFuncionario: Boolean get() = nivelAcesso == 3
-}
+    val id: Long,
+    val nome: String,
+    val email: String,
+    val senha: String,
+    val telefone: String,
+    val dataNascimento: Date,
+    val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
+    val estacionamento: Estacionamento?,
+    val ativo: Boolean
+)
