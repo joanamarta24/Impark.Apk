@@ -4,8 +4,8 @@ import java.util.Date
 
 data class AvaliacaoDto (
     val id: Long,
-    val usuarioId: String,
-    val estacionamentoId: String,
+    val clienteId: Long?,
+    val estacionamentoId: Long?,
     val nota: Int,
     val comentario: String,
     val dataAvaliacao: Date,

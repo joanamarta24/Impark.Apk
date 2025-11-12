@@ -30,10 +30,10 @@ data class AvaliacaoEntity(
     val id: Long,
 
     @ColumnInfo(name = "usuario_id")
-    val usuarioId: String,
+    val clienteId: Long?,
 
     @ColumnInfo(name = "estacionamento_id")
-    val estacionamentoId: String,
+    val estacionamentoId: Long?,
 
     @ColumnInfo(name = "nota")
     val nota: Int,
