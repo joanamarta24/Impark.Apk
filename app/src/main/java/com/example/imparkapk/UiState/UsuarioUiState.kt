@@ -1,19 +1,21 @@
 package com.example.imparkapk.UiState
 
-import com.example.imparkapk.data.dao.remote.api.request.RedefinirSenhaRequest
-import com.example.imparktcc.model.TipoUsuario
+
 import com.example.imparktcc.model.Usuario
 
 data class UsuarioUiState(
+
     // Dados do usuário
     val usuario: Usuario? = null,
     val usuarios:List<Usuario> = emptyList(),
+
     // Formulários
     val nome:String ="",
     val email:String ="",
     val senha: String ="",
     val confirmaSenha: String ="",
     val tipoUsuario: String ="CLIENTE",
+
     // Estados de loadin
     val isLoading: Boolean = false,
     val isLogging: Boolean = false,

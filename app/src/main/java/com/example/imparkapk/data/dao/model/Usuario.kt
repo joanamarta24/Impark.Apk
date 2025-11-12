@@ -15,7 +15,7 @@ data class Usuario(
     val nome: String ="",
     val email: String ="",
     val senha: String ="",
-    val tipo: TipoUsuario,
+    val tipo: String,
 
-    val estacionamentoId:String? = null
+    val estacionamentoId: String? = null
 )
