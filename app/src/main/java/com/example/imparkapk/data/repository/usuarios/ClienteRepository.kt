@@ -17,6 +17,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.text.get
 
 @Singleton
 class ClienteRepository @Inject constructor(
@@ -41,7 +42,13 @@ class ClienteRepository @Inject constructor(
 
         val merged = remote.map { dto ->
             val old = current[dto.id]
-            if (old.ativo != true) old else dto.toEntity()
+            if (old?.ativo == true) old else dto.toEntity(pending = false)
         }
+
+        dao.upsertAll(merged)
+
+        val remoteIds = merged.map { it.id }.toSet()
+        val toDelete = current.values.filter { it.id !in remoteIds && !it.pendingSync && !it.localOnly }
+        toDelete.forEach { dao.deleteById(it.id) }
     }
 }
