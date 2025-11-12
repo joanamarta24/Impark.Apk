@@ -11,6 +11,6 @@ data class GerenteDto(
     val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
-    val estacionamentoId: String,
+    val estacionamentoId: Long,
     val ativo: Boolean
 )

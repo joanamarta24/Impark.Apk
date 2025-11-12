@@ -43,7 +43,7 @@ data class GerenteEntity(
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
 
     @ColumnInfo(name = "estacionamento_id")
-    val estacionamentoId: String,
+    val estacionamentoId: Long,
 
     @ColumnInfo(name = "ativo")
     val ativo: Boolean

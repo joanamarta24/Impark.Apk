@@ -51,3 +51,27 @@ fun GerenteDto.toDomain() = Gerente(
     estacionamento = null,
     ativo = ativo
 )
+
+fun Gerente.toEntity() = GerenteEntity(
+    id = id,
+    nome = nome,
+    email = email,
+    senha = senha,
+    telefone = telefone,
+    dataNascimento = dataNascimento,
+    tipoUsuario = tipoUsuario,
+    estacionamentoId = estacionamento?.id ?: 0,
+    ativo = ativo
+)
+
+fun GerenteDto.toEntity() = GerenteEntity(
+    id = id,
+    nome = nome,
+    email = email,
+    senha = senha,
+    telefone = telefone,
+    dataNascimento = dataNascimento,
+    tipoUsuario = tipoUsuario,
+    estacionamentoId = estacionamentoId,
+    ativo = ativo
+)
