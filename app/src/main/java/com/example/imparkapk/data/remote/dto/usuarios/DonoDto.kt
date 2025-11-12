@@ -11,6 +11,6 @@ data class DonoDto(
     val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
-    val estacionamentos: List<String>,
+    val estacionamentosId: List<Long>,
     val ativo: Boolean
 )

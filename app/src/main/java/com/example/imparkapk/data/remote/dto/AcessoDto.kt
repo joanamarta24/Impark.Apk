@@ -4,8 +4,8 @@ import java.util.Date
 
 data class AcessoDto(
     val id: Long,
-    val estacionamentoId: Long,
-    val carroId: Long,
+    val estacionamentoId: Long?,
+    val carroId: Long?,
     val placa: String,
     val horaDeEntrada: Date,
     val horaDeSaida: Date,

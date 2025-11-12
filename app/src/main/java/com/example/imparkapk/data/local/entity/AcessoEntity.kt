@@ -28,10 +28,10 @@ data class AcessoEntity(
     val id: Long,
 
     @ColumnInfo(name = "estacionamento_id")
-    val estacionamentoId: Long,
+    val estacionamentoId: Long?,
 
     @ColumnInfo(name = "carro_id")
-    val carroId: Long,
+    val carroId: Long?,
 
     @ColumnInfo(name = "placa")
     val placa: String,
