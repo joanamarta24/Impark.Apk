@@ -3,6 +3,8 @@ package com.example.imparkapk.data.mapper
 import com.example.imparkapk.data.local.entity.AcessoEntity
 import com.example.imparkapk.data.remote.dto.AcessoDto
 import com.example.imparkapk.domain.model.Acesso
+import com.example.imparkapk.domain.model.Carro
+import com.example.imparkapk.domain.model.Estacionamento
 
 fun Acesso.toEntity() = AcessoEntity(
     id = id,
@@ -28,10 +30,13 @@ fun AcessoDto.toEntity() = AcessoEntity(
     ativo = ativo
 )
 
-fun AcessoDto.toDomain() = Acesso(
+fun AcessoDto.toDomain(
+    estacionamento: Estacionamento? = null,
+    carro: Carro? = null
+) = Acesso(
     id = id,
-    estacionamento = null,
-    carro = null,
+    estacionamento = estacionamento,
+    carro = carro,
     placa = placa,
     horaDeEntrada = horaDeEntrada,
     horaDeSaida = horaDeSaida,
@@ -40,10 +45,13 @@ fun AcessoDto.toDomain() = Acesso(
     ativo = ativo
 )
 
-fun AcessoEntity.toDomain() = Acesso(
+fun AcessoEntity.toDomain(
+    estacionamento: Estacionamento? = null,
+    carro: Carro? = null
+) = Acesso(
     id = id,
-    estacionamento = null,
-    carro = null,
+    estacionamento = estacionamento,
+    carro = carro,
     placa = placa,
     horaDeEntrada = horaDeEntrada,
     horaDeSaida = horaDeSaida,

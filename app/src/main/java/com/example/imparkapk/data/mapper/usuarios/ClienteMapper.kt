@@ -2,6 +2,9 @@ package com.example.imparkapk.data.mapper.usuarios
 
 import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import com.example.imparkapk.data.remote.dto.usuarios.ClienteDto
+import com.example.imparkapk.domain.model.Avaliacao
+import com.example.imparkapk.domain.model.Carro
+import com.example.imparkapk.domain.model.Reserva
 import com.example.imparkapk.domain.model.usuarios.Cliente
 
 fun Cliente.toDto() = ClienteDto(
@@ -60,7 +63,11 @@ fun ClienteDto.toEntity() = ClienteEntity(
     ativo = ativo
 )
 
-fun ClienteEntity.toDomain() = Cliente(
+fun ClienteEntity.toDomain(
+    carros: List<Carro>? = null,
+    avaliacoes: List<Avaliacao>? = null,
+    reservas: List<Reserva>? = null
+) = Cliente(
     id = id,
     nome = nome,
     email = email,
@@ -68,13 +75,17 @@ fun ClienteEntity.toDomain() = Cliente(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    carros = null,
-    avaliacoes = null,
-    reservas = null,
+    carros = carros,
+    avaliacoes = avaliacoes,
+    reservas = reservas,
     ativo = ativo
 )
 
-fun ClienteDto.toDomain() = Cliente(
+fun ClienteDto.toDomain(
+    carros: List<Carro>? = null,
+    avaliacoes: List<Avaliacao>? = null,
+    reservas: List<Reserva>? = null
+) = Cliente(
     id = id,
     nome = nome,
     email = email,
@@ -82,8 +93,8 @@ fun ClienteDto.toDomain() = Cliente(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    carros = null,
-    avaliacoes = null,
-    reservas = null,
+    carros = carros,
+    avaliacoes = avaliacoes,
+    reservas = reservas,
     ativo = ativo
 )

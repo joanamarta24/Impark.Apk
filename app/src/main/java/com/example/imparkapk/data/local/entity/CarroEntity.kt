@@ -22,7 +22,7 @@ data class CarroEntity(
     val id: Long,
 
     @ColumnInfo(name = "usuario_id")
-     val usuarioId: String,
+    val usuarioId: Long?,
 
     @ColumnInfo(name = "modelo")
     val modelo: String,

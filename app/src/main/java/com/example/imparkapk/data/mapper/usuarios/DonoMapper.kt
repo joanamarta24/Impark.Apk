@@ -2,6 +2,7 @@ package com.example.imparkapk.data.mapper.usuarios
 
 import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
 import com.example.imparkapk.data.remote.dto.usuarios.DonoDto
+import com.example.imparkapk.domain.model.Estacionamento
 import com.example.imparkapk.domain.model.usuarios.Dono
 
 fun Dono.toEntity() = DonoEntity(
@@ -28,7 +29,9 @@ fun DonoDto.toEntity() = DonoEntity(
     ativo = ativo
 )
 
-fun DonoEntity.toDomain() = Dono(
+fun DonoEntity.toDomain(
+    estacionamento: List<Estacionamento>? = emptyList()
+) = Dono(
     id = id,
     nome = nome,
     email = email,
@@ -36,11 +39,13 @@ fun DonoEntity.toDomain() = Dono(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamentos = null,
+    estacionamentos = estacionamento,
     ativo = ativo
 )
 
-fun DonoDto.toDomain() = Dono(
+fun DonoDto.toDomain(
+    estacionamento: List<Estacionamento>? = emptyList()
+) = Dono(
     id = id,
     nome = nome,
     email = email,
@@ -48,7 +53,7 @@ fun DonoDto.toDomain() = Dono(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamentos = null,
+    estacionamentos = estacionamento,
     ativo = ativo
 )
 

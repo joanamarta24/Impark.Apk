@@ -2,6 +2,7 @@ package com.example.imparkapk.data.mapper.usuarios
 
 import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
 import com.example.imparkapk.data.remote.dto.usuarios.GerenteDto
+import com.example.imparkapk.domain.model.Estacionamento
 import com.example.imparkapk.domain.model.usuarios.Gerente
 
 
@@ -28,7 +29,9 @@ fun GerenteDto.toDto() = GerenteDto(
     estacionamentoId = estacionamentoId,
     ativo = ativo
 )
-fun GerenteEntity.toDomain() = Gerente(
+fun GerenteEntity.toDomain(
+    estacionamento: Estacionamento?
+) = Gerente(
     id = id,
     nome = nome,
     email = email,
@@ -36,11 +39,13 @@ fun GerenteEntity.toDomain() = Gerente(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamento = null,
+    estacionamento = estacionamento,
     ativo = ativo
 )
 
-fun GerenteDto.toDomain() = Gerente(
+fun GerenteDto.toDomain(
+    estacionamento: Estacionamento?
+) = Gerente(
     id = id,
     nome = nome,
     email = email,
@@ -48,7 +53,7 @@ fun GerenteDto.toDomain() = Gerente(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamento = null,
+    estacionamento = estacionamento,
     ativo = ativo
 )
 

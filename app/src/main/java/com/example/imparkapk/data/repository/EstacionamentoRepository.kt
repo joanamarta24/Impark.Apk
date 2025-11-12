@@ -1,8 +1,7 @@
 package com.example.imparkapk.data.repository
-
-import com.example.imparkapk.data.local.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.local.dao.EstacionamentoDao
 import com.example.imparkapk.data.local.entity.EstacionamentoEntity
+import com.example.imparkapk.data.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.domain.model.Estacionamento
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -12,11 +11,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class EstacionamentoRepositoryImpl @Inject constructor(
+class EstacionamentoRepository @Inject constructor(
     private val estacionamentoDao: EstacionamentoDao,
     private val estacionamentoApi: EstacionamentoApi
 ) {
-
     private val estacionamentosCache = mutableListOf<Estacionamento>().apply {
         addAll(listOf(
             Estacionamento(
