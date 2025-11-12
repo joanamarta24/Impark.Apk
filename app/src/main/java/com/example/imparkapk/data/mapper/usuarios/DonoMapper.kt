@@ -5,7 +5,9 @@ import com.example.imparkapk.data.remote.dto.usuarios.DonoDto
 import com.example.imparkapk.domain.model.Estacionamento
 import com.example.imparkapk.domain.model.usuarios.Dono
 
-fun Dono.toEntity() = DonoEntity(
+fun Dono.toEntity(
+    pending: Boolean = false
+) = DonoEntity(
     id = id,
     nome = nome,
     email = email,
@@ -14,10 +16,14 @@ fun Dono.toEntity() = DonoEntity(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentosId = estacionamentos?.map { it.id } ?: emptyList(),
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
-fun DonoDto.toEntity() = DonoEntity(
+fun DonoDto.toEntity(
+    pending: Boolean = false
+) = DonoEntity(
     id = id,
     nome = nome,
     email = email,
@@ -26,7 +32,9 @@ fun DonoDto.toEntity() = DonoEntity(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentosId = estacionamentosId,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
 fun DonoEntity.toDomain(
@@ -40,7 +48,8 @@ fun DonoEntity.toDomain(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentos = estacionamento,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun DonoDto.toDomain(
@@ -54,7 +63,8 @@ fun DonoDto.toDomain(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentos = estacionamento,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun Dono.toDto() = DonoDto(
@@ -66,7 +76,8 @@ fun Dono.toDto() = DonoDto(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentosId = estacionamentos?.map { it.id } ?: emptyList(),
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun DonoEntity.toDto() = DonoDto(
@@ -78,5 +89,6 @@ fun DonoEntity.toDto() = DonoDto(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentosId = estacionamentosId,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )

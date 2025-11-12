@@ -12,5 +12,6 @@ data class DonoDto(
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     val estacionamentosId: List<Long>,
+    val updatedAt: Long,
     val ativo: Boolean
 )

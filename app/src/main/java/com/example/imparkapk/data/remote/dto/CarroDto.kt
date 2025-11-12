@@ -5,5 +5,6 @@ data class CarroDto (
     val usuarioId: Long?,
     val modelo: String,
     val placa: String,
-    val ativo: Boolean = true
+    val ativo: Boolean = true,
+    val updatedAt: Long
 )

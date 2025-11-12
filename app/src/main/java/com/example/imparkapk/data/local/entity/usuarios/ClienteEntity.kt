@@ -66,5 +66,17 @@ data class ClienteEntity(
     val reservas: List<Long>,
 
     @ColumnInfo(name = "ativo")
-    val ativo: Boolean
+    val ativo: Boolean,
+
+    @ColumnInfo(name = "updated_at")
+    val updatedAt: Long,
+
+    @ColumnInfo(name = "pending_sync")
+    val pendingSync: Boolean,
+
+    @ColumnInfo(name = "local_only")
+    val localOnly: Boolean = false,
+
+    @ColumnInfo(name = "operation_type")
+    val operationType: String? = null
 )

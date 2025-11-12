@@ -18,7 +18,8 @@ fun Cliente.toDto() = ClienteDto(
     carros = carros?.map { it.id } ?: emptyList(),
     avaliacoes = avaliacoes?.map { it.id } ?: emptyList(),
     reservas = reservas?.map { it.id } ?: emptyList(),
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun ClienteEntity.toDto() = ClienteDto(
@@ -32,10 +33,13 @@ fun ClienteEntity.toDto() = ClienteDto(
     carros = carros,
     avaliacoes = avaliacoes,
     reservas = reservas,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
-fun Cliente.toEntity() = ClienteEntity(
+fun Cliente.toEntity(
+    pending: Boolean = false
+) = ClienteEntity(
     id = id,
     nome = nome,
     email = email,
@@ -46,10 +50,14 @@ fun Cliente.toEntity() = ClienteEntity(
     carros = carros?.map { it.id } ?: emptyList(),
     avaliacoes = avaliacoes?.map { it.id } ?: emptyList(),
     reservas = reservas?.map { it.id } ?: emptyList(),
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
-fun ClienteDto.toEntity() = ClienteEntity(
+fun ClienteDto.toEntity(
+    pending: Boolean = false
+) = ClienteEntity(
     id = id,
     nome = nome,
     email = email,
@@ -60,7 +68,9 @@ fun ClienteDto.toEntity() = ClienteEntity(
     carros = carros,
     avaliacoes = avaliacoes,
     reservas = reservas,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
 fun ClienteEntity.toDomain(
@@ -78,7 +88,8 @@ fun ClienteEntity.toDomain(
     carros = carros,
     avaliacoes = avaliacoes,
     reservas = reservas,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun ClienteDto.toDomain(
@@ -96,5 +107,6 @@ fun ClienteDto.toDomain(
     carros = carros,
     avaliacoes = avaliacoes,
     reservas = reservas,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )

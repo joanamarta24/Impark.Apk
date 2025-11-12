@@ -12,5 +12,6 @@ data class Acesso(
     val horaDeSaida: Date,
     val horasTotais: Int,
     val valorTotal: Double,
+    val updatedAt: Long,
     val ativo: Boolean
 )

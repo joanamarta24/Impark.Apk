@@ -15,7 +15,8 @@ fun GerenteEntity.toDto() = GerenteDto(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentoId = estacionamentoId,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun GerenteDto.toDto() = GerenteDto(
@@ -27,7 +28,8 @@ fun GerenteDto.toDto() = GerenteDto(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentoId = estacionamentoId,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 fun GerenteEntity.toDomain(
     estacionamento: Estacionamento?
@@ -40,7 +42,8 @@ fun GerenteEntity.toDomain(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamento = estacionamento,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun GerenteDto.toDomain(
@@ -54,10 +57,13 @@ fun GerenteDto.toDomain(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamento = estacionamento,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
-fun Gerente.toEntity() = GerenteEntity(
+fun Gerente.toEntity(
+    pending: Boolean = false
+) = GerenteEntity(
     id = id,
     nome = nome,
     email = email,
@@ -66,10 +72,14 @@ fun Gerente.toEntity() = GerenteEntity(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentoId = estacionamento?.id ?: 0,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending,
 )
 
-fun GerenteDto.toEntity() = GerenteEntity(
+fun GerenteDto.toEntity(
+    pending: Boolean = false
+) = GerenteEntity(
     id = id,
     nome = nome,
     email = email,
@@ -78,5 +88,7 @@ fun GerenteDto.toEntity() = GerenteEntity(
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
     estacionamentoId = estacionamentoId,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )

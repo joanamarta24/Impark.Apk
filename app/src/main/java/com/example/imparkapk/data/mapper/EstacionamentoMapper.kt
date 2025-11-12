@@ -25,7 +25,8 @@ fun Estacionamento.toDto() = EstacionamentoDto(
     horarioFuncionamento = horarioFuncionamento,
     reservasId = reservas?.map { it.id } ?: emptyList(),
     donoId = dono?.id,
-    gerentesId = gerentes?.map { it.id } ?: emptyList()
+    gerentesId = gerentes?.map { it.id } ?: emptyList(),
+    updatedAt = updatedAt
 )
 
 fun EstacionamentoEntity.toDto() = EstacionamentoDto(
@@ -46,11 +47,14 @@ fun EstacionamentoEntity.toDto() = EstacionamentoDto(
     horarioFuncionamento = horarioFuncionamento,
     reservasId = reservasId,
     donoId = donoId,
-    gerentesId = gerentesId
+    gerentesId = gerentesId,
+    updatedAt = updatedAt
 )
 
 
-fun Estacionamento.toEntity() = EstacionamentoEntity(
+fun Estacionamento.toEntity(
+    pending: Boolean = false
+) = EstacionamentoEntity(
     id = id,
     nome = nome,
     endereco = endereco,
@@ -68,10 +72,14 @@ fun Estacionamento.toEntity() = EstacionamentoEntity(
     horarioFuncionamento = horarioFuncionamento,
     reservasId = reservas?.map { it.id } ?: emptyList(),
     donoId = dono?.id,
-    gerentesId = gerentes?.map { it.id } ?: emptyList()
+    gerentesId = gerentes?.map { it.id } ?: emptyList(),
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
-fun EstacionamentoDto.toEntity() = EstacionamentoEntity(
+fun EstacionamentoDto.toEntity(
+    pending: Boolean = false
+) = EstacionamentoEntity(
     id = id,
     nome = nome,
     endereco = endereco,
@@ -89,7 +97,9 @@ fun EstacionamentoDto.toEntity() = EstacionamentoEntity(
     horarioFuncionamento = horarioFuncionamento,
     reservasId = reservasId,
     donoId = donoId,
-    gerentesId = gerentesId
+    gerentesId = gerentesId,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
 fun EstacionamentoDto.toDomain(
@@ -114,7 +124,8 @@ fun EstacionamentoDto.toDomain(
     horarioFuncionamento = horarioFuncionamento,
     reservas = reservas,
     dono = dono,
-    gerentes = gerentes
+    gerentes = gerentes,
+    updatedAt = updatedAt
 )
 
 fun EstacionamentoEntity.toDomain(
@@ -139,5 +150,6 @@ fun EstacionamentoEntity.toDomain(
     horarioFuncionamento = horarioFuncionamento,
     reservas = reservas,
     dono = dono,
-    gerentes = gerentes
+    gerentes = gerentes,
+    updatedAt = updatedAt
 )

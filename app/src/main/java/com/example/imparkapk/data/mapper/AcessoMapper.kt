@@ -6,7 +6,9 @@ import com.example.imparkapk.domain.model.Acesso
 import com.example.imparkapk.domain.model.Carro
 import com.example.imparkapk.domain.model.Estacionamento
 
-fun Acesso.toEntity() = AcessoEntity(
+fun Acesso.toEntity(
+    pending: Boolean = false
+) = AcessoEntity(
     id = id,
     estacionamentoId = estacionamento?.id,
     carroId = carro?.id,
@@ -15,10 +17,14 @@ fun Acesso.toEntity() = AcessoEntity(
     horaDeSaida = horaDeSaida,
     horasTotais = horasTotais,
     valorTotal = valorTotal,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
-fun AcessoDto.toEntity() = AcessoEntity(
+fun AcessoDto.toEntity(
+    pending: Boolean = false
+) = AcessoEntity(
     id = id,
     estacionamentoId = estacionamentoId,
     carroId = carroId,
@@ -27,7 +33,9 @@ fun AcessoDto.toEntity() = AcessoEntity(
     horaDeSaida = horaDeSaida,
     horasTotais = horasTotais,
     valorTotal = valorTotal,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
 fun AcessoDto.toDomain(
@@ -42,7 +50,8 @@ fun AcessoDto.toDomain(
     horaDeSaida = horaDeSaida,
     horasTotais = horasTotais,
     valorTotal = valorTotal,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun AcessoEntity.toDomain(
@@ -57,7 +66,8 @@ fun AcessoEntity.toDomain(
     horaDeSaida = horaDeSaida,
     horasTotais = horasTotais,
     valorTotal = valorTotal,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun Acesso.toDto() = AcessoDto(
@@ -69,7 +79,8 @@ fun Acesso.toDto() = AcessoDto(
     horaDeSaida = horaDeSaida,
     horasTotais = horasTotais,
     valorTotal = valorTotal,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun AcessoEntity.toDto() = AcessoDto(
@@ -81,5 +92,6 @@ fun AcessoEntity.toDto() = AcessoDto(
     horaDeSaida = horaDeSaida,
     horasTotais = horasTotais,
     valorTotal = valorTotal,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )

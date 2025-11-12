@@ -13,7 +13,8 @@ fun Avaliacao.toDto() = AvaliacaoDto(
     nota = nota,
     comentario = comentario,
     dataAvaliacao = dataAvaliacao,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun AvaliacaoEntity.toDto() = AvaliacaoDto(
@@ -23,27 +24,36 @@ fun AvaliacaoEntity.toDto() = AvaliacaoDto(
     nota = nota,
     comentario = comentario,
     dataAvaliacao = dataAvaliacao,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
-fun AvaliacaoDto.toEntity() = AvaliacaoEntity(
+fun AvaliacaoDto.toEntity(
+    pending: Boolean = false
+) = AvaliacaoEntity(
     id = id,
     clienteId = clienteId,
     estacionamentoId = estacionamentoId,
     nota = nota,
     comentario = comentario,
     dataAvaliacao = dataAvaliacao,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending,
 )
 
-fun Avaliacao.toEntity() = AvaliacaoEntity(
+fun Avaliacao.toEntity(
+    pending: Boolean = false
+) = AvaliacaoEntity(
     id = id,
     clienteId = cliente?.id,
     estacionamentoId = estacionamento?.id,
     nota = nota,
     comentario = comentario,
     dataAvaliacao = dataAvaliacao,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending,
 )
 
 fun AvaliacaoEntity.toDomain(
@@ -56,7 +66,8 @@ fun AvaliacaoEntity.toDomain(
     nota = nota,
     comentario = comentario,
     dataAvaliacao = dataAvaliacao,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun AvaliacaoDto.toDomain(
@@ -69,5 +80,6 @@ fun AvaliacaoDto.toDomain(
     nota = nota,
     comentario = comentario,
     dataAvaliacao = dataAvaliacao,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )

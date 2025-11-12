@@ -3,6 +3,7 @@ package com.example.imparkapk.data.repository.usuarios
 import android.content.Context
 import com.example.imparkapk.data.local.dao.usuarios.ClienteDao
 import com.example.imparkapk.data.mapper.usuarios.toDomain
+import com.example.imparkapk.data.mapper.usuarios.toEntity
 import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.usuarios.Cliente
@@ -33,4 +34,14 @@ class ClienteRepository @Inject constructor(
     fun observeAll(): Flow<List<Cliente>> = dao.observerAll().map { list -> list.map { it.toDomain() } }
 
     fun observeById(id: Long): Flow<Cliente?> = dao.observeById(id).map { it?.toDomain() }
+
+    suspend fun refresh(): Result<Unit> = runCatching {
+        val remote = api.list()
+        val current = dao.listAll().associateBy { it.id }
+
+        val merged = remote.map { dto ->
+            val old = current[dto.id]
+            if (old.ativo != true) old else dto.toEntity()
+        }
+    }
 }

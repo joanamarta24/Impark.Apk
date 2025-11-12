@@ -9,5 +9,6 @@ data class AvaliacaoDto (
     val nota: Int,
     val comentario: String,
     val dataAvaliacao: Date,
+    val updatedAt: Long,
     val ativo: Boolean
 )

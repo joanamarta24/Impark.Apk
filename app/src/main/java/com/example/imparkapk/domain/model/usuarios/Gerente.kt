@@ -13,5 +13,6 @@ data class Gerente(
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     val estacionamento: Estacionamento?,
+    val updatedAt: Long,
     val ativo: Boolean
 )

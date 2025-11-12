@@ -22,6 +22,7 @@ data class Estacionamento(
     val horarioFuncionamento: String,
     val reservas: List<Reserva>?,
     val dono: Dono?,
+    val updatedAt: Long,
     val gerentes: List<Gerente>?
 )
 

@@ -5,21 +5,29 @@ import com.example.imparkapk.data.remote.dto.CarroDto
 import com.example.imparkapk.domain.model.Carro
 import com.example.imparkapk.domain.model.usuarios.Cliente
 
-fun Carro.toEntity() = CarroEntity(
+fun Carro.toEntity(
+    pending: Boolean = false
+) = CarroEntity(
     id = id,
     usuarioId = cliente?.id,
     modelo = modelo,
     placa = placa,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
 
-fun CarroDto.toEntity() = CarroEntity(
+fun CarroDto.toEntity(
+    pending: Boolean = false
+) = CarroEntity(
     id = id,
     usuarioId = usuarioId,
     modelo = modelo,
     placa = placa,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending,
 )
 
 fun CarroEntity.toDto() = CarroDto(
@@ -27,7 +35,8 @@ fun CarroEntity.toDto() = CarroDto(
     usuarioId = usuarioId,
     modelo = modelo,
     placa = placa,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun Carro.toDto() = CarroDto(
@@ -35,7 +44,8 @@ fun Carro.toDto() = CarroDto(
     usuarioId = cliente?.id,
     modelo = modelo,
     placa = placa,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun CarroEntity.toDomain(
@@ -45,7 +55,8 @@ fun CarroEntity.toDomain(
     cliente = cliente,
     modelo = modelo,
     placa = placa,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun CarroDto.toDomain(
@@ -55,5 +66,6 @@ fun CarroDto.toDomain(
     cliente = cliente,
     modelo = modelo,
     placa = placa,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )

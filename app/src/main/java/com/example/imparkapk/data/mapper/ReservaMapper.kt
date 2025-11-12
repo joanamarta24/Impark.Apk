@@ -17,7 +17,8 @@ fun Reserva.toDto() = ReservaDto(
     horaSaida = horaSaida,
     valorTotal = valorTotal,
     status = status,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun ReservaEntity.toDto() = ReservaDto(
@@ -30,10 +31,13 @@ fun ReservaEntity.toDto() = ReservaDto(
     horaSaida = horaSaida,
     valorTotal = valorTotal,
     status = status,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
-fun Reserva.toEntity() = ReservaEntity(
+fun Reserva.toEntity(
+    pending: Boolean = false
+) = ReservaEntity(
     id = id,
     usuarioId = cliente?.id,
     carroId = carro?.id,
@@ -43,10 +47,14 @@ fun Reserva.toEntity() = ReservaEntity(
     horaSaida = horaSaida,
     valorTotal = valorTotal,
     status = status,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending,
 )
 
-fun ReservaDto.toEntity() = ReservaEntity(
+fun ReservaDto.toEntity(
+    pending: Boolean = false
+) = ReservaEntity(
     id = id,
     usuarioId = usuarioId,
     carroId = carroId,
@@ -56,7 +64,9 @@ fun ReservaDto.toEntity() = ReservaEntity(
     horaSaida = horaSaida,
     valorTotal = valorTotal,
     status = status,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt,
+    pendingSync = pending
 )
 
 fun ReservaDto.toDomain(
@@ -73,7 +83,8 @@ fun ReservaDto.toDomain(
     horaSaida = horaSaida,
     valorTotal = valorTotal,
     status = status,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )
 
 fun ReservaEntity.toDomain(
@@ -90,5 +101,6 @@ fun ReservaEntity.toDomain(
     horaSaida = horaSaida,
     valorTotal = valorTotal,
     status = status,
-    ativo = ativo
+    ativo = ativo,
+    updatedAt = updatedAt
 )

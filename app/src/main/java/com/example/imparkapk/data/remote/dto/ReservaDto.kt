@@ -13,5 +13,6 @@ data class ReservaDto(
     val horaSaida: Time,
     val valorTotal: Double,
     val status: String,
+    val updatedAt: Long,
     val ativo: Boolean = true
 )

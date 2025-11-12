@@ -14,5 +14,6 @@ data class ClienteDto(
     val carros: List<Long> = listOf(),
     val avaliacoes: List<Long> = listOf(),
     val reservas: List<Long> = listOf(),
+    val updatedAt: Long,
     val ativo: Boolean
 )

@@ -18,5 +18,6 @@ data class Cliente (
     val carros: List<Carro>?,
     val avaliacoes: List<Avaliacao>?,
     val reservas: List<Reserva>?,
+    val updatedAt: Long,
     val ativo: Boolean
 )

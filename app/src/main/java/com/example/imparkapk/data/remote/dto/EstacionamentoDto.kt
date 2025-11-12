@@ -20,5 +20,6 @@ data class EstacionamentoDto(
     val horarioFuncionamento: String,
     val reservasId: List<Long>?,
     val donoId: Long?,
+    val updatedAt: Long,
     val gerentesId: List<Long>?
 )

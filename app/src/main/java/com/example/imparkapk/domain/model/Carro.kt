@@ -7,5 +7,6 @@ data class Carro(
     val cliente: Cliente?,
     val modelo: String,
     val placa: String,
+    val updatedAt: Long,
     val ativo: Boolean = true
 )

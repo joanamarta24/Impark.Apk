@@ -84,5 +84,17 @@ data class EstacionamentoEntity(
     val donoId: Long?,
 
     @ColumnInfo(name = "gerentes")
-    val gerentesId: List<Long>?
+    val gerentesId: List<Long>?,
+
+    @ColumnInfo(name = "updated_at")
+    val updatedAt: Long,
+
+    @ColumnInfo(name = "pending_sync")
+    val pendingSync: Boolean,
+
+    @ColumnInfo(name = "local_only")
+    val localOnly: Boolean = false,
+
+    @ColumnInfo(name = "operation_type")
+    val operationType: String? = null
 )
