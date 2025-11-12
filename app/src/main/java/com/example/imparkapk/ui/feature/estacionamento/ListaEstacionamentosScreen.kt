@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.imparkapk.domain.model.Estacionamento
 import com.example.imparkapk.domain.model.StatusVagas
-import com.example.imparkapk.data.local.ui.viewmodel.EstacionamentoViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)

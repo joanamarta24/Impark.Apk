@@ -78,11 +78,11 @@ data class EstacionamentoEntity(
     val horarioFuncionamento: String,
 
     @ColumnInfo(name = "reservas")
-    val reservas: List<String>,
+    val reservasId: List<Long>?,
 
     @ColumnInfo(name = "dono")
-    val dono: String,
+    val donoId: Long?,
 
     @ColumnInfo(name = "gerentes")
-    val gerentes: List<String>
+    val gerentesId: List<Long>?
 )
