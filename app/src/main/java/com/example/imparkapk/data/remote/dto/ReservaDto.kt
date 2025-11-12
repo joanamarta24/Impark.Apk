@@ -5,9 +5,9 @@ import java.util.Date
 
 data class ReservaDto(
     val id: Long,
-    val usuarioId: String,
-    val carroId: String,
-    val estacionamentoId: String,
+    val usuarioId: Long?,
+    val carroId: Long?,
+    val estacionamentoId: Long?,
     val dataReserva: Date,
     val horaEntrada: Time,
     val horaSaida: Time,

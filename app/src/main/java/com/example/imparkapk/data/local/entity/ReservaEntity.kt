@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
+import java.sql.Time
 import java.util.Date
 
 @Entity(
@@ -35,22 +36,22 @@ data class ReservaEntity(
     val id: Long,
 
     @ColumnInfo(name = "usuario_id")
-    val usuarioId: String,
+    val usuarioId: Long?,
 
     @ColumnInfo(name = "carro_id")
-    val carroId: String,
+    val carroId: Long?,
 
     @ColumnInfo(name = "estacionamento_id")
-    val estacionamentoId: String,
+    val estacionamentoId: Long?,
 
     @ColumnInfo(name = "data_reserva")
     val dataReserva: Date,
 
     @ColumnInfo(name = "hora_entrada")
-    val horaEntrada: String, // "14:30"
+    val horaEntrada: Time, // "14:30"
 
     @ColumnInfo(name = "hora_saida")
-    val horaSaida: String, // "16:30"
+    val horaSaida: Time, // "16:30"
 
     @ColumnInfo(name = "valor_total")
     val valorTotal: Double,
