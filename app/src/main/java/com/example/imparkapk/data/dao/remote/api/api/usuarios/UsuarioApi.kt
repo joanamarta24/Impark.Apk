@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.remote.api.api
+package com.example.imparkapk.data.dao.remote.api.api.usuarios
 
 import com.example.imparkapk.data.dao.remote.api.response.UsuarioResponse
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest

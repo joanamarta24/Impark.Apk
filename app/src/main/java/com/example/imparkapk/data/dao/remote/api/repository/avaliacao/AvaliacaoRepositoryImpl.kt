@@ -1,6 +1,6 @@
 package com.example.imparkapk.data.dao.remote.api.repository.avaliacao
 
-import com.example.imparkapk.data.dao.dao.AvaliacaoDao
+import com.example.imparkapk.data.dao.local.dao.dao.AvaliacaoDao
 import com.example.imparkapk.data.dao.model.Avaliacao
 import com.example.imparkapk.data.dao.remote.api.api.AvaliacaoApi
 import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository

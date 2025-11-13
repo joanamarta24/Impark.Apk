@@ -1,4 +1,4 @@
-package com.example.imparkapk.data
+package com.example.imparkapk.data.dao.local.dao.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

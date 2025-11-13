@@ -1,9 +1,9 @@
 package com.example.imparkapk.data.dao.remote.api.repository.gerente
 
 import android.util.Log.e
-import com.example.imparkapk.data.dao.dao.GerenteDao
+import com.example.imparkapk.data.dao.local.dao.dao.GerenteDao
 import com.example.imparkapk.data.dao.model.Gerente
-import com.example.imparkapk.data.dao.remote.api.api.GerenteApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import kotlinx.coroutines.delay
 import java.util.UUID
 import javax.inject.Inject

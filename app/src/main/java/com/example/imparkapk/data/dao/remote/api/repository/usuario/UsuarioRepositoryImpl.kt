@@ -1,8 +1,8 @@
 package com.example.imparkapk.data.dao.remote.api.repository.usuario
 
-import com.example.imparkapk.data.UsuarioDao
+import com.example.imparkapk.data.dao.local.dao.dao.UsuarioDao
 import com.example.imparkapk.data.dao.entity.UsuarioEntity
-import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest
 import com.example.imparktcc.model.Usuario
 import kotlinx.coroutines.delay

@@ -1,11 +1,10 @@
 package com.example.imparkapk.data.dao.remote.api.repository.reserva
 
-import com.example.imparkapk.data.ReservaDao
+import com.example.imparkapk.data.dao.local.dao.dao.ReservaDao
 import com.example.imparkapk.data.dao.model.Reserva
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import kotlinx.coroutines.delay
-import okhttp3.internal.notify
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID

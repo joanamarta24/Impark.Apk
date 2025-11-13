@@ -3,7 +3,7 @@ package com.example.imparktcc.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.UiState.LoginUiState
-import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import com.example.imparkapk.data.dao.remote.api.repository.usuario.UsuarioRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel

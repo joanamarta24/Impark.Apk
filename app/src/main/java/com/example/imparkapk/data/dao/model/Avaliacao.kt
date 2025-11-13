@@ -3,7 +3,7 @@ package com.example.imparkapk.data.dao.model
 import java.util.Date
 
 data class Avaliacao(
-    val id: String = "",
+    val id: Long ,
     val usuarioId: String = "",
     val estacionamentoId: String = "",
     val nota: Int = 5, // 1-5

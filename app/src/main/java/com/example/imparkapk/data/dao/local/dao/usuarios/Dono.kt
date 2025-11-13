@@ -1,10 +1,10 @@
-package com.example.imparkapk.data.dao.model.usuarios
+package com.example.imparkapk.data.dao.local.dao.usuarios
 
 import com.example.imparkapk.data.dao.model.Estacionamento
 import com.example.imparkapk.data.dao.model.enus.TipoDeUsuario
 import java.util.Date
 
-data class Gerente(
+data class Dono(
     val id: Long,
     val nome: String,
     val email: String,
@@ -12,6 +12,6 @@ data class Gerente(
     val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
-    val estacionamento: Estacionamento?,
+    val estacionamentos: List<Estacionamento>?,
     val ativo: Boolean
 )

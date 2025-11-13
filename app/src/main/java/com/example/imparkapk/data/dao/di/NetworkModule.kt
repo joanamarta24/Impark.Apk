@@ -3,9 +3,9 @@ package com.example.imparkapk.data.dao.di
 import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.dao.remote.api.api.CarroApi
 import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
-import com.example.imparkapk.data.dao.remote.api.api.GerenteApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
-import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import com.google.firebase.BuildConfig
 import dagger.Module
 import dagger.Provides

@@ -6,10 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.imparkapk.data.dao.converters.DateConverter
-import com.example.imparkapk.data.dao.dao.AvaliacaoDao
-import com.example.imparkapk.data.dao.dao.CarroDao
-import com.example.imparkapk.data.dao.dao.EstacionamentoDao
-import com.example.imparkapk.data.dao.dao.GerenteDao
+import com.example.imparkapk.data.dao.local.dao.dao.AvaliacaoDao
+import com.example.imparkapk.data.dao.local.dao.dao.CarroDao
+import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
+import com.example.imparkapk.data.dao.local.dao.dao.GerenteDao
 import com.example.imparkapk.data.dao.dao.UsuarioDao
 import com.example.imparkapk.data.dao.entity.AvaliacaoEntity
 import com.example.imparkapk.data.dao.entity.CarroEntity

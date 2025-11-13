@@ -1,6 +1,6 @@
 import android.content.Context
 import androidx.browser.trusted.TokenStore
-import com.example.imparkapk.data.dao.remote.api.api.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.remote.AuthApiService
 import com.example.imparkapk.data.remote.RefreshRequest

@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.model.usuarios
+package com.example.imparkapk.data.dao.local.dao.usuarios
 
 import com.example.imparkapk.data.dao.model.Avaliacao
 import com.example.imparkapk.data.dao.model.Reserva
