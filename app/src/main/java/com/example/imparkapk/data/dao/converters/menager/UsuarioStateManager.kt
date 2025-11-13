@@ -1,5 +1,6 @@
 package com.example.imparkapk.data.dao.converters.menager
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.example.imparkapk.UiState.UsuarioUiState
@@ -8,21 +9,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.emptyList
 
-@Singleton
-class UsuarioStateManager @Inject constructor(){
-    private val _uiState = mutableStateOf(UsuarioUiState())
-    val uiState: State<UsuarioUiState> = _uiState
+class UsuarioStateManager (private val context: Context){
+    companion object{
+        private const val PREFS_NAME ="UserStatePrefs"
+        private const val KEY_USER_TYPE ="user_type"
+        private const val KEY_USER_DATA = "user_data"
+        private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_ACCESS_TOKEN = "access_token"
+        private const val KEY_REFRESH_TOKEN = "refresh_token"
+        private const val KEY_LAST_LOGIN = "last_login"
 
-    fun updateField(campo: String, valor: String, usuarios: List<Usuario> = emptyList()) {
-        // Implementação do gerenciamento de estado
+        //TIPOS DE USUÁRIO
     }
-
-    fun setLoading(loading: Boolean) {
-        _uiState.value = _uiState.value.copy(isLoading = loading)
-    }
-
-    fun setMensagemErro(mensagem: String) {
-        _uiState.value = _uiState.value.copy(mensagemErro = mensagem)
-    }
-
 }
