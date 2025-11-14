@@ -328,5 +328,3 @@ private fun ScrollBoxesSmooth() {
         }
     }
 }
-@Preview(showBackground = true)
-@Composable

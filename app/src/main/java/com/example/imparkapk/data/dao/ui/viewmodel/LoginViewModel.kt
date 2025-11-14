@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.UiState.LoginUiState
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import com.example.imparkapk.data.dao.remote.api.repository.usuario.ClienteRepository
+import com.example.imparkapk.data.dao.remote.api.request.LoginRequest
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,6 +73,7 @@ class LoginViewModel @Inject constructor(
                     }
                 }
             }
+        }
     }
 
 

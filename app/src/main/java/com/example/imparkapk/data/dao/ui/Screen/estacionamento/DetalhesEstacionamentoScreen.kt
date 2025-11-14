@@ -102,5 +102,5 @@ fun DetalhesEstacionamentoScreen(
                     .verticalScroll(rememberScrollState())
             )
         }
-
     }
+}
