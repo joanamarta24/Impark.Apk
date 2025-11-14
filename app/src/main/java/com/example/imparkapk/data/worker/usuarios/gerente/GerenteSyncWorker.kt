@@ -1,26 +1,24 @@
-package com.example.imparkapk.data.worker.estacionamento
+package com.example.imparkapk.data.worker.usuarios.gerente
 
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.ClienteRepository
-import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.EstacionamentoRepository
+import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.GerenteRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class EstacionamentoSyncWorker @AssistedInject constructor(
+class GerenteSyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: EstacionamentoRepository
+    private val repository: GerenteRepository
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         Log.i("UsuarioSyncWorker", "Executando sincronização...")
         return try {
-            repository.sincronizarUsuarios()
 
             Log.i("UsuarioSyncWorker", "Sincronização concluída com sucesso.")
             Result.success()
@@ -30,4 +28,5 @@ class EstacionamentoSyncWorker @AssistedInject constructor(
         }
 
     }
+
 }

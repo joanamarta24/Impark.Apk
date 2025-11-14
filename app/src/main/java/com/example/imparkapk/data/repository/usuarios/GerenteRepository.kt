@@ -1,32 +1,12 @@
 package com.rafaelcosta.modelo_app_crud_usuario_api.data.repository
 
-import android.content.ContentResolver
 import android.content.Context
-import android.net.Uri
-import android.util.Log
 import com.example.imparkapk.data.local.dao.usuarios.GerenteDao
-import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
-import com.example.imparkapk.data.mapper.usuarios.toDomain
-import com.example.imparkapk.data.mapper.usuarios.toEntity
 import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
-import com.example.imparkapk.data.worker.gerente.GerenteSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
-import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
-import com.example.imparkapk.domain.model.usuarios.Gerente
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 

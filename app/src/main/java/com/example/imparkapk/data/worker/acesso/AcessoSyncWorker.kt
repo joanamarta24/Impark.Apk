@@ -1,19 +1,20 @@
-package com.example.imparkapk.data.worker.dono
+package com.example.imparkapk.data.worker.acesso
 
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.imparkapk.data.repository.usuarios.DonoRepository
+import com.example.imparkapk.data.repository.AcessoRepository
+import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.CarroRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class DonoSyncWorker @AssistedInject constructor(
+class AcessoSyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: DonoRepository
+    private val repository: AcessoRepository
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -27,6 +28,5 @@ class DonoSyncWorker @AssistedInject constructor(
             Log.e("UsuarioSyncWorker", "Erro na sincronização", e)
             Result.retry()
         }
-
     }
 }

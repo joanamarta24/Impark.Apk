@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.worker.estacionamento
+package com.example.imparkapk.data.worker.usuarios.cliente
 
 import android.content.Context
 import android.util.Log
@@ -6,15 +6,14 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.ClienteRepository
-import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.EstacionamentoRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class EstacionamentoSyncWorker @AssistedInject constructor(
+class ClienteSyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: EstacionamentoRepository
+    private val repository: ClienteRepository
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -30,4 +29,5 @@ class EstacionamentoSyncWorker @AssistedInject constructor(
         }
 
     }
+
 }

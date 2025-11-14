@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.worker.cliente
+package com.example.imparkapk.data.worker.usuarios.gerente
 
 import android.content.Context
 import androidx.work.Constraints
@@ -6,9 +6,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 
-object ClienteSyncScheduler {
+object GerenteSyncScheduler {
     fun enqueueNow(context: Context) {
-        val req = OneTimeWorkRequestBuilder<ClienteSyncWorker>()
+        val req = OneTimeWorkRequestBuilder<GerenteSyncWorker>()
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)

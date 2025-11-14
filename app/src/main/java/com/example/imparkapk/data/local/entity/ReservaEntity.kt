@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
+import com.example.imparkapk.domain.model.enuns.StatusDeReserva
 import java.sql.Time
 import java.util.Date
 
@@ -57,7 +58,7 @@ data class ReservaEntity(
     val valorTotal: Double,
 
     @ColumnInfo(name = "status")
-    val status: String,
+    val status: StatusDeReserva,
 
     @ColumnInfo(name = "ativo")
     val ativo: Boolean = true,

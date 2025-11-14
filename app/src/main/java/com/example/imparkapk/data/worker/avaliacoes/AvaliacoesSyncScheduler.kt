@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.worker.dono
+package com.example.imparkapk.data.worker.avaliacoes
 
 import android.content.Context
 import androidx.work.Constraints
@@ -6,9 +6,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 
-object DonoSyncScheduler {
+object AvaliacoesSyncScheduler {
     fun enqueueNow(context: Context) {
-        val req = OneTimeWorkRequestBuilder<DonoSyncWorker>()
+        val req = OneTimeWorkRequestBuilder<AvaliacoesSyncWorker>()
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)

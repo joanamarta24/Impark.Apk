@@ -11,7 +11,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.imparkapk.data.mapper.usuarios.toDomain
 import com.example.imparkapk.data.mapper.usuarios.toEntity
-import com.example.imparkapk.data.worker.dono.DonoSyncScheduler
+import com.example.imparkapk.data.worker.usuarios.dono.DonoSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
 import com.google.gson.Gson

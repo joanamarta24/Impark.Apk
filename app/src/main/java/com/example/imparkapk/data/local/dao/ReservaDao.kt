@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.imparkapk.data.local.entity.ReservaEntity
+import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,8 +23,14 @@ interface ReservaDao {
     @Query("SELECT * FROM reserva WHERE id = :id")
     suspend fun getById(id: Long): ReservaEntity
 
+    @Query("SELECT * FROM reserva WHERE pending_sync = 1")
+    suspend fun getByPending(): List<ReservaEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(reserva: ReservaEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(reserva: List<ReservaEntity>)
 
     @Delete
     suspend fun delete(reserva: ReservaEntity)
