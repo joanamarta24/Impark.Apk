@@ -23,19 +23,20 @@ import com.example.imparkapk.theme.ImparkApkTheme
 
 @Composable
 fun HomeScreen(
-    // A navegação continua sendo responsabilidade de quem chama a tela
     onGoToReservas: () -> Unit,
     onGoToProfile: () -> Unit,
     onGoToLogin: () -> Unit,
     onGoToSearch: () -> Unit,
-    // O ViewModel agora é o provedor do estado
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    // Coleta o estado da UI a partir do ViewModel
     val uiState by viewModel.uiState.collectAsState()
+
+    // A UI agora pode chamar a sincronização diretamente.
+    val onRefresh = { viewModel.sincronizarDadosComApi() }
 
     HomeScreenContent(
         uiState = uiState,
+        onRefresh = onRefresh, // Passa a função de atualização para o conteúdo da UI
         onGoToReservas = onGoToReservas,
         onGoToProfile = onGoToProfile,
         onGoToLogin = onGoToLogin,
@@ -43,17 +44,21 @@ fun HomeScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
-    // Recebe o estado pronto para ser desenhado
     uiState: HomeUiState,
+    onRefresh: () -> Unit,
     onGoToReservas: () -> Unit,
     onGoToProfile: () -> Unit,
     onGoToLogin: () -> Unit,
     onGoToSearch: () -> Unit,
 ) {
     var menuAberto by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.isLoading,
+        onRefresh = onRefresh
+    )
 
     Scaffold(
         topBar = {
@@ -103,65 +108,72 @@ private fun HomeScreenContent(
             )
         }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .pullRefresh(pullRefreshState) // Aplica o modificador pullRefresh
         ) {
-            if (uiState.isLoading) {
-                // Mostra um indicador de progresso enquanto os dados carregam
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else if (uiState.errorMessage != null) {
-                // Mostra uma mensagem de erro se algo falhar
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // A lógica de if/else para isLoading/errorMessage/Conteúdo foi movida para dentro da Column
+                if (uiState.isLoading && uiState.estacionamentos.isEmpty()) {
+                    // Mostra um spinner centralizado apenas se a lista estiver vazia e carregando
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else if (uiState.errorMessage != null && uiState.estacionamentos.isEmpty()) {
+                    // Mostra o erro apenas se a lista estiver vazia
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = uiState.errorMessage,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(onClick = onRefresh) {
+                                Text("Tentar Novamente")
+                            }
+                        }
+                    }
+                } else {
+                    // Mostra a lista de estacionamentos (mesmo que um refresh esteja acontecendo em segundo plano)
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = uiState.errorMessage,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge
+                        text = "Estacionamentos Próximos",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
                     )
-                }
-            } else {
-                // Mostra o conteúdo principal se tudo estiver certo
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "Estacionamentos Próximos",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp)
+                    ) {
+                        items(uiState.estacionamentos) { estacionamento ->
+                            EstacionamentoCard(estacionamento = estacionamento)
+                        }
+                    }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
-                ) {
-                    // Usa a lista de estacionamentos do uiState
-                    items(uiState.estacionamentos) { estacionamento ->
-                        EstacionamentoCard(estacionamento = estacionamento)
+                    Button(
+                        onClick = onGoToSearch,
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    ) {
+                        Text("Ver todos os estacionamentos")
                     }
                 }
-
-                Button(
-                    onClick = onGoToSearch,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Ver todos os estacionamentos")
-                }
             }
+
+            // Indicador do PullToRefresh, fica centralizado no topo
+            PullRefreshIndicator(
+                refreshing = uiState.isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
@@ -215,7 +227,8 @@ fun HomeScreenPreview() {
             onGoToReservas = {},
             onGoToProfile = {},
             onGoToLogin = {},
-            onGoToSearch = {}
+            onGoToSearch = {},
+            onRefresh = {}
         )
     }
 }
