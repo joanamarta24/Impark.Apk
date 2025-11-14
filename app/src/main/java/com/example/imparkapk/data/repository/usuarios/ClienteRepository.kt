@@ -1,45 +1,71 @@
-package com.example.imparkapk.data.repository.usuarios
+package com.rafaelcosta.modelo_app_crud_usuario_api.data.repository
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import com.example.imparkapk.data.local.dao.usuarios.ClienteDao
 import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import com.example.imparkapk.data.mapper.usuarios.toDomain
 import com.example.imparkapk.data.mapper.usuarios.toEntity
 import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
-import com.example.imparkapk.data.worker.ClienteSyncScheduler
+import com.example.imparkapk.data.worker.cliente.ClienteSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
-import com.example.imparkapk.domain.model.usuarios.Cliente
 import com.google.gson.Gson
+import com.example.imparkapk.domain.model.usuarios.Cliente
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.text.get
 
 @Singleton
 class ClienteRepository @Inject constructor(
-    val dao: ClienteDao,
-    val api: ClienteApi,
+    private val api: ClienteApi,
+    private val dao: ClienteDao,
     @IoDispatcher private val io: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val gson: Gson
-){
+) {
+
     private val jsonMedia = "application/json".toMediaType()
 
-    private fun partJasonData(dados: Any): RequestBody =
+    private fun partJsonDados(dados: Any): RequestBody =
         gson.toJson(dados).toRequestBody(jsonMedia)
 
-    fun observeAll(): Flow<List<Cliente>> = dao.observerAll().map { list -> list.map { it.toDomain() } }
+    private fun partFromUri(fieldName: String, uri: Uri?): MultipartBody.Part? {
+        if (uri == null) return null
+        val cr: ContentResolver = context.contentResolver
+        val type = cr.getType(uri) ?: "application/octet-stream"
+        val fileName = uri.lastPathSegment?.substringAfterLast('/') ?: "arquivo"
+        val input = cr.openInputStream(uri) ?: return null
+        val tmp = File.createTempFile("up_", "_tmp", context.cacheDir)
+        tmp.outputStream().use { out -> input.copyTo(out) }
+        val body = tmp.asRequestBody(type.toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(fieldName, fileName, body)
+    }
 
-    fun observeById(id: Long): Flow<Cliente?> = dao.observeById(id).map { it?.toDomain() }
+    private fun partsFromUris(uris: List<Uri>?): List<MultipartBody.Part>? {
+        if (uris.isNullOrEmpty()) return null
+        return uris.mapNotNull { partFromUri("anexos", it) }
+    }
+
+    fun observeUsuarios(): Flow<List<Cliente>> =
+        dao.observerAll().map { list -> list.map { it.toDomain() } }
+
+    fun observeUsuario(id: Long): Flow<Cliente?> =
+        dao.observeById(id).map { it?.toDomain() }
 
     suspend fun refresh(): Result<Unit> = runCatching {
         val remote = api.list()
@@ -57,38 +83,44 @@ class ClienteRepository @Inject constructor(
         toDelete.forEach { dao.deleteById(it.id) }
     }
 
+
     suspend fun create(
         nome: String,
         email: String,
         senha: String,
         telefone: String,
-        dataNascimento: Date,
-    ) : Cliente {
+        nascimento: Date,
+        tipoDeUsuario: TipoDeUsuario,
+        carros: List<Long>,
+        avaliacoes: List<Long>,
+        reservas: List<Long>
+    ): Cliente {
         return withContext(io) {
+
             val tempId = System.currentTimeMillis()
-            val localCliente = ClienteEntity(
-                nome = nome,
+            val localUsuario = ClienteEntity(
                 id = tempId,
+                nome = nome,
                 email = email,
                 senha = senha,
-                telefone = telefone,
-                dataNascimento = dataNascimento,
-                tipoUsuario = TipoDeUsuario.CLIENTE,
-                carros = emptyList(),
-                avaliacoes = emptyList(),
-                reservas = emptyList(),
-                ativo = true,
                 updatedAt = System.currentTimeMillis(),
                 pendingSync = true,
                 localOnly = true,
-                operationType = "CREATE"
+                ativo = false,
+                operationType = "CREATE",
+                telefone = telefone,
+                dataNascimento = nascimento,
+                tipoUsuario = tipoDeUsuario,
+                carros = carros,
+                avaliacoes = avaliacoes,
+                reservas = reservas
             )
 
-            dao.upsert(localCliente)
+            dao.upsert(localUsuario)
 
             ClienteSyncScheduler.enqueueNow(context)
 
-            localCliente.toDomain()
+            localUsuario.toDomain()
         }
     }
 
@@ -96,27 +128,21 @@ class ClienteRepository @Inject constructor(
         id: Long,
         nome: String,
         email: String,
-        senha: String,
-        telefone: String,
-        dataNascimento: Date,
-    ) : Cliente {
+        cpf: String,
+        senha: String?,
+        fotoUri: Uri?,
+        anexosUris: List<Uri>?
+    ): Cliente {
         return withContext(io) {
-            val local = dao.getById(id) ?: throw IllegalArgumentException("Cliente não encontrado")
+            val local = dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")
             val updated = local.copy(
                 nome = nome,
-                id = id,
                 email = email,
-                senha = senha,
-                telefone = telefone,
-                dataNascimento = dataNascimento,
-                tipoUsuario = TipoDeUsuario.CLIENTE,
-                carros = emptyList(),
-                avaliacoes = emptyList(),
-                reservas = emptyList(),
-                ativo = true,
+                senha = senha ?: local.senha,
                 updatedAt = System.currentTimeMillis(),
                 pendingSync = true,
-                localOnly = true,
+                localOnly = local.localOnly,
+                ativo = false,
                 operationType = "UPDATE"
             )
 
@@ -126,11 +152,12 @@ class ClienteRepository @Inject constructor(
         }
     }
 
+
     suspend fun delete(id: Long): Result<Unit> = runCatching {
         val local = dao.getById(id) ?: return@runCatching
         dao.upsert(
             local.copy(
-                ativo = false,
+                ativo = true,
                 pendingSync = true,
                 updatedAt = System.currentTimeMillis(),
                 operationType = "DELETE"
@@ -139,66 +166,169 @@ class ClienteRepository @Inject constructor(
         ClienteSyncScheduler.enqueueNow(context)
     }
 
-    suspend fun sincronizarClientes() {
+    suspend fun sincronizarUsuarios() {
         val pendentes = dao.getByPending()
 
-        pendentes.filter { it.operationType == "DELETE" && it.ativo }.forEach {
-            u ->
+        pendentes.filter { it.operationType == "DELETE" }.forEach { u ->
             try {
                 runCatching { api.delete(u.id) }
                 dao.deleteById(u.id)
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+            }
         }
 
-        pendentes.filter { it.operationType == "CREATE" && it.ativo }.forEach {
-            u ->
+        pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
             try {
-                val dados = mapOf(
-                    "nome" to u.nome,
-                    "email" to u.email,
-                    "senha" to u.senha,
-                    "telefone" to u.telefone,
-                    "dataNascimento" to u.dataNascimento,
-                    "carros" to u.carros,
-                    "avaliacoes" to u.avaliacoes,
-                    "reservas" to u.reservas
+                val dados = mapOf("nome" to u.nome, "email" to u.email, "senha" to u.senha)
+                val resp = api.create(
+                    dadosJson = partJsonDados(dados),
                 )
-                val resp = api.create(dadosJson = partJasonData(dados))
                 dao.deleteById(u.id)
                 dao.upsert(resp.toEntity(pending = false))
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
         }
 
-        pendentes.filter { it.operationType == "UPDATE" && it.ativo }.forEach {
-            u ->
+        pendentes.filter { it.operationType == "UPDATE" && !it.ativo }.forEach { u ->
             try {
                 val dados = buildMap<String, Any> {
                     put("nome", u.nome)
-                    put("nome", u.nome)
                     put("email", u.email)
-                    put("senha", u.senha)
-                    put("telefone", u.telefone)
-                    put("dataNascimento", u.dataNascimento)
-                    put("carros", u.carros)
-                    put("avaliacoes", u.avaliacoes)
-                    put("reservas", u.reservas)
+                    u.senha?.takeIf { it.isNotBlank() }?.let { put("senha", it) }
                 }
 
                 val resp = api.update(
-                    u.id,
-                    partJasonData(dados)
+                    id = u.id,
+                    dadosJson = partJsonDados(dados)
                 )
 
                 dao.upsert(
                     resp.toEntity(
-                        false,
+                        pending = false
                     ).copy(
                         updatedAt = System.currentTimeMillis(),
-
+                        pendingSync = false,
+                        localOnly = false,
+                        operationType = null
                     )
                 )
 
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+                Log.w("UsuarioRepository", "Falha ao sincronizar UPDATE ${u.id}: ${e.message}")
+            }
+        }
+
+        try {
+            val listaApi = api.list()
+            val atuais = dao.listAll().associateBy { it.id }
+
+            val remotos = listaApi.map { dto ->
+                val antigo = atuais[dto.id]
+
+                // 1️⃣ se foi deletado localmente, não ressuscita
+                if (antigo?.ativo == true) return@map antigo
+
+                val remoto = dto.toEntity(pending = false)
+
+                // 2️⃣ se o local tem pendingSync, ele é mais novo → mantém local
+                if (antigo?.pendingSync == true) return@map antigo
+
+                // 3️⃣ se o local tem updatedAt mais recente, mantém local
+                if (antigo != null && antigo.updatedAt > remoto.updatedAt) return@map antigo
+
+                // 4️⃣ caso contrário, aceita o remoto (API)
+                remoto
+            }
+
+            dao.upsertAll(remotos)
+
+            val idsRemotos = remotos.map { it.id }.toSet()
+            val locais = dao.listAll()
+            locais.filter { local ->
+                local.id !in idsRemotos && !local.pendingSync && !local.localOnly
+            }.forEach { dao.deleteById(it.id) }
+
+        } catch (e: Exception) {
+            Log.w("UsuarioRepository", "Sem conexão no pull: ${e.message}")
         }
     }
+
+    @Suppress("unused")
+    suspend fun syncAll(): Result<Unit> = runCatching {
+        val pendentes = dao.getByPending()
+
+        for (e in pendentes) {
+            try {
+                if (e.localOnly) {
+                    val dados = mapOf(
+                        "nome" to e.nome,
+                        "email" to e.email,
+                        "senha" to e.senha
+                    )
+                    val resp = api.create(
+                        dadosJson = partJsonDados(dados),
+                    )
+                    dao.deleteById(e.id)
+                    dao.upsert(resp.toEntity(pending = false))
+                } else {
+                    val dados = buildMap<String, Any> {
+                        put("nome", e.nome)
+                        put("email", e.email)
+                        e.senha?.let { put("senha", it) }
+                    }
+                    val resp = api.update(
+                        id = e.id,
+                        dadosJson = partJsonDados(dados)
+                    )
+                    dao.upsert(resp.toEntity(pending = false))
+                }
+            } catch (_: Exception) {
+            }
+        }
+        refresh()
+    }
+
+    @Suppress("unused")
+    private suspend fun tryPushOne(id: Long) {
+        val e = dao.getById(id) ?: return
+
+        val dados = buildMap<String, Any> {
+            put("nome", e.nome)
+            put("email", e.email)
+            e.senha?.takeIf { it.isNotBlank() }?.let { put("senha", it) }
+        }
+
+
+        val pushed = if (existsRemote(id)) {
+            api.update(
+                id = id,
+                dadosJson = partJsonDados(dados)
+            )
+        } else {
+            api.create(
+                dadosJson = partJsonDados(dados)
+            )
+        }
+
+        dao.upsert(pushed.toEntity(pending = false).copy(senha = null))
+    }
+
+    private suspend fun existsRemote(id: Long): Boolean = runCatching {
+        api.getById(id); true
+    }.getOrDefault(false)
+
+    private fun saveLocalCopy(uri: Uri?): String? {
+        if (uri == null) return null
+        return try {
+            val cr = context.contentResolver
+            val input = cr.openInputStream(uri) ?: return null
+            val fotosDir = File(context.filesDir, "fotos").apply { mkdirs() }
+            val destFile = File(fotosDir, "foto_${System.currentTimeMillis()}.jpg")
+            input.use { src -> destFile.outputStream().use { dst -> src.copyTo(dst) } }
+            destFile.absolutePath
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }

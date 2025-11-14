@@ -4,6 +4,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -23,6 +24,10 @@ interface DonoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(dono: DonoEntity)
+    @Query("SELECT * FROM dono WHERE pending_sync = 1")
+    suspend fun getByPending(): List<DonoEntity>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(dono: List<DonoEntity>)
 
     @Delete
     suspend fun delete(dono: DonoEntity)

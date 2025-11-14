@@ -1,18 +1,19 @@
-package com.rafaelcosta.modelo_app_crud_usuario_api.data.repository
+package com.example.imparkapk.data.repository.usuarios
+
+import com.example.imparkapk.data.local.dao.usuarios.DonoDao
+import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
+import com.example.imparkapk.data.remote.api.api.usuarios.DonoApi
+import com.example.imparkapk.domain.model.usuarios.Dono
 
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.example.imparkapk.data.local.dao.usuarios.GerenteDao
-import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
 import com.example.imparkapk.data.mapper.usuarios.toDomain
 import com.example.imparkapk.data.mapper.usuarios.toEntity
-import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
-import com.example.imparkapk.data.worker.gerente.GerenteSyncScheduler
+import com.example.imparkapk.data.worker.dono.DonoSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
-import com.example.imparkapk.domain.model.usuarios.Gerente
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -31,14 +32,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GerenteRepository @Inject constructor(
-    private val api: GerenteApi,
-    private val dao: GerenteDao,
+class DonoRepository @Inject constructor(
+    private val api: DonoApi,
+    private val dao: DonoDao,
     @IoDispatcher private val io: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val gson: Gson
 ) {
-/*
+
     private val jsonMedia = "application/json".toMediaType()
 
     private fun partJsonDados(dados: Any): RequestBody =
@@ -61,15 +62,11 @@ class GerenteRepository @Inject constructor(
         return uris.mapNotNull { partFromUri("anexos", it) }
     }
 
-    fun observeUsuarios(): Flow<List<Gerente>> =
-        dao.observerAll().map { list -> list.map { it.toDomain(
-            estacionamento = TODO()
-        ) } }
+    fun observeUsuarios(): Flow<List<Dono>> =
+        dao.observerAll().map { list -> list.map { it.toDomain() } }
 
-    fun observeUsuario(id: Long): Flow<Gerente?> =
-        dao.observeById(id).map { it?.toDomain(
-            estacionamento = TODO()
-        ) }
+    fun observeUsuario(id: Long): Flow<Dono?> =
+        dao.observeById(id).map { it?.toDomain() }
 
     suspend fun refresh(): Result<Unit> = runCatching {
         val remote = api.list()
@@ -95,12 +92,12 @@ class GerenteRepository @Inject constructor(
         telefone: String,
         nascimento: Date,
         tipoDeUsuario: TipoDeUsuario,
-        estacionamento: Long
-    ): Gerente {
+        estacionamentosId: List<Long>
+    ): Dono {
         return withContext(io) {
 
             val tempId = System.currentTimeMillis()
-            val localUsuario = GerenteEntity(
+            val localUsuario = DonoEntity(
                 id = tempId,
                 nome = nome,
                 email = email,
@@ -113,16 +110,14 @@ class GerenteRepository @Inject constructor(
                 telefone = telefone,
                 dataNascimento = nascimento,
                 tipoUsuario = tipoDeUsuario,
-                estacionamentoId = estacionamento,
+                estacionamentosId = estacionamentosId,
             )
 
             dao.upsert(localUsuario)
 
-            GerenteSyncScheduler.enqueueNow(context)
+            DonoSyncScheduler.enqueueNow(context)
 
-            localUsuario.toDomain(
-                estacionamento = TODO()
-            )
+            localUsuario.toDomain()
         }
     }
 
@@ -131,7 +126,7 @@ class GerenteRepository @Inject constructor(
         nome: String,
         email: String,
         senha: String?,
-    ): Gerente {
+    ): Dono {
         return withContext(io) {
             val local = dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")
             val updated = local.copy(
@@ -146,10 +141,8 @@ class GerenteRepository @Inject constructor(
             )
 
             dao.upsert(updated)
-            GerenteSyncScheduler.enqueueNow(context)
-            updated.toDomain(
-                estacionamento = TODO()
-            )
+            DonoSyncScheduler.enqueueNow(context)
+            updated.toDomain()
         }
     }
 
@@ -164,7 +157,7 @@ class GerenteRepository @Inject constructor(
                 operationType = "DELETE"
             )
         )
-        GerenteSyncScheduler.enqueueNow(context)
+        DonoSyncScheduler.enqueueNow(context)
     }
 
     suspend fun sincronizarUsuarios() {
@@ -331,5 +324,5 @@ class GerenteRepository @Inject constructor(
             null
         }
     }
-*/
+
 }
