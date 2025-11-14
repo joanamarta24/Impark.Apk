@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
 import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -26,6 +27,11 @@ interface GerenteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(gerente: GerenteEntity)
+    @Query("SELECT * FROM gerente WHERE pending_sync = 1")
+    suspend fun getByPending(): List<GerenteEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(gerentes: List<GerenteEntity>)
 
     @Delete
     suspend fun delete(gerente: GerenteEntity)

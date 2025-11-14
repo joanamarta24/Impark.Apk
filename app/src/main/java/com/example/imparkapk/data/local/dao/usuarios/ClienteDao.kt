@@ -19,7 +19,6 @@ interface ClienteDao {
 
     @Query("SELECT * FROM cliente WHERE id = :id")
     suspend fun getById(id: Long): ClienteEntity?
-
     @Query("SELECT * FROM cliente WHERE pending_sync = 1")
     suspend fun getByPending(): List<ClienteEntity>
 

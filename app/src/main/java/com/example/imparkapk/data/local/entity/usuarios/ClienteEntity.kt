@@ -45,7 +45,7 @@ data class ClienteEntity(
     val email: String,
 
     @ColumnInfo(name = "senha")
-    val senha: String,
+    val senha: String?,
 
     @ColumnInfo(name = "telefone")
     val telefone: String,

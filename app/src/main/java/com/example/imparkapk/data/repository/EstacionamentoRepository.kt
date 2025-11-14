@@ -1,334 +1,388 @@
-package com.example.imparkapk.data.repository
+package com.rafaelcosta.modelo_app_crud_usuario_api.data.repository
+
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import com.example.imparkapk.data.local.dao.EstacionamentoDao
 import com.example.imparkapk.data.local.entity.EstacionamentoEntity
+import com.example.imparkapk.data.mapper.toDomain
+import com.example.imparkapk.data.mapper.toEntity
 import com.example.imparkapk.data.remote.api.api.EstacionamentoApi
+import com.example.imparkapk.data.worker.estacionamento.EstacionamentoSyncScheduler
+import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Estacionamento
-import kotlinx.coroutines.delay
+import com.google.gson.Gson
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.UUID
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import java.sql.Time
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class EstacionamentoRepository @Inject constructor(
-    private val estacionamentoDao: EstacionamentoDao,
-    private val estacionamentoApi: EstacionamentoApi
+    private val api: EstacionamentoApi,
+    private val dao: EstacionamentoDao,
+    @IoDispatcher private val io: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
+    private val gson: Gson
 ) {
-    private val estacionamentosCache = mutableListOf<Estacionamento>().apply {
-        addAll(listOf(
-            Estacionamento(
-                id = "1",
-                nome = "Estacionamento Central",
-                endereco = "Rua Principal, 123 - Centro",
-                latitude = -23.5505,
-                longitude = -46.6333,
-                totalVagas = 50,
-                vagasDisponiveis = 15,
-                valorHora = 8.50,
-                telefone = "(11) 9999-8888",
-                horarioAbertura = "06:00",
-                horarioFechamento = "22:00",
-                ativo = true
-            ),
-            Estacionamento(
-                id = "2",
-                nome = "Parking Shopping",
-                endereco = "Av. Comercial, 456 - Jardins",
-                latitude = -23.5632,
-                longitude = -46.6544,
-                totalVagas = 200,
-                vagasDisponiveis = 45,
-                valorHora = 12.00,
-                telefone = "(11) 9777-6666",
-                horarioAbertura = "08:00",
-                horarioFechamento = "23:00",
-                ativo = true
-            ),
-            Estacionamento(
-                id = "3",
-                nome = "Estacionamento Express",
-                endereco = "Rua Rápida, 789 - Centro",
-                latitude = -23.5489,
-                longitude = -46.6388,
-                totalVagas = 30,
-                vagasDisponiveis = 8,
-                valorHora = 6.00,
-                telefone = "(11) 9555-4444",
-                horarioAbertura = "07:00",
-                horarioFechamento = "21:00",
-                ativo = true
-            )
-        ))
+
+    private val jsonMedia = "application/json".toMediaType()
+
+    private fun partJsonDados(dados: Any): RequestBody =
+        gson.toJson(dados).toRequestBody(jsonMedia)
+
+    private fun partFromUri(fieldName: String, uri: Uri?): MultipartBody.Part? {
+        if (uri == null) return null
+        val cr: ContentResolver = context.contentResolver
+        val type = cr.getType(uri) ?: "application/octet-stream"
+        val fileName = uri.lastPathSegment?.substringAfterLast('/') ?: "arquivo"
+        val input = cr.openInputStream(uri) ?: return null
+        val tmp = File.createTempFile("up_", "_tmp", context.cacheDir)
+        tmp.outputStream().use { out -> input.copyTo(out) }
+        val body = tmp.asRequestBody(type.toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(fieldName, fileName, body)
     }
 
-    override suspend fun cadastrarEstacionamento(estacionamento: Estacionamento): Result<Boolean> {
-        return try {
-            delay(1500)
+    private fun partsFromUris(uris: List<Uri>?): List<MultipartBody.Part>? {
+        if (uris.isNullOrEmpty()) return null
+        return uris.mapNotNull { partFromUri("anexos", it) }
+    }
 
-            // Validações
-            if (!validarCoordenadas(estacionamento.latitude, estacionamento.longitude)) {
-                return Result.failure(IllegalArgumentException("Coordenadas inválidas"))
-            }
-            if (!validarHorario(estacionamento.horarioAbertura) || !validarHorario(estacionamento.horarioFechamento)) {
-                return Result.failure(IllegalArgumentException("Horário inválido"))
-            }
-            if (!validarTelefone(estacionamento.telefone)) {
-                return Result.failure(IllegalArgumentException("Telefone inválido"))
-            }
+    fun observeUsuarios(): Flow<List<Estacionamento>> =
+        dao.observerAll().map { list -> list.map { it.toDomain() } }
 
-            val novoEstacionamento = estacionamento.copy(id = UUID.randomUUID().toString())
-            estacionamentosCache.add(novoEstacionamento)
+    fun observeUsuario(id: Long): Flow<Estacionamento?> =
+        dao.observeById(id).map { it?.toDomain() }
 
-            // Salva no banco local também
-            estacionamentoDao.insertEstacionamento(novoEstacionamento.toEntity())
+    suspend fun refresh(): Result<Unit> = runCatching {
+        val remote = api.list()
+        val current = dao.listAll().associateBy { it.id }
 
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
+        val merged = remote.map { dto ->
+            val old = current[dto.id]
+            if (old?.ativo == true) old else dto.toEntity(pending = false)
         }
+
+        dao.upsertAll(merged)
+
+        val remoteIds = merged.map { it.id }.toSet()
+        val toDelete = current.values.filter { it.id !in remoteIds && !it.pendingSync && !it.localOnly }
+        toDelete.forEach { dao.deleteById(it.id) }
     }
 
-    override suspend fun getEstacionamentoPorId(id: String): Result<Estacionamento?> {
-        return try {
-            delay(800)
-            val estacionamento = estacionamentosCache.find { it.id == id }
-            Result.success(estacionamento)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 
-    override suspend fun listarEstacionamentos(): Result<List<Estacionamento>> {
-        return try {
-            delay(1000)
-            Result.success(estacionamentosCache)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun listarEstacionamentosComVagas(): Result<List<Estacionamento>> {
-        return try {
-            delay(600)
-            val estacionamentos = estacionamentosCache.filter { it.vagasDisponiveis > 0 && it.ativo }
-            Result.success(estacionamentos)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun atualizarEstacionamento(estacionamento: Estacionamento): Result<Boolean> {
-        return try {
-            delay(1200)
-            val index = estacionamentosCache.indexOfFirst { it.id == estacionamento.id }
-            if (index != -1) {
-                estacionamentosCache[index] = estacionamento
-
-                // Atualiza no banco local
-                estacionamentoDao.updateEstacionamento(estacionamento.toEntity())
-                Result.success(true)
-            } else {
-                Result.success(false)
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun atualizarVagasDisponiveis(id: String, vagas: Int): Result<Boolean> {
-        return try {
-            delay(400)
-            val estacionamento = estacionamentosCache.find { it.id == id }
-            if (estacionamento != null) {
-                val index = estacionamentosCache.indexOf(estacionamento)
-                val updated = estacionamento.copy(vagasDisponiveis = vagas)
-                estacionamentosCache[index] = updated
-                // Atualiza no banco local
-                estacionamentoDao.updateVagasDisponiveis(id, vagas)
-                Result.success(true)
-            } else {
-                Result.success(false)
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun buscarEstacionamentosPorNome(nome: String): Result<List<Estacionamento>> {
-        return try {
-            delay(600)
-            val resultados = estacionamentosCache.filter {
-                it.nome.contains(nome, ignoreCase = true) && it.ativo
-            }
-            Result.success(resultados)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun buscarEstacionamentosProximos(
+    suspend fun create(
+        nome: String,
+        telefone: String,
+        endereco: String,
         latitude: Double,
         longitude: Double,
-        raioKm: Double
-    ): Result<List<Estacionamento>> {
-        return try {
-            delay(1200)
+        totalVagas: Int,
+        vagasDisponiveis: Int,
+        valorHora: Double,
+        horarioAbertura: Time,
+        horarioFechamento: Time,
+        vagasTotal: Int,
+        precoHora: Double,
+        horarioFuncionamento: String,
+        reservasId: List<Long>?,
+        donoId: Long,
+        gerentesId: List<Long>?
+    ): Estacionamento {
+        return withContext(io) {
 
-            // Calcula todas as distâncias uma única vez
-            val estacionamentosComDistancia = estacionamentosCache
-                .filter { it.ativo }
-                .map { estacionamento ->
-                    val distancia = calcularDistancia(
-                        latitude, longitude,
-                        estacionamento.latitude, estacionamento.longitude
-                    )
-                    Triple(estacionamento, distancia, distancia <= raioKm)
+            val tempId = System.currentTimeMillis()
+            val localUsuario = EstacionamentoEntity(
+                id = tempId,
+                nome = nome,
+                updatedAt = System.currentTimeMillis(),
+                pendingSync = true,
+                localOnly = true,
+                ativo = false,
+                operationType = "CREATE",
+                endereco = endereco,
+                latitude = latitude,
+                longitude = longitude,
+                totalVagas = totalVagas,
+                vagasDisponiveis = vagasDisponiveis,
+                valorHora = valorHora,
+                horarioAbertura = horarioAbertura,
+                horarioFechamento = horarioFechamento,
+                vagasTotal = vagasTotal,
+                precoHora = precoHora,
+                horarioFuncionamento = horarioFuncionamento,
+                reservasId = reservasId,
+                donoId = donoId,
+                gerentesId = gerentesId,
+                telefone = telefone
+            )
+
+            dao.upsert(localUsuario)
+
+            EstacionamentoSyncScheduler.enqueueNow(context)
+
+            localUsuario.toDomain()
+        }
+    }
+
+    suspend fun update(
+        id: Long,
+        nome: String
+    ): Estacionamento {
+        return withContext(io) {
+            val local = dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")
+            val updated = local.copy(
+                nome = nome,
+                updatedAt = System.currentTimeMillis(),
+                pendingSync = true,
+                localOnly = local.localOnly,
+                ativo = false,
+                operationType = "UPDATE"
+            )
+
+            dao.upsert(updated)
+            EstacionamentoSyncScheduler.enqueueNow(context)
+            updated.toDomain()
+        }
+    }
+
+
+    suspend fun delete(id: Long): Result<Unit> = runCatching {
+        val local = dao.getById(id) ?: return@runCatching
+        dao.upsert(
+            local.copy(
+                ativo = true,
+                pendingSync = true,
+                updatedAt = System.currentTimeMillis(),
+                operationType = "DELETE"
+            )
+        )
+        EstacionamentoSyncScheduler.enqueueNow(context)
+    }
+
+    suspend fun sincronizarUsuarios() {
+        val pendentes = dao.getByPending()
+
+        pendentes.filter { it.operationType == "DELETE" }.forEach { u ->
+            try {
+                runCatching { api.delete(u.id) }
+                dao.deleteById(u.id)
+            } catch (e: Exception) {
+            }
+        }
+
+        pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
+            try {
+                val dados = mapOf(
+                    "nome" to u.nome,
+                    "endereco" to u.endereco,
+                    "latitude" to u.latitude,
+                    "longitude" to u.longitude,
+                    "totalVagas" to u.totalVagas,
+                    "vagasDisponiveis" to u.vagasDisponiveis,
+                    "valorHora" to u.valorHora,
+                    "horarioAbertura" to u.horarioAbertura,
+                    "horarioFechamento" to u.horarioFechamento,
+                    "vagasTotal" to u.vagasTotal,
+                    "precoHora" to u.precoHora,
+                    "horarioFuncionamento" to u.horarioFuncionamento,
+                    "reservasId" to u.reservasId,
+                    "donoId" to u.donoId,
+                    "gerentesId" to u.gerentesId,
+                    "telefone" to u.telefone
+                )
+                val resp = api.create(
+                    dadosJson = partJsonDados(dados),
+                )
+                dao.deleteById(u.id)
+                dao.upsert(resp.toEntity(pending = false))
+            } catch (_: Exception) {
+            }
+        }
+
+        pendentes.filter { it.operationType == "UPDATE" && !it.ativo }.forEach { u ->
+            try {
+                val dados = buildMap<String, Any> {
+                    put("nome", u.nome)
+                    put("endereco", u.endereco)
+                    put("latitude", u.latitude)
+                    put("longitude", u.longitude)
+                    put("totalVagas", u.totalVagas)
+                    put("vagasDisponiveis", u.vagasDisponiveis)
+                    put("valorHora", u.valorHora)
+                    put("horarioAbertura", u.horarioAbertura)
+                    put("horarioFechamento", u.horarioFechamento)
+                    put("vagasTotal", u.vagasTotal)
+                    put("precoHora", u.precoHora)
+                    put("horarioFuncionamento", u.horarioFuncionamento)
+                    put("telefone", u.telefone)
                 }
 
-            val estacionamentosProximos = estacionamentosComDistancia
-                .filter { (_, _, estaDentroDoRaio) -> estaDentroDoRaio }
-                .sortedBy { (_, distancia, _) -> distancia }
-                .map { (estacionamento, _, _) -> estacionamento }
+                val resp = api.update(
+                    id = u.id,
+                    dadosJson = partJsonDados(dados)
+                )
 
-            Result.success(estacionamentosProximos)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+                dao.upsert(
+                    resp.toEntity(
+                        pending = false
+                    ).copy(
+                        updatedAt = System.currentTimeMillis(),
+                        pendingSync = false,
+                        localOnly = false,
+                        operationType = null
+                    )
+                )
 
-    override suspend fun buscarEstacionamentosPorPreco(maxPreco: Double): Result<List<Estacionamento>> {
-        return try {
-            delay(600)
-            val resultados = estacionamentosCache.filter {
-                it.valorHora <= maxPreco && it.ativo
-            }.sortedBy { it.valorHora }
-            Result.success(resultados)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-    override suspend fun getMediaAvaliacoes(estacionamentoId: String): Result<Double> {
-        return try {
-            delay(500)
-
-            // Simulação de avaliações
-
-            val media = (3.5 + (0..15).random() * 0.1).coerceIn(1.0, 5.0)
-            Result.success(media)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun countEstacionamentos(): Result<Int> {
-        return try {
-            delay(200)
-            val count = estacionamentosCache.count { it.ativo }
-            Result.success(count)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getTaxaOcupacao(estacionamentoId: String): Result<Double> {
-        return try {
-            delay(400)
-            val estacionamento = estacionamentosCache.find { it.id == estacionamentoId }
-            val taxa = if (estacionamento != null && estacionamento.totalVagas > 0) {
-                val vagasOcupadas = estacionamento.totalVagas - estacionamento.vagasDisponiveis
-                (vagasOcupadas.toDouble() / estacionamento.totalVagas) * 100
-            } else {
-                0.0
+            } catch (e: Exception) {
+                Log.w("UsuarioRepository", "Falha ao sincronizar UPDATE ${u.id}: ${e.message}")
             }
-            Result.success(taxa)
+        }
+
+        try {
+            val listaApi = api.list()
+            val atuais = dao.listAll().associateBy { it.id }
+
+            val remotos = listaApi.map { dto ->
+                val antigo = atuais[dto.id]
+
+                // 1️⃣ se foi deletado localmente, não ressuscita
+                if (antigo?.ativo == true) return@map antigo
+
+                val remoto = dto.toEntity(pending = false)
+
+                // 2️⃣ se o local tem pendingSync, ele é mais novo → mantém local
+                if (antigo?.pendingSync == true) return@map antigo
+
+                // 3️⃣ se o local tem updatedAt mais recente, mantém local
+                if (antigo != null && antigo.updatedAt > remoto.updatedAt) return@map antigo
+
+                // 4️⃣ caso contrário, aceita o remoto (API)
+                remoto
+            }
+
+            dao.upsertAll(remotos)
+
+            val idsRemotos = remotos.map { it.id }.toSet()
+            val locais = dao.listAll()
+            locais.filter { local ->
+                local.id !in idsRemotos && !local.pendingSync && !local.localOnly
+            }.forEach { dao.deleteById(it.id) }
+
         } catch (e: Exception) {
-            Result.failure(e)
+            Log.w("UsuarioRepository", "Sem conexão no pull: ${e.message}")
         }
     }
 
-    // Métodos de validação
-    override fun validarCoordenadas(latitude: Double, longitude: Double): Boolean {
-        return latitude in -90.0..90.0 && longitude in -180.0..180.0
+    @Suppress("unused")
+    suspend fun syncAll(): Result<Unit> = runCatching {
+        val pendentes = dao.getByPending()
+
+        for (e in pendentes) {
+            try {
+                if (e.localOnly) {
+                    val dados = mapOf(
+                        "nome" to e.nome,
+                        "endereco" to e.endereco,
+                        "latitude" to e.latitude,
+                        "longitude" to e.longitude,
+                        "totalVagas" to e.totalVagas,
+                        "vagasDisponiveis" to e.vagasDisponiveis,
+                        "valorHora" to e.valorHora,
+                        "horarioAbertura" to e.horarioAbertura,
+                        "horarioFechamento" to e.horarioFechamento,
+                        "vagasTotal" to e.vagasTotal,
+                        "precoHora" to e.precoHora,
+                        "horarioFuncionamento" to e.horarioFuncionamento,
+                        "reservasId" to e.reservasId,
+                        "donoId" to e.donoId,
+                        "gerentesId" to e.gerentesId,
+                        "telefone" to e.telefone
+                    )
+                    val resp = api.create(
+                        dadosJson = partJsonDados(dados),
+                    )
+                    dao.deleteById(e.id)
+                    dao.upsert(resp.toEntity(pending = false))
+                } else {
+                    val dados = buildMap<String, Any> {
+                        put("nome", e.nome)
+                    }
+                    val resp = api.update(
+                        id = e.id,
+                        dadosJson = partJsonDados(dados)
+                    )
+                    dao.upsert(resp.toEntity(pending = false))
+                }
+            } catch (_: Exception) {
+            }
+        }
+        refresh()
     }
 
-    override fun validarHorario(horario: String): Boolean {
-        val horarioRegex = Regex("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")
-        return horarioRegex.matches(horario)
+    @Suppress("unused")
+    private suspend fun tryPushOne(id: Long) {
+        val e = dao.getById(id) ?: return
+
+        val dados = buildMap<String, Any> {
+            put("nome", e.nome)
+            put("endereco", e.endereco)
+            put("latitude", e.latitude)
+            put("longitude", e.longitude)
+            put("totalVagas", e.totalVagas)
+            put("vagasDisponiveis", e.vagasDisponiveis)
+            put("valorHora", e.valorHora)
+            put("horarioAbertura", e.horarioAbertura)
+            put("horarioFechamento", e.horarioFechamento)
+            put("vagasTotal", e.vagasTotal)
+            put("precoHora", e.precoHora)
+            put("horarioFuncionamento", e.horarioFuncionamento)
+            put("telefone", e.telefone)
+        }
+
+
+        val pushed = if (existsRemote(id)) {
+            api.update(
+                id = id,
+                dadosJson = partJsonDados(dados)
+            )
+        } else {
+            api.create(
+                dadosJson = partJsonDados(dados)
+            )
+        }
+
+        dao.upsert(pushed.toEntity(pending = false))
     }
 
-    override fun validarTelefone(telefone: String): Boolean {
-        val telefoneRegex = Regex("^\\([1-9]{2}\\) [0-9]{4,5}-[0-9]{4}$")
-        return telefoneRegex.matches(telefone)
-    }
+    private suspend fun existsRemote(id: Long): Boolean = runCatching {
+        api.getById(id); true
+    }.getOrDefault(false)
 
-    override fun validarPreco(preco: Double): Boolean {
-        return preco >= 0.0
-    }
-
-    // Métodos adicionais úteis
-    suspend fun sincronizarComServidor(): Result<Boolean> {
+    private fun saveLocalCopy(uri: Uri?): String? {
+        if (uri == null) return null
         return try {
-            delay(2000)
-            // Implementar sincronização com a API
-            Result.success(true)
+            val cr = context.contentResolver
+            val input = cr.openInputStream(uri) ?: return null
+            val fotosDir = File(context.filesDir, "fotos").apply { mkdirs() }
+            val destFile = File(fotosDir, "foto_${System.currentTimeMillis()}.jpg")
+            input.use { src -> destFile.outputStream().use { dst -> src.copyTo(dst) } }
+            destFile.absolutePath
         } catch (e: Exception) {
-            Result.failure(e)
+            null
         }
     }
-
-    fun getEstacionamentosFlow(): Flow<List<Estacionamento>> {
-        return estacionamentoDao.getEstacionamentosAtivos()
-            .map { entities -> entities.map { it.toModel() } }
-    }
-
-    private fun calcularDistancia(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val earthRadius = 6371.0 // km
-
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return earthRadius * c
-    }
-}
-
-// Extensions para conversão entre Entity e Model
-private fun Estacionamento.toEntity(): EstacionamentoEntity {
-    return EstacionamentoEntity(
-        id = this.id,
-        nome = this.nome,
-        endereco = this.endereco,
-        vagasTotal = this.totalVagas,
-        vagasDisponiveis = this.vagasDisponiveis,
-        precoHora = this.valorHora,
-        horarioFuncionamento = "$horarioAbertura - $horarioFechamento",
-        telefone = this.telefone,
-        latitude = this.latitude,
-        longitude = this.longitude,
-        ativo = this.ativo
-    )
-}
-
-private fun EstacionamentoEntity.toModel(): Estacionamento {
-    val horarios = this.horarioFuncionamento.split(" - ")
-    return Estacionamento(
-        id = this.id,
-        nome = this.nome,
-        endereco = this.endereco,
-        latitude = this.latitude,
-        longitude = this.longitude,
-        totalVagas = this.vagasTotal,
-        vagasDisponiveis = this.vagasDisponiveis,
-        valorHora = this.precoHora,
-        telefone = this.telefone,
-        horarioAbertura = horarios.getOrElse(0) { "08:00" },
-        horarioFechamento = horarios.getOrElse(1) { "18:00" },
-        ativo = this.ativo
-    )
 }
