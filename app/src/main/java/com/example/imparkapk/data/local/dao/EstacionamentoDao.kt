@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.imparkapk.data.local.entity.EstacionamentoEntity
-import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -16,7 +15,7 @@ interface EstacionamentoDao {
  fun observerAll(): Flow<List<EstacionamentoEntity>>
 
  @Query("SELECT * FROM estacionamento WHERE id = :id")
- fun observeById(id: Long): Flow<EstacionamentoEntity>
+ fun observeById(id: Long?): Flow<EstacionamentoEntity>
 
  @Query("SELECT * FROM estacionamento WHERE ativo = 1")
  suspend fun listAll(): List<EstacionamentoEntity>
