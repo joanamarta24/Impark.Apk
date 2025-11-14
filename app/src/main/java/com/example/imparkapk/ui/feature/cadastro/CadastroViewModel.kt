@@ -2,7 +2,7 @@ package com.example.imparktcc.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.imparktcc.repository.CadastroRepository
+import com.example.imparktcc.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CadastroViewModel @Inject constructor(
-    private val repository: CadastroRepository
+    private val repository: AuthRepository
 ): ViewModel (){
     private val _uiState = MutableStateFlow(CadastroUiState())
     val uiState: StateFlow<CadastroUiState> = _uiState.asStateFlow()
