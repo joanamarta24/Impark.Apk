@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.feature.estacionamento
+package com.example.imparkapk.ui.screen.estacionamento
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

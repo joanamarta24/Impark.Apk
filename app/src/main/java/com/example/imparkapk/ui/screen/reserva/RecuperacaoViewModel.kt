@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.feature.reserva
+package com.example.imparkapk.ui.screen.reserva
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

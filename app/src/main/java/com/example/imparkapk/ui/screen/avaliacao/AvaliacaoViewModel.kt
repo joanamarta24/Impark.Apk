@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.feature.avaliacao
+package com.example.imparkapk.ui.screen.avaliacao
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

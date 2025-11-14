@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.feature.splash
+package com.example.imparkapk.ui.screen.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

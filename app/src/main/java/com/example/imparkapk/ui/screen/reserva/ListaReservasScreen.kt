@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.feature.reserva
+package com.example.imparkapk.ui.screen.reserva
 
 import android.R.attr.contentDescription
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +23,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.imparkapk.ui.feature.estacionamento.EstacionamentoViewModel
-import com.example.imparkapk.ui.feature.estacionamento.OrdenacaoEstacionamento
+import com.example.imparkapk.ui.screen.estacionamento.EstacionamentoViewModel
+import com.example.imparkapk.ui.screen.estacionamento.OrdenacaoEstacionamento
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

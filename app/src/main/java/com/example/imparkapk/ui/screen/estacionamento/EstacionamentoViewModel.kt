@@ -1,4 +1,4 @@
-package com.example.imparkapk.ui.feature.estacionamento
+package com.example.imparkapk.ui.screen.estacionamento
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
