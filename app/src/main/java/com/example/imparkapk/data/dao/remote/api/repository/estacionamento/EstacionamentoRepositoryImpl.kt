@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.remote.api.repository.estacionamento
 
 import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
-import com.example.imparkapk.data.dao.entity.EstacionamentoEntity
+import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.model.Estacionamento
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -157,7 +157,27 @@ class EstacionamentoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun buscarEstacionamentosPorNome(nome: String): Result<List<Estacionamento>> {
+    override suspend fun buscarEstacionamentoPorId(id: String): Estacionamento? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun buscarEstacionamentoPorNome(nome: String): List<Estacionamento> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun buscarEstacionamentoProximos(
+        latitude: Double,
+        longitude: Double,
+        raioKm: Double
+    ): List<Estacionamento> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun buscarEstacionamentoPorPreco(maxPreco: Double): List<Estacionamento> {
+        TODO("Not yet implemented")
+    }
+
+    suspend fun buscarEstacionamentosPorNome(nome: String): Result<List<Estacionamento>> {
         return try {
             delay(600)
             val resultados = estacionamentosCache.filter {
@@ -169,7 +189,7 @@ class EstacionamentoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun buscarEstacionamentosProximos(
+    suspend fun buscarEstacionamentosProximos(
         latitude: Double,
         longitude: Double,
         raioKm: Double
@@ -199,7 +219,7 @@ class EstacionamentoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun buscarEstacionamentosPorPreco(maxPreco: Double): Result<List<Estacionamento>> {
+    suspend fun buscarEstacionamentosPorPreco(maxPreco: Double): Result<List<Estacionamento>> {
         return try {
             delay(600)
             val resultados = estacionamentosCache.filter {

@@ -3,7 +3,7 @@ package com.example.imparkapk.data.dao.remote.api.repository.usuario
 import com.example.imparktcc.model.Usuario
 import kotlinx.coroutines.flow.Flow
 
-interface UsuarioRepository {
+interface ClienteRepository {
 
     suspend fun buscarUsuarioPorNome(nome: String): List<Usuario>
     suspend fun buscarUsuarioPorEmail(email: String): List<Usuario>

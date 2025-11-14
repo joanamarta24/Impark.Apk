@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.local.dao.dao
 
 import androidx.room.*
-import com.example.imparkapk.data.dao.entity.ReservaEntity
+import com.example.imparkapk.data.dao.local.dao.entity.ReservaEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 

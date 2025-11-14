@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.entity
+package com.example.imparkapk.data.dao.local.dao.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -10,13 +10,13 @@ import java.util.Date
     tableName = "gerente",
     foreignKeys = [
         ForeignKey(
-            entity = UsuarioEntity::class,
+            entity = ClienteEntity::class,
             parentColumns = ["id"],
             childColumns = ["id_usuario"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = UsuarioEntity::class,
+            entity = ClienteEntity::class,
             parentColumns = ["id"],
             childColumns = ["estacionamento_id"],
             onDelete = ForeignKey.CASCADE

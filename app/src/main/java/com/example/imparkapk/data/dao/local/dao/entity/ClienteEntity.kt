@@ -1,15 +1,16 @@
-package com.example.imparkapk.data.dao.entity
+package com.example.imparkapk.data.dao.local.dao.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.imparkapk.data.dao.converters.DateConverter
+import com.example.imparkapk.data.dao.local.dao.db.DateConverter
 import java.util.Date
 import java.util.UUID
 
 @Entity(tableName = "usuarios")
-data class UsuarioEntity(
+data class ClienteEntity(
     @PrimaryKey
     val id: String,
     @ColumnInfo(name = "nome")
@@ -32,15 +33,15 @@ data class UsuarioEntity(
 @Entity(
     tableName = "usuarios",
     indices = [
-        androidx.room.Index(value = ["email"], unique = true),
-        androidx.room.Index(value = ["cpf"], unique = true),
-        androidx.room.Index(value = ["telefone"], unique = true),
-        androidx.room.Index(value = ["ativo"]),
-        androidx.room.Index(value = ["tipo_usuario"])
+        Index(value = ["email"], unique = true),
+        Index(value = ["cpf"], unique = true),
+        Index(value = ["telefone"], unique = true),
+        Index(value = ["ativo"]),
+        Index(value = ["tipo_usuario"])
     ]
 )
 @TypeConverters(DateConverter::class)
-data class UsuarioEntity(
+data class ClienteEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: String = UUID.randomUUID().toString(),
@@ -141,21 +142,21 @@ data class UsuarioEntity(
     /**
      * Cria uma cópia do usuário com a data de atualização atualizada
      */
-    fun copyComAtualizacao(): UsuarioEntity {
+    fun copyComAtualizacao(): ClienteEntity {
         return this.copy(dataAtualizacao = Date())
     }
 
     /**
      * Cria uma cópia do usuário com o último acesso atualizado
      */
-    fun copyComUltimoAcesso(): UsuarioEntity {
+    fun copyComUltimoAcesso(): ClienteEntity {
         return this.copy(ultimoAcesso = Date())
     }
 
     /**
      * Cria uma cópia do usuário marcando o e-mail como verificado
      */
-    fun copyComEmailVerificado(): UsuarioEntity {
+    fun copyComEmailVerificado(): ClienteEntity {
         return this.copy(
             emailVerificado = true,
             dataAtualizacao = Date()
@@ -165,7 +166,7 @@ data class UsuarioEntity(
     /**
      * Cria uma cópia do usuário marcando o telefone como verificado
      */
-    fun copyComTelefoneVerificado(): UsuarioEntity {
+    fun copyComTelefoneVerificado(): ClienteEntity {
         return this.copy(
             telefoneVerificado = true,
             dataAtualizacao = Date()
@@ -175,7 +176,7 @@ data class UsuarioEntity(
     /**
      * Cria uma cópia do usuário com nova senha
      */
-    fun copyComNovaSenha(novaSenha: String): UsuarioEntity {
+    fun copyComNovaSenha(novaSenha: String): ClienteEntity {
         return this.copy(
             senha = novaSenha,
             dataAtualizacao = Date()
@@ -225,8 +226,8 @@ data class UsuarioEntity(
             cpf: String? = null,
             dataNascimento: Date? = null,
             tipoUsuario: TipoUsuario = TipoUsuario.CLIENTE
-        ): UsuarioEntity {
-            return UsuarioEntity(
+        ): ClienteEntity {
+            return ClienteEntity(
                 nome = nome.trim(),
                 email = email.trim().lowercase(),
                 senha = senha,
@@ -242,8 +243,8 @@ data class UsuarioEntity(
         /**
          * Cria um usuário de demonstração para testes
          */
-        fun criarDemo(): UsuarioEntity {
-            return UsuarioEntity(
+        fun criarDemo(): ClienteEntity {
+            return ClienteEntity(
                 nome = "João Silva Santos",
                 email = "joao.silva@email.com",
                 senha = "senha123",
@@ -314,7 +315,7 @@ data class UsuarioEntity(
 /**
  * Extension function para converter Entity para Model (se necessário)
  */
-fun UsuarioEntity.toUsuario(): com.example.imparkapk.domain.model.Usuario {
+fun ClienteEntity.toUsuario(): com.example.imparkapk.domain.model.Usuario {
     return com.example.imparkapk.domain.model.Usuario(
         id = this.id,
         nome = this.nome,
@@ -324,9 +325,9 @@ fun UsuarioEntity.toUsuario(): com.example.imparkapk.domain.model.Usuario {
         dataNascimento = this.dataNascimento,
         fotoPerfil = this.fotoPerfil,
         tipoUsuario = when (this.tipoUsuario) {
-            UsuarioEntity.TipoUsuario.CLIENTE -> com.example.imparkapk.domain.model.Usuario.TipoUsuario.CLIENTE
-            UsuarioEntity.TipoUsuario.GERENTE -> com.example.imparkapk.domain.model.Usuario.TipoUsuario.GERENTE
-            UsuarioEntity.TipoUsuario.ADMIN -> com.example.imparkapk.domain.model.Usuario.TipoUsuario.ADMIN
+            ClienteEntity.TipoUsuario.CLIENTE -> com.example.imparkapk.domain.model.Usuario.TipoUsuario.CLIENTE
+            ClienteEntity.TipoUsuario.GERENTE -> com.example.imparkapk.domain.model.Usuario.TipoUsuario.GERENTE
+            ClienteEntity.TipoUsuario.ADMIN -> com.example.imparkapk.domain.model.Usuario.TipoUsuario.ADMIN
         },
         dataCriacao = this.dataCriacao,
         dataAtualizacao = this.dataAtualizacao,

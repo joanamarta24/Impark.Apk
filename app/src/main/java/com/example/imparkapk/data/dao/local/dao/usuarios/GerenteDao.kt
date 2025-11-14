@@ -4,7 +4,7 @@ import com.example.imparkapk.data.dao.model.Estacionamento
 import com.example.imparkapk.data.dao.model.enus.TipoDeUsuario
 import java.util.Date
 
-data class Gerente(
+data class GerenteDao(
     val id: Long,
     val nome: String,
     val email: String,

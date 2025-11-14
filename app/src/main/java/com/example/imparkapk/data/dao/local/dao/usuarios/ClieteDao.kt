@@ -6,7 +6,7 @@ import com.example.imparkapk.data.dao.model.enus.TipoDeUsuario
 import com.example.imparktcc.model.Carro
 import java.util.Date
 
-data class Cliete(
+data class ClieteDao(
     val id: Long,
     val nome: String,
     val email: String,

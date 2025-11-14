@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.UiState.LoginUiState
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
-import com.example.imparkapk.data.dao.remote.api.repository.usuario.UsuarioRepository
+import com.example.imparkapk.data.dao.remote.api.repository.usuario.ClienteRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val usuarioRepository: UsuarioRepository,
+    private val clienteRepository: ClienteRepository,
     private val usuarioApi: UsuarioApi,
     private val tokenManager: TokenManager
 ) : ViewModel() {
@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 email = email,
-                emailValido = usuarioRepository.validarEmail(email)
+                emailValido = clienteRepository.validarEmail(email)
             )
         }
         limparErros()
@@ -96,7 +96,7 @@ class LoginViewModel @Inject constructor(
     }
 }
     private fun validarCampos(): Boolean {
-        val emailValido = usuarioRepository.validarEmail(_uiState.value.email)
+        val emailValido = clienteRepository.validarEmail(_uiState.value.email)
         val senhaPreenchida = _uiState.value.senha.isNotBlank()
 
         _uiState.update { it.copy(emailValido = emailValido) }

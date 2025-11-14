@@ -1,16 +1,17 @@
 package com.example.imparkapk.data.dao
 
 import com.example.imparkapk.data.dao.remote.api.repository.avaliacao.AvaliacaoRepository
+import com.example.imparkapk.data.dao.remote.api.repository.carro.CarroRepository
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository
-import com.example.imparkapk.data.dao.remote.api.repository.usuario.UsuarioRepository
+import com.example.imparkapk.data.dao.remote.api.repository.usuario.ClienteRepository
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DataSource @Inject constructor(
-    val usuarioRepository: UsuarioRepository,
+    val clienteRepository: ClienteRepository,
     val carroRepository: CarroRepository,
     val estacionamentoRepository: EstacionamentoRepository,
     val reservaRepository: ReservaRepository,

@@ -1,8 +1,7 @@
-package com.example.imparkapk.data.dao.converters
+package com.example.imparkapk.data.dao.local.dao.db
 
 import androidx.room.TypeConverter
 import java.util.Date
-
 
 class DateConverter {
 

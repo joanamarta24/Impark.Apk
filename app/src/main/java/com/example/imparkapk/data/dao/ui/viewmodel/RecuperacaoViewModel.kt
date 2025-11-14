@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.imparkapk.data.dao.remote.api.repository.usuario.UsuarioRepository
+import com.example.imparkapk.data.dao.remote.api.repository.usuario.ClienteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecuperacaoViewModel @Inject constructor(
-    private val usuarioRepository: UsuarioRepository
+    private val clienteRepository: ClienteRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecuperacaoUiState())
@@ -49,7 +49,7 @@ class RecuperacaoViewModel @Inject constructor(
 
             viewModelScope.launch {
                 try {
-                    val sucesso = usuarioRepository.recuperarSenha(_uiState.value.email)
+                    val sucesso = clienteRepository.recuperarSenha(_uiState.value.email)
 
                     if (sucesso) {
                         _uiState.update { it.copy(
@@ -134,7 +134,7 @@ class RecuperacaoViewModel @Inject constructor(
     }
 
     private fun validarEmail(): Boolean {
-        val emailValido = usuarioRepository.validarEmail(_uiState.value.email)
+        val emailValido = clienteRepository.validarEmail(_uiState.value.email)
         _uiState.update { it.copy(emailValido = emailValido) }
         return emailValido
     }
@@ -146,7 +146,7 @@ class RecuperacaoViewModel @Inject constructor(
     }
 
     private fun validarSenhas(): Boolean {
-        val senhaValida = usuarioRepository.validarSenha(_uiState.value.novaSenha)
+        val senhaValida = clienteRepository.validarSenha(_uiState.value.novaSenha)
         val senhasCoincidem = _uiState.value.novaSenha == _uiState.value.confirmarSenha
 
         _uiState.update { it.copy(

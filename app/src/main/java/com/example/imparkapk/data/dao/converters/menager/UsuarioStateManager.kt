@@ -32,5 +32,6 @@ class UsuarioStateManager (private val context: Context){
     private val gson = Gson()
 
     //SALVAR ESTADO DO CLIENTE
+    fun saveClienteState(cliente:ClienteDto,token: String? = null)
 
 }

@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.remote.api.repository.usuario
 
-import com.example.imparkapk.data.dao.local.dao.dao.UsuarioDao
-import com.example.imparkapk.data.dao.entity.UsuarioEntity
+import com.example.imparkapk.data.dao.local.dao.dao.ClienteDao
+import com.example.imparkapk.data.dao.local.dao.entity.ClienteEntity
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest
 import com.example.imparktcc.model.Usuario
@@ -13,10 +13,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UsuarioRepositoryImpl @Inject constructor(
-    private val usuarioDao: UsuarioDao,
+class ClienteRepositoryImpl @Inject constructor(
+    private val clienteDao: ClienteDao,
     private val usuarioApi: UsuarioApi
-) : UsuarioRepository {
+) : ClienteRepository {
 
     // Cache em memoria para simulação
     private val usuariosCache = mutableListOf<Usuario>()
@@ -330,8 +330,8 @@ class UsuarioRepositoryImpl @Inject constructor(
 }
 
 // Extension function para conversão (se estivesse usando Room)
-private fun Usuario.toEntity(): UsuarioEntity {
-    return UsuarioEntity(
+private fun Usuario.toEntity(): ClienteEntity {
+    return ClienteEntity(
         id = this.id,
         nome = this.nome,
         email = this.email,
