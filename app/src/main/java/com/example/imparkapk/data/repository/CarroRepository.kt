@@ -1,143 +1,315 @@
-package com.example.imparkapk.data.repository
+package com.rafaelcosta.modelo_app_crud_usuario_api.data.repository
 
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import com.example.imparkapk.data.local.dao.CarroDao
 import com.example.imparkapk.data.local.entity.CarroEntity
-import com.example.imparkapk.data.local.remote.api.api.CarroApi
-import com.example.imparktcc.data.remote.request.CarroRequest
+import com.example.imparkapk.data.mapper.toDomain
+import com.example.imparkapk.data.mapper.toEntity
+import com.example.imparkapk.data.remote.api.api.CarroApi
+import com.example.imparkapk.data.worker.carro.CarroSyncScheduler
+import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Carro
+import com.google.gson.Gson
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import java.util.Date
-import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CarroRepository @Inject constructor(
-    private val carroDao: CarroDao,
-    private val carroApi: CarroApi
-) : CarroRepository {
+    private val api: CarroApi,
+    private val dao: CarroDao,
+    @IoDispatcher private val io: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
+    private val gson: Gson
+) {
 
-    override suspend fun cadastrarCarro(carro: Carro): Result<Boolean> {
-        return try {
-            // Tenta cadastrar na API
-            val request = CarroRequest(
-                usuarioId = carro.usuarioId,
-                modelo = carro.modelo,
-                placa = carro.placa,
-                cor = carro.cor
+    private val jsonMedia = "application/json".toMediaType()
+
+    private fun partJsonDados(dados: Any): RequestBody =
+        gson.toJson(dados).toRequestBody(jsonMedia)
+
+    private fun partFromUri(fieldName: String, uri: Uri?): MultipartBody.Part? {
+        if (uri == null) return null
+        val cr: ContentResolver = context.contentResolver
+        val type = cr.getType(uri) ?: "application/octet-stream"
+        val fileName = uri.lastPathSegment?.substringAfterLast('/') ?: "arquivo"
+        val input = cr.openInputStream(uri) ?: return null
+        val tmp = File.createTempFile("up_", "_tmp", context.cacheDir)
+        tmp.outputStream().use { out -> input.copyTo(out) }
+        val body = tmp.asRequestBody(type.toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(fieldName, fileName, body)
+    }
+
+    private fun partsFromUris(uris: List<Uri>?): List<MultipartBody.Part>? {
+        if (uris.isNullOrEmpty()) return null
+        return uris.mapNotNull { partFromUri("anexos", it) }
+    }
+
+    fun observeUsuarios(): Flow<List<Carro>> =
+        dao.observerAll().map { list -> list.map { it.toDomain() } }
+
+    fun observeUsuario(id: Long): Flow<Carro?> =
+        dao.observeById(id).map { it?.toDomain() }
+
+    suspend fun refresh(): Result<Unit> = runCatching {
+        val remote = api.list()
+        val current = dao.listAll().associateBy { it.id }
+
+        val merged = remote.map { dto ->
+            val old = current[dto.id]
+            if (old?.ativo == true) old else dto.toEntity(pending = false)
+        }
+
+        dao.upsertAll(merged)
+
+        val remoteIds = merged.map { it.id }.toSet()
+        val toDelete = current.values.filter { it.id !in remoteIds && !it.pendingSync && !it.localOnly }
+        toDelete.forEach { dao.deleteById(it.id) }
+    }
+
+
+    suspend fun create(
+        usuarioId: Long,
+        modelo: String,
+        placa: String
+    ): Carro {
+        return withContext(io) {
+
+            val tempId = System.currentTimeMillis()
+            val localUsuario = CarroEntity(
+                id = tempId,
+                updatedAt = System.currentTimeMillis(),
+                pendingSync = true,
+                localOnly = true,
+                ativo = false,
+                operationType = "CREATE",
+                usuarioId = usuarioId,
+                modelo = modelo,
+                placa = placa,
             )
 
-            val response = carroApi.criarCarro(request)
+            dao.upsert(localUsuario)
 
-            if (response.isSuccessful && response.body() != null) {
-                val carroResponse = response.body()!!
+            CarroSyncScheduler.enqueueNow(context)
 
-                // Salva no banco local
-                val entity = CarroEntity(
-                    id = carroResponse.id,
-                    usuarioId = carroResponse.usuarioId,
-                    modelo = carroResponse.modelo,
-                    placa = carroResponse.placa,
-                    cor = carroResponse.cor,
-                    dataCriacao = carroResponse.dataCriacao,
-                    dataAtualizacao = carroResponse.dataAtualizacao,
-                    ativo = carroResponse.ativo
-                )
-
-                carroDao.insertCarro(entity)
-                Result.success(true)
-            } else {
-                // Fallback: salva apenas localmente
-                val entity = CarroEntity(
-                    id = UUID.randomUUID().toString(),
-                    usuarioId = carro.usuarioId,
-                    modelo = carro.modelo,
-                    placa = carro.placa,
-                    cor = carro.cor,
-                    dataCriacao = Date(),
-                    dataAtualizacao = Date(),
-                    ativo = true
-                )
-
-                carroDao.insertCarro(entity)
-                Result.success(true)
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
+            localUsuario.toDomain()
         }
     }
 
-    override suspend fun getCarroPorId(id: String): Result<Carro?> {
-        return try {
-            val entity = carroDao.getCarroById(id)
-            val carro = entity?.toCarro()
-            Result.success(carro)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getCarroPorPlaca(placa: String): Result<Carro?> {
-        return try {
-            val entity = carroDao.getCarroPorPlaca(placa)
-            val carro = entity?.toCarro()
-            Result.success(carro)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun atualizarCarro(carro: Carro): Result<Boolean> {
-        return try {
-            val entity = CarroEntity(
-                id = carro.id,
-                usuarioId = carro.usuarioId,
-                modelo = carro.modelo,
-                placa = carro.placa,
-                cor = carro.cor,
-                dataCriacao = Date(), // Em produção, buscar do banco
-                dataAtualizacao = Date(),
-                ativo = true
+    suspend fun update(
+        id: Long,
+        usuarioId: Long,
+        modelo: String,
+        placa: String
+    ): Carro {
+        return withContext(io) {
+            val local = dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")
+            val updated = local.copy(
+                updatedAt = System.currentTimeMillis(),
+                pendingSync = true,
+                localOnly = local.localOnly,
+                ativo = false,
+                operationType = "UPDATE",
+                usuarioId = usuarioId,
+                modelo = modelo,
+                placa = placa,
             )
 
-            carroDao.updateCarro(entity)
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
+            dao.upsert(updated)
+            CarroSyncScheduler.enqueueNow(context)
+            updated.toDomain()
         }
     }
 
-    override suspend fun deletarCarro(id: String): Result<Boolean> {
-        return try {
-            carroDao.deleteCarro(id)
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 
-    override fun getCarrosPorUsuario(usuarioId: String): Flow<List<Carro>> {
-        return carroDao.getCarrosPorUsuario(usuarioId).map { entities ->
-            entities.map { it.toCarro() }
-        }
-    }
-
-    override suspend fun countCarrosPorUsuario(usuarioId: String): Result<Int> {
-        return try {
-            val count = carroDao.countCarrosPorUsuario(usuarioId)
-            Result.success(count)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    // Extension function para converter Entity para Model
-    private fun CarroEntity.toCarro(): Carro {
-        return Carro(
-            id = this.id,
-            usuarioId = this.usuarioId,
-            modelo = this.modelo,
-            placa = this.placa,
-            cor = this.cor
+    suspend fun delete(id: Long): Result<Unit> = runCatching {
+        val local = dao.getById(id) ?: return@runCatching
+        dao.upsert(
+            local.copy(
+                ativo = true,
+                pendingSync = true,
+                updatedAt = System.currentTimeMillis(),
+                operationType = "DELETE"
+            )
         )
+        CarroSyncScheduler.enqueueNow(context)
     }
+
+    suspend fun sincronizarUsuarios() {
+        val pendentes = dao.getByPending()
+
+        pendentes.filter { it.operationType == "DELETE" }.forEach { u ->
+            try {
+                runCatching { api.delete(u.id) }
+                dao.deleteById(u.id)
+            } catch (e: Exception) {
+            }
+        }
+
+        pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
+            try {
+                val dados = mapOf(
+                    "usuarioId" to u.usuarioId,
+                    "modelo" to u.modelo,
+                    "placa" to u.placa
+                )
+                val resp = api.create(
+                    dadosJson = partJsonDados(dados),
+                )
+                dao.deleteById(u.id)
+                dao.upsert(resp.toEntity(pending = false))
+            } catch (_: Exception) {
+            }
+        }
+
+        pendentes.filter { it.operationType == "UPDATE" && !it.ativo }.forEach { u ->
+            try {
+                val dados = buildMap<String, Any> {
+                    put("modelo", u.modelo)
+                    put("placa", u.placa)
+                }
+
+                val resp = api.update(
+                    id = u.id,
+                    dadosJson = partJsonDados(dados)
+                )
+
+                dao.upsert(
+                    resp.toEntity(
+                        pending = false
+                    ).copy(
+                        updatedAt = System.currentTimeMillis(),
+                        pendingSync = false,
+                        localOnly = false,
+                        operationType = null
+                    )
+                )
+
+            } catch (e: Exception) {
+                Log.w("UsuarioRepository", "Falha ao sincronizar UPDATE ${u.id}: ${e.message}")
+            }
+        }
+
+        try {
+            val listaApi = api.list()
+            val atuais = dao.listAll().associateBy { it.id }
+
+            val remotos = listaApi.map { dto ->
+                val antigo = atuais[dto.id]
+
+                // 1️⃣ se foi deletado localmente, não ressuscita
+                if (antigo?.ativo == true) return@map antigo
+
+                val remoto = dto.toEntity(pending = false)
+
+                // 2️⃣ se o local tem pendingSync, ele é mais novo → mantém local
+                if (antigo?.pendingSync == true) return@map antigo
+
+                // 3️⃣ se o local tem updatedAt mais recente, mantém local
+                if (antigo != null && antigo.updatedAt > remoto.updatedAt) return@map antigo
+
+                // 4️⃣ caso contrário, aceita o remoto (API)
+                remoto
+            }
+
+            dao.upsertAll(remotos)
+
+            val idsRemotos = remotos.map { it.id }.toSet()
+            val locais = dao.listAll()
+            locais.filter { local ->
+                local.id !in idsRemotos && !local.pendingSync && !local.localOnly
+            }.forEach { dao.deleteById(it.id) }
+
+        } catch (e: Exception) {
+            Log.w("UsuarioRepository", "Sem conexão no pull: ${e.message}")
+        }
+    }
+
+    @Suppress("unused")
+    suspend fun syncAll(): Result<Unit> = runCatching {
+        val pendentes = dao.getByPending()
+
+        for (e in pendentes) {
+            try {
+                if (e.localOnly) {
+                    val dados = mapOf(
+                        "usuarioId" to e.usuarioId,
+                        "modelo" to e.modelo,
+                        "placa" to e.placa
+                    )
+                    val resp = api.create(
+                        dadosJson = partJsonDados(dados),
+                    )
+                    dao.deleteById(e.id)
+                    dao.upsert(resp.toEntity(pending = false))
+                } else {
+                    val dados = buildMap<String, Any> {
+                    }
+                    val resp = api.update(
+                        id = e.id,
+                        dadosJson = partJsonDados(dados)
+                    )
+                    dao.upsert(resp.toEntity(pending = false))
+                }
+            } catch (_: Exception) {
+            }
+        }
+        refresh()
+    }
+
+    @Suppress("unused")
+    private suspend fun tryPushOne(id: Long) {
+        val e = dao.getById(id) ?: return
+
+        val dados = buildMap<String, Any> {
+        }
+
+
+        val pushed = if (existsRemote(id)) {
+            api.update(
+                id = id,
+                dadosJson = partJsonDados(dados)
+            )
+        } else {
+            api.create(
+                dadosJson = partJsonDados(dados)
+            )
+        }
+
+        dao.upsert(pushed.toEntity(pending = false))
+    }
+
+    private suspend fun existsRemote(id: Long): Boolean = runCatching {
+        api.getById(id); true
+    }.getOrDefault(false)
+
+    private fun saveLocalCopy(uri: Uri?): String? {
+        if (uri == null) return null
+        return try {
+            val cr = context.contentResolver
+            val input = cr.openInputStream(uri) ?: return null
+            val fotosDir = File(context.filesDir, "fotos").apply { mkdirs() }
+            val destFile = File(fotosDir, "foto_${System.currentTimeMillis()}.jpg")
+            input.use { src -> destFile.outputStream().use { dst -> src.copyTo(dst) } }
+            destFile.absolutePath
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }
