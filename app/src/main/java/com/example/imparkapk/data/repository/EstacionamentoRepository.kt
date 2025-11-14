@@ -26,7 +26,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.sql.Time
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -64,7 +63,7 @@ class EstacionamentoRepository @Inject constructor(
     fun observeUsuarios(): Flow<List<Estacionamento>> =
         dao.observerAll().map { list -> list.map { it.toDomain() } }
 
-    fun observeUsuario(id: Long): Flow<Estacionamento?> =
+    fun observeUsuario(id: Long?): Flow<Estacionamento?> =
         dao.observeById(id).map { it?.toDomain() }
 
     suspend fun refresh(): Result<Unit> = runCatching {

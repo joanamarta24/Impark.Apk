@@ -12,7 +12,7 @@ interface ClienteDao {
     fun observerAll(): Flow<List<ClienteEntity>>
 
     @Query("SELECT * FROM cliente WHERE id = :id")
-    fun observeById(id: Long): Flow<ClienteEntity?>
+    fun observeById(id: Long?): Flow<ClienteEntity?>
 
     @Query("SELECT * FROM cliente WHERE ativo = 1")
     suspend fun listAll(): List<ClienteEntity>

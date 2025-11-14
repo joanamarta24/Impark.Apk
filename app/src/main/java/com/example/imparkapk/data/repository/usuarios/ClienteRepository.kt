@@ -9,8 +9,12 @@ import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import com.example.imparkapk.data.mapper.usuarios.toDomain
 import com.example.imparkapk.data.mapper.usuarios.toEntity
 import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
+import com.example.imparkapk.data.repository.AvaliacaoRepository
 import com.example.imparkapk.data.worker.usuarios.cliente.ClienteSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
+import com.example.imparkapk.domain.model.Avaliacao
+import com.example.imparkapk.domain.model.Carro
+import com.example.imparkapk.domain.model.Reserva
 import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
 import com.google.gson.Gson
 import com.example.imparkapk.domain.model.usuarios.Cliente
@@ -18,6 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -34,6 +39,9 @@ import javax.inject.Singleton
 class ClienteRepository @Inject constructor(
     private val api: ClienteApi,
     private val dao: ClienteDao,
+    private val carroRepository: CarroRepository,
+    private val avaliacaoRepository: AvaliacaoRepository,
+    private val reservaRepository: ReservaRepository,
     @IoDispatcher private val io: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val gson: Gson
@@ -62,10 +70,18 @@ class ClienteRepository @Inject constructor(
     }
 
     fun observeUsuarios(): Flow<List<Cliente>> =
-        dao.observerAll().map { list -> list.map { it.toDomain() } }
+        dao.observerAll().map { list -> list.map { it.toDomain(
+            carros = it.carros.map { carroRepository.observeUsuario(it).toList().first() } as List<Carro>?,
+            reservas = it.reservas.map { reservaRepository.observeUsuario(it).toList().first() } as List<Reserva>?,
+            avaliacoes = it.reservas.map { avaliacaoRepository.observeUsuario(it).toList().first() } as List<Avaliacao>?
+        ) } }
 
-    fun observeUsuario(id: Long): Flow<Cliente?> =
-        dao.observeById(id).map { it?.toDomain() }
+    fun observeUsuario(id: Long?): Flow<Cliente?> =
+        dao.observeById(id).map { it?.toDomain(
+            carros = it.carros.map { carroRepository.observeUsuario(it).toList().first() } as List<Carro>?,
+            reservas = it.reservas.map { reservaRepository.observeUsuario(it).toList().first() } as List<Reserva>?,
+            avaliacoes = it.reservas.map { avaliacaoRepository.observeUsuario(it).toList().first() } as List<Avaliacao>?
+        ) }
 
     suspend fun refresh(): Result<Unit> = runCatching {
         val remote = api.list()
@@ -128,10 +144,7 @@ class ClienteRepository @Inject constructor(
         id: Long,
         nome: String,
         email: String,
-        cpf: String,
         senha: String?,
-        fotoUri: Uri?,
-        anexosUris: List<Uri>?
     ): Cliente {
         return withContext(io) {
             val local = dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")

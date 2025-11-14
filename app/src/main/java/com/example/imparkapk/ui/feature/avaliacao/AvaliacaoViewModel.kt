@@ -3,7 +3,7 @@ package com.example.imparkapk.ui.feature.avaliacao
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.domain.model.Avaliacao
-import com.example.imparkapk.data.local.remote.api.repository.avaliacao.AvaliacaoRepository
+import com.example.imparkapk.data.repository.AvaliacaoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

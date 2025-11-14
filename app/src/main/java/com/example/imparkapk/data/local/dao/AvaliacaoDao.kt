@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.imparkapk.data.local.entity.AcessoEntity
 import com.example.imparkapk.data.local.entity.AvaliacaoEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -23,8 +24,14 @@ interface AvaliacaoDao {
     @Query("SELECT * FROM avaliacoes WHERE id = :id")
     suspend fun getById(id: Long): AvaliacaoEntity
 
+    @Query("SELECT * FROM avaliacoes WHERE pending_sync = 1")
+    suspend fun getByPending(): List<AvaliacaoEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(avaliacoes: AvaliacaoEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(cliente: List<AvaliacaoEntity>)
 
     @Delete
     suspend fun delete(avaliacoes: AvaliacaoEntity)

@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.imparkapk.data.repository.ReservaRepository
-import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.CarroRepository
+import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.ReservaRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

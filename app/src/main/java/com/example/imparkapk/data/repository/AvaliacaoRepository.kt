@@ -1,301 +1,352 @@
 package com.example.imparkapk.data.repository
 
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import com.example.imparkapk.data.local.dao.AvaliacaoDao
+import com.example.imparkapk.data.local.entity.AvaliacaoEntity
+import com.example.imparkapk.data.mapper.toDomain
+import com.example.imparkapk.data.mapper.toEntity
+import com.example.imparkapk.data.remote.api.api.AvaliacaoApi
+import com.example.imparkapk.data.worker.avaliacoes.AvaliacoesSyncScheduler
+import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Avaliacao
-import com.example.imparkapk.data.local.remote.api.api.AvaliacaoApi
-import com.example.imparkapk.data.local.remote.api.repository.reserva.ReservaRepository
-import kotlinx.coroutines.delay
-import java.util.Calendar
+import com.google.gson.Gson
+import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.ClienteRepository
+import com.rafaelcosta.modelo_app_crud_usuario_api.data.repository.EstacionamentoRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import java.util.Date
-import java.util.UUID
 import javax.inject.Inject
 
 class AvaliacaoRepository @Inject constructor(
-    private val avaliacaoDao: AvaliacaoDao,
-    private val avaliacaoApi: AvaliacaoApi,
-    private val reservaRepository: ReservaRepository
-) : AvaliacaoRepository {
-    private val avaliacoesCache = mutableListOf<Avaliacao>()
+    private val api: AvaliacaoApi,
+    private val dao: AvaliacaoDao,
+    private val estacionamentoRepository: EstacionamentoRepository,
+    private val clienteRepository: ClienteRepository,
+    @IoDispatcher private val io: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
+    private val gson: Gson
+) {
+    private val jsonMedia = "application/json".toMediaType()
 
-    init {
-        val calendario = Calendar.getInstance()
-        calendario.add(Calendar.DAY_OF_YEAR, -7)
+    private fun partJsonDados(dados: Any): RequestBody =
+        gson.toJson(dados).toRequestBody(jsonMedia)
 
-        avaliacoesCache.addAll(
-            listOf(
-                Avaliacao(
-                    id = "1",
-                    usuarioId = "1",
-                    estacionamentoId = "1",
-                    nota = 5,
-                    comentario = "Excelente estacionamento! Atendimento rápido e vagas amplas. Recomendo",
-                    dataAvaliacao = Date()
-                ),
-                Avaliacao(
-                    id = "2",
-                    usuarioId = "2",
-                    estacionamentoId = "1",
-                    nota = 4,
-                    comentario = "Bom estacionamento, mas poderia ter mais sinalização interna.",
-                    dataAvaliacao = calendario.time
-                ),
-                Avaliacao(
-                    id = "3",
-                    usuarioId = "3",
-                    estacionamentoId = "1",
-                    nota = 3,
-                    comentario = "Preço um pouco alto para a localização. Vagas um pouco apertadas.",
-                    dataAvaliacao = calendario.time
-                ),
-                Avaliacao(
-                    id = "4",
-                    usuarioId = "1",
-                    estacionamentoId = "2",
-                    nota = 5,
-                    comentario = "Ótima estrutura e atendimento. Estacionamento muito organizado!",
-                    dataAvaliacao = Date()
-                ),
-                Avaliacao(
-                    id = "5",
-                    usuarioId = "2",
-                    estacionamentoId = "2",
-                    nota = 4,
-                    comentario = "Boa localização e preço justo. Faltam mais vagas para idosos.",
-                    dataAvaliacao = calendario.time
+    private fun partFromUri(fieldName: String, uri: Uri?): MultipartBody.Part? {
+        if (uri == null) return null
+        val cr: ContentResolver = context.contentResolver
+        val type = cr.getType(uri) ?: "application/octet-stream"
+        val fileName = uri.lastPathSegment?.substringAfterLast('/') ?: "arquivo"
+        val input = cr.openInputStream(uri) ?: return null
+        val tmp = File.createTempFile("up_", "_tmp", context.cacheDir)
+        tmp.outputStream().use { out -> input.copyTo(out) }
+        val body = tmp.asRequestBody(type.toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(fieldName, fileName, body)
+    }
+
+    private fun partsFromUris(uris: List<Uri>?): List<MultipartBody.Part>? {
+        if (uris.isNullOrEmpty()) return null
+        return uris.mapNotNull { partFromUri("anexos", it) }
+    }
+
+    fun observeUsuarios(): Flow<List<Avaliacao>> =
+        dao.observerAll().map { list ->
+            list.map {
+                it.toDomain(
+                    cliente = clienteRepository.observeUsuario(it.clienteId).toList().first(),
+                    estacionamento = estacionamentoRepository.observeUsuario(it.estacionamentoId)
+                        .toList().first(),
                 )
-            )
-        )
-    }
-
-    override suspend fun criarAvaliacao(avaliacao: Avaliacao): Boolean {
-        return try {
-            delay(1500)
-            // Verifica se usuário já avaliou este estacionamento
-            val jaAvaliou = avaliacoesCache.any {
-                it.usuarioId == avaliacao.usuarioId &&
-                        it.estacionamentoId == avaliacao.estacionamentoId
-            }
-            if (jaAvaliou) {
-                return false
-            }
-            // Verifica se usuário pode avaliar (teve reserva neste estacionamento)
-            val podeAvaliar = verificarPodeAvaliar(avaliacao.usuarioId, avaliacao.estacionamentoId)
-            if (!podeAvaliar) {
-                return false
-            }
-
-            val novaAvaliacao = avaliacao.copy(
-                id = UUID.randomUUID().toString(),
-                dataAvaliacao = Date()
-            )
-            avaliacoesCache.add(novaAvaliacao)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    override suspend fun getAvaliacaoPorId(id: String): Result<Avaliacao?> {
-        return try {
-            val avaliacao = avaliacoesCache.find { it.id == id }
-            Result.success(avaliacao)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun listarAvaliacoesPorEstacionamento(estacionamentoId: String): List<Avaliacao> {
-        delay(1200)
-        return avaliacoesCache
-            .filter { it.estacionamentoId == estacionamentoId }
-            .sortedByDescending { it.dataAvaliacao }
-    }
-
-    override suspend fun listarMinhasAvaliacoes(usuarioId: String): List<Avaliacao> {
-        delay(1000)
-        return avaliacoesCache
-            .filter { it.usuarioId == usuarioId }
-            .sortedByDescending { it.dataAvaliacao }
-    }
-
-    override suspend fun atualizarAvaliacao(avaliacao: Avaliacao): Boolean {
-        return try {
-            delay(1200)
-            val index = avaliacoesCache.indexOfFirst { it.id == avaliacao.id }
-            if (index != -1) {
-                avaliacoesCache[index] = avaliacao.copy(dataAvaliacao = Date())
-                true
-            } else {
-                false
-            }
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    override suspend fun deletarAvaliacao(avaliacaoId: String): Boolean {
-        return try {
-            delay(800)
-            val removed = avaliacoesCache.removeAll { it.id == avaliacaoId }
-            removed
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    override suspend fun calcularMediaAvaliacoes(estacionamentoId: String): Result<Double> {
-        return try {
-            delay(600)
-            val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
-            val media = if (avaliacoes.isNotEmpty()) {
-                avaliacoes.map { it.nota }.average()
-            } else {
-                0.0
-            }
-            Result.success(media)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun countAvaliacoesPorEstacionamento(estacionamentoId: String): Int {
-        delay(300)
-        return avaliacoesCache.count { it.estacionamentoId == estacionamentoId }
-    }
-
-    override suspend fun countMinhasAvaliacoes(usuarioId: String): Int {
-        delay(300)
-        return avaliacoesCache.count { it.usuarioId == usuarioId }
-    }
-
-    override suspend fun getAvaliacoesPorUsuarioEEstacionamento(
-        usuarioId: String,
-        estacionamentoId: String
-    ): Result<Avaliacao?> {
-        return try {
-            delay(500)
-            val avaliacao = avaliacoesCache.find {
-                it.usuarioId == usuarioId &&
-                        it.estacionamentoId == estacionamentoId
-            }
-            Result.success(avaliacao)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun verificarPodeAvaliar(
-        usuarioId: String,
-        estacionamentoId: String
-    ): Boolean {
-        delay(800)
-        // Verifica se usuário já avaliou
-        val jaAvaliou = avaliacoesCache.any {
-            it.usuarioId == usuarioId &&
-                    it.estacionamentoId == estacionamentoId
-        }
-        if (jaAvaliou) {
-            return false
-        }
-        // Verifica se usuário teve pelo menos uma reserva neste estacionamento
-        val teveReserva = true // reservaRepository.temReservaNoEstacionamento(usuarioId, estacionamentoId)
-
-        return teveReserva
-    }
-
-    override fun validarNota(nota: Int): Boolean {
-        return nota in 1..5
-    }
-
-    override fun validarComentario(comentario: String): Boolean {
-        return comentario.length <= 500
-    }
-
-    override suspend fun getAvaliacoesRecentes(
-        estacionamentoId: String,
-        limite: Int
-    ): List<Avaliacao> {
-        delay(700)
-        return avaliacoesCache
-            .filter { it.estacionamentoId == estacionamentoId }
-            .sortedByDescending { it.dataAvaliacao }
-            .take(limite)
-    }
-
-    override suspend fun getDistribuicaoNotas(estacionamentoId: String): Map<Int, Int> {
-        delay(500)
-        val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
-        return (1..5).associateWith { nota ->
-            avaliacoes.count { it.nota == nota }
-        }
-    }
-
-    override suspend fun getAvaliacoesComComentario(estacionamentoId: String): List<Avaliacao> {
-        delay(600)
-        return avaliacoesCache
-            .filter {
-                it.estacionamentoId == estacionamentoId &&
-                        it.comentario.isNotBlank()
-            }
-            .sortedByDescending { it.dataAvaliacao }
-    }
-
-    override suspend fun sincronizarAvaliacoes(usuarioId: String): Result<Boolean> {
-        return try {
-            delay(2000)
-            // Simula sincronização com servidor
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    // Métodos auxiliares para análise de sentimentos
-    suspend fun analisarSentimentoAvaliacoes(estacionamentoId: String): Map<String, Any> {
-        delay(1000)
-        val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
-        val comentarios = avaliacoes.mapNotNull { it.comentario }
-
-        // Simulação simples de análise de sentimentos
-        val palavrasPositivas = listOf("excelente", "ótimo", "bom", "recomendo", "ótima")
-        val palavrasNegativas = listOf("ruim", "péssimo", "horrível", "problema", "falta")
-
-        var sentimentoPositivo = 0
-        var sentimentoNegativo = 0
-        var sentimentoNeutro = 0
-
-        comentarios.forEach { comentario ->
-            val palavras = comentario.lowercase().split(" ")
-            val positivas = palavras.count { it in palavrasPositivas }
-            val negativas = palavras.count { it in palavrasNegativas }
-
-            when {
-                positivas > negativas -> sentimentoPositivo++
-                negativas > positivas -> sentimentoNegativo++
-                else -> sentimentoNeutro++
             }
         }
 
-        return mapOf(
-            "total_avaliacoes" to avaliacoes.size,
-            "sentimento_positivo" to sentimentoPositivo,
-            "sentimento_negativo" to sentimentoNegativo,
-            "sentimento_neutro" to sentimentoNeutro,
-            "palavras_chave" to extrairPalavrasChave(comentarios)
-        )
-    }
+            fun observeUsuario(id: Long): Flow<Avaliacao?> =
+                dao.observeById(id).map {
+                    it?.toDomain(
+                        cliente = clienteRepository.observeUsuario(it.clienteId).toList().first(),
+                        estacionamento = estacionamentoRepository.observeUsuario(it.estacionamentoId)
+                            .toList().first(),
+                    )
+                }
 
-    private fun extrairPalavrasChave(comentarios: List<String>): List<String> {
-        val todasPalavras = comentarios.flatMap { it.lowercase().split(" ") }
-        val palavrasFrequentes = todasPalavras
-            .filter { it.length > 3 }
-            .groupingBy { it }
-            .eachCount()
-            .entries
-            .sortedByDescending { it.value }
-            .take(10)
-            .map { it.key }
+            suspend fun refresh(): Result<Unit> = runCatching {
+                val remote = api.list()
+                val current = dao.listAll().associateBy { it.id }
 
-        return palavrasFrequentes
-    }
-}
+                val merged = remote.map { dto ->
+                    val old = current[dto.id]
+                    if (old?.ativo == true) old else dto.toEntity(pending = false)
+                }
+
+                dao.upsertAll(merged)
+
+                val remoteIds = merged.map { it.id }.toSet()
+                val toDelete =
+                    current.values.filter { it.id !in remoteIds && !it.pendingSync && !it.localOnly }
+                toDelete.forEach { dao.deleteById(it.id) }
+            }
+
+
+            suspend fun create(
+                clienteId: Long,
+                estacionamentoId: Long,
+                nota: Int,
+                comentario: String,
+                dataAvaliacao: Date
+            ): Avaliacao {
+                return withContext(io) {
+
+                    val tempId = System.currentTimeMillis()
+                    val localUsuario = AvaliacaoEntity(
+                        id = tempId,
+                        updatedAt = System.currentTimeMillis(),
+                        pendingSync = true,
+                        localOnly = true,
+                        ativo = false,
+                        operationType = "CREATE",
+                        clienteId = clienteId,
+                        estacionamentoId = estacionamentoId,
+                        nota = nota,
+                        comentario = comentario,
+                        dataAvaliacao = dataAvaliacao,
+                    )
+
+                    dao.upsert(localUsuario)
+
+                    AvaliacoesSyncScheduler.enqueueNow(context)
+
+                    localUsuario.toDomain(
+                        cliente = clienteRepository.observeUsuario(clienteId).toList().first(),
+                        estacionamento = estacionamentoRepository.observeUsuario(estacionamentoId)
+                            .toList().first()
+                    )
+                }
+            }
+
+            suspend fun update(
+                id: Long,
+            ): Avaliacao {
+                return withContext(io) {
+                    val local =
+                        dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")
+                    val updated = local.copy(
+                        updatedAt = System.currentTimeMillis(),
+                        pendingSync = true,
+                        localOnly = local.localOnly,
+                        ativo = false,
+                        operationType = "UPDATE"
+                    )
+
+                    dao.upsert(updated)
+                    AvaliacoesSyncScheduler.enqueueNow(context)
+                    updated.toDomain(
+                        cliente = clienteRepository.observeUsuario(local.clienteId).toList()
+                            .first(),
+                        estacionamento = estacionamentoRepository.observeUsuario(local.estacionamentoId)
+                            .toList().first()
+                    )
+                }
+            }
+
+
+            suspend fun delete(id: Long): Result<Unit> = runCatching {
+                val local = dao.getById(id) ?: return@runCatching
+                dao.upsert(
+                    local.copy(
+                        ativo = true,
+                        pendingSync = true,
+                        updatedAt = System.currentTimeMillis(),
+                        operationType = "DELETE"
+                    )
+                )
+                AvaliacoesSyncScheduler.enqueueNow(context)
+            }
+
+            suspend fun sincronizarUsuarios() {
+                val pendentes = dao.getByPending()
+
+                pendentes.filter { it.operationType == "DELETE" }.forEach { u ->
+                    try {
+                        runCatching { api.delete(u.id) }
+                        dao.deleteById(u.id)
+                    } catch (e: Exception) {
+                    }
+                }
+
+                pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
+                    try {
+                        val dados = mapOf(
+                            ("clienteId" to u.clienteId),
+                            ("estacionamentoId" to u.estacionamentoId),
+                            ("nota" to u.nota),
+                            ("comentario" to u.comentario),
+                            ("dataAvaliacao" to u.dataAvaliacao)
+                        )
+                        val resp = api.create(
+                            dadosJson = partJsonDados(dados),
+                        )
+                        dao.deleteById(u.id)
+                        dao.upsert(resp.toEntity(pending = false))
+                    } catch (_: Exception) {
+                    }
+                }
+
+                pendentes.filter { it.operationType == "UPDATE" && !it.ativo }.forEach { u ->
+                    try {
+                        val dados = buildMap<String, Any> {
+                            put("clienteId", clienteRepository.observeUsuario(u.clienteId))
+                            put(
+                                "estacionamentoId",
+                                estacionamentoRepository.observeUsuario(u.estacionamentoId)
+                            )
+                            put("nota", u.nota)
+                            put("comentario", u.comentario)
+                            put("dataAvaliacao", u.dataAvaliacao)
+                        }
+
+                        val resp = api.update(
+                            id = u.id,
+                            dadosJson = partJsonDados(dados)
+                        )
+
+                        dao.upsert(
+                            resp.toEntity(
+                                pending = false
+                            ).copy(
+                                updatedAt = System.currentTimeMillis(),
+                                pendingSync = false,
+                                localOnly = false,
+                                operationType = null
+                            )
+                        )
+
+                    } catch (e: Exception) {
+                        Log.w(
+                            "UsuarioRepository",
+                            "Falha ao sincronizar UPDATE ${u.id}: ${e.message}"
+                        )
+                    }
+                }
+
+                try {
+                    val listaApi = api.list()
+                    val atuais = dao.listAll().associateBy { it.id }
+
+                    val remotos = listaApi.map { dto ->
+                        val antigo = atuais[dto.id]
+
+                        // 1️⃣ se foi deletado localmente, não ressuscita
+                        if (antigo?.ativo == true) return@map antigo
+
+                        val remoto = dto.toEntity(pending = false)
+
+                        // 2️⃣ se o local tem pendingSync, ele é mais novo → mantém local
+                        if (antigo?.pendingSync == true) return@map antigo
+
+                        // 3️⃣ se o local tem updatedAt mais recente, mantém local
+                        if (antigo != null && antigo.updatedAt > remoto.updatedAt) return@map antigo
+
+                        // 4️⃣ caso contrário, aceita o remoto (API)
+                        remoto
+                    }
+
+                    dao.upsertAll(remotos)
+
+                    val idsRemotos = remotos.map { it.id }.toSet()
+                    val locais = dao.listAll()
+                    locais.filter { local ->
+                        local.id !in idsRemotos && !local.pendingSync && !local.localOnly
+                    }.forEach { dao.deleteById(it.id) }
+
+                } catch (e: Exception) {
+                    Log.w("UsuarioRepository", "Sem conexão no pull: ${e.message}")
+                }
+            }
+
+            @Suppress("unused")
+            suspend fun syncAll(): Result<Unit> = runCatching {
+                val pendentes = dao.getByPending()
+
+                for (e in pendentes) {
+                    try {
+                        if (e.localOnly) {
+                            val dados = mapOf(
+                                ("clienteId" to e.clienteId),
+                                ("estacionamentoId" to e.estacionamentoId),
+                                ("nota" to e.nota),
+                                ("comentario" to e.comentario),
+                                ("dataAvaliacao" to e.dataAvaliacao)
+                            )
+                            val resp = api.create(
+                                dadosJson = partJsonDados(dados),
+                            )
+                            dao.deleteById(e.id)
+                            dao.upsert(resp.toEntity(pending = false))
+                        } else {
+                            val dados = buildMap<String, Any> {
+                            }
+                            val resp = api.update(
+                                id = e.id,
+                                dadosJson = partJsonDados(dados)
+                            )
+                            dao.upsert(resp.toEntity(pending = false))
+                        }
+                    } catch (_: Exception) {
+                    }
+                }
+                refresh()
+            }
+
+            @Suppress("unused")
+            private suspend fun tryPushOne(id: Long) {
+                val e = dao.getById(id) ?: return
+
+                val dados = buildMap<String, Any> {
+                }
+
+
+                val pushed = if (existsRemote(id)) {
+                    api.update(
+                        id = id,
+                        dadosJson = partJsonDados(dados)
+                    )
+                } else {
+                    api.create(
+                        dadosJson = partJsonDados(dados)
+                    )
+                }
+
+                dao.upsert(pushed.toEntity(pending = false))
+            }
+
+            private suspend fun existsRemote(id: Long): Boolean = runCatching {
+                api.getById(id); true
+            }.getOrDefault(false)
+
+            private fun saveLocalCopy(uri: Uri?): String? {
+                if (uri == null) return null
+                return try {
+                    val cr = context.contentResolver
+                    val input = cr.openInputStream(uri) ?: return null
+                    val fotosDir = File(context.filesDir, "fotos").apply { mkdirs() }
+                    val destFile = File(fotosDir, "foto_${System.currentTimeMillis()}.jpg")
+                    input.use { src -> destFile.outputStream().use { dst -> src.copyTo(dst) } }
+                    destFile.absolutePath
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }

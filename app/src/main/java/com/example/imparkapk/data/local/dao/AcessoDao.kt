@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.imparkapk.data.local.entity.AcessoEntity
+import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import kotlinx.coroutines.flow.Flow
 
 interface AcessoDao {
@@ -22,6 +23,12 @@ interface AcessoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(acesso: AcessoEntity)
+
+    @Query("SELECT * FROM acesso WHERE pending_sync = 1")
+    suspend fun getByPending(): List<AcessoEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(cliente: List<AcessoEntity>)
 
     @Delete
     suspend fun delete(acesso: AcessoEntity)
