@@ -4,7 +4,7 @@ import com.example.imparkapk.data.dao.remote.api.dto.estacionamento.Estacionamen
 import com.example.imparkapk.data.dto.carro.CarroDTO
 import java.util.*
 
-// ✅ REQUEST DTOs
+//  REQUEST DTOs
 data class ReservaCreateRequest(
     val clienteId: String,
     val estacionamentoId: String,
@@ -33,7 +33,7 @@ data class ReservaFilterRequest(
     val pageSize: Int = 20
 )
 
-// ✅ RESPONSE DTOs
+//  RESPONSE DTOs
 data class ReservaDTO(
     val id: String,
     val clienteId: String,
