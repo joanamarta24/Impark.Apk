@@ -55,7 +55,7 @@ data class ReservaDetailResponse(
     val reserva: ReservaDTO,
     val estacionamento: EstacionamentoDTO,
     val carro: CarroDTO?,
-    val cliente: com.example.imparkapk.data.dto.usuario.UsuarioDTO?
+    val cliente: com.example.imparkapk.data.dto.Cliente.ClienteDTO?
 )
 
 data class ReservaListResponse(
