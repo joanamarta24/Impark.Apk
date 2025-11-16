@@ -2,9 +2,11 @@ package com.example.imparkapk.data.dao.remote.api.repository.gerente
 
 import android.util.Log.e
 import com.example.imparkapk.data.dao.local.dao.dao.GerenteDao
+import com.example.imparkapk.data.dao.local.dao.entity.GerenteEntity
 import com.example.imparkapk.data.dao.model.Gerente
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import kotlinx.coroutines.delay
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -92,13 +94,82 @@ class GerenteRepositoryImpl @Inject constructor(
 
 
     override suspend fun getGerente(id: String): Result<Gerente?> {
-        TODO("Not yet implemented")
+        return try {
+            val response = gerenteApi.getGerente(id)
+            if (response.isSuccessful && response.body() != null){
+                val gerenteResponse = response.body()!!
+
+                // Converte Response para Model
+                val gerente = Gerente(
+                    id = gerenteResponse.id,
+                    nome = gerenteResponse.nome,
+                    email = gerenteResponse.email,
+                    senha = "", // Por segurança, não traz a senha
+                    estacionamentoId = gerenteResponse.estacionamentoId,
+                    cpf = gerenteResponse.cpf,
+                    telefone = gerenteResponse.telefone,
+                    dataCriacao = gerenteResponse.dataCriacao ?: Date(),
+                    dataAtualizacao = gerenteResponse.dataAtualizacao ?: Date(),
+                    ativo = gerenteResponse.ativo ?: true
+                )
+
+                // Salva no banco local para cache
+                val entity = GerenteEntity(
+                    id = gerente.id,
+                    nome = gerente.nome,
+                    email = gerente.email,
+                    senha = "", // Não salvar senha no cache por segurança
+                    estacionamentoId = gerente.estacionamentoId,
+                    cpf = gerente.cpf,
+                    telefone = gerente.telefone,
+                    dataCriacao = gerente.dataCriacao,
+                    dataAtualizacao = gerente.dataAtualizacao,
+                    ativo = gerente.ativo
+                )
+                gerenteDao.insertGerente(entity)
+
+                // Atualiza cache em memória
+                val index = gerentesCache.indexOfLast { it.id == id }
+                if (index != -1){
+                    gerentesCache[index] = gerente
+                }else{
+                    gerentesCache.add(gerente)
+                }
+                Result.success(gerente)
+            }else{
+                //FALLBACK: BUSCA DO BANCO LOCAL
+                val entity = gerenteDao.getGerenteById(id)
+                if (entity !=null){
+                    val gerente = Gerente(
+                        id = entity.id,
+                        nome = entity.nome,
+                        email = entity.email,
+                        senha = "", // Não trazer senha
+                        estacionamentoId = entity.estacionamentoId,
+                        cpf = entity.cpf,
+                        telefone = entity.telefone,
+                        dataCriacao = entity.dataCriacao,
+                        dataAtualizacao = entity.dataAtualizacao,
+                        ativo = entity.ativo
+                    )
+                    Result.success(gerente)
+                }else{
+                    Result.success(null
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            // FALLBACK FINAL: Busca do cache em memória
+            val gerenteCache = gerentesCache.find { it.id == id }
+            if (gerenteCache != null) {
+                Result.success(gerenteCache)
+            } else {
+                Result.failure(Exception("Erro ao buscar gerente: ${e.message}"))
+            }
+        }
     }
 
-    override suspend fun getGerentePorUsuarioEEstacionamento(
-        usuarioId: String,
-        estacionamentoId: String
-    ): Result<Gerente?> {
+    override suspend fun getGerentePorUsuarioEEstacionamento(usuarioId: String, estacionamentoId: String): Result<Gerente?> {
         TODO("Not yet implemented")
     }
 
@@ -187,10 +258,7 @@ class GerenteRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun atualizarPermissoesGerente(
-        gerenteId: String,
-        permissoes: List<String>
-    ): Boolean {
+    override suspend fun atualizarPermissoesGerente(gerenteId: String, permissoes: List<String>): Boolean {
         TODO("Not yet implemented")
     }
 

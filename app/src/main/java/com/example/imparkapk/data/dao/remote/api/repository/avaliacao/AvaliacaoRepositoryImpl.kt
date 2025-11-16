@@ -24,7 +24,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
         avaliacoesCache.addAll(
             listOf(
                 Avaliacao(
-                    id = "1",
+                    id = 1,
                     usuarioId = "1",
                     estacionamentoId = "1",
                     nota = 5,
@@ -32,7 +32,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = Date()
                 ),
                 Avaliacao(
-                    id = "2",
+                    id = 2,
                     usuarioId = "2",
                     estacionamentoId = "1",
                     nota = 4,
@@ -40,7 +40,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = calendario.time
                 ),
                 Avaliacao(
-                    id = "3",
+                    id = 3,
                     usuarioId = "3",
                     estacionamentoId = "1",
                     nota = 3,
@@ -48,7 +48,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = calendario.time
                 ),
                 Avaliacao(
-                    id = "4",
+                    id = 4,
                     usuarioId = "1",
                     estacionamentoId = "2",
                     nota = 5,
@@ -56,7 +56,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = Date()
                 ),
                 Avaliacao(
-                    id = "5",
+                    id = 5,
                     usuarioId = "2",
                     estacionamentoId = "2",
                     nota = 4,

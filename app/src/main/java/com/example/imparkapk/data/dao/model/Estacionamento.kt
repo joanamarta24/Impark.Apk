@@ -1,5 +1,6 @@
 package com.example.imparkapk.data.dao.model
 
+import com.example.imparkapk.data.dao.model.enus.StatusVagas
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -154,12 +155,6 @@ data class Estacionamento(
             dataAtualizacao = Date()
         )
     }
-}
-enum class StatusVagas{
-    DISPONIVEL,
-    MODERADO,
-    QUASE_LOTADO,
-    LOTADO
 }
 /*FILTRAR OS ESTACIONAMENTOS ABERTOS*/
 fun List<Estacionamento>.filtarAbertos(): List<Estacionamento>{

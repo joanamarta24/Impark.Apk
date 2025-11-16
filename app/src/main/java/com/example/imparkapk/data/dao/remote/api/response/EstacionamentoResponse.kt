@@ -1,5 +1,6 @@
 package com.example.imparkapk.data.dao.remote.api.response
 
+import com.example.imparkapk.data.dao.model.enus.TipoVeiculo
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
@@ -87,5 +88,17 @@ data class EstatisticasEstacionamento(
 
     @SerializedName("faturamento_mensal")
     val faturamentoMensal: Double
+)
+
+data class VeiculosResponse(
+    val id: String,
+    val placa: String,
+    val modelo: String,
+    val cor: String,
+    val tipo: TipoVeiculo,
+    val dataEntrada: Date,
+    val dataSaida: Date?,
+    val valorPago: Double?,
+    val status: String
 )
 

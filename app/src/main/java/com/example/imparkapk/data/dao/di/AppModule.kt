@@ -1,9 +1,9 @@
 import android.content.Context
 import androidx.browser.trusted.TokenStore
+import com.example.imparkapk.data.dao.remote.api.AuthApiService
+import com.example.imparkapk.data.dao.remote.api.RefreshRequest
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import java.util.concurrent.TimeUnit
-import com.example.imparkapk.data.remote.AuthApiService
-import com.example.imparkapk.data.remote.RefreshRequest
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -17,7 +17,6 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.jvm.java

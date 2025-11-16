@@ -83,6 +83,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48.1")
     implementation(libs.androidx.room.common.jvm)
     implementation(libs.androidx.browser)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.room.ktx)
     ksp("com.google.dagger:hilt-compiler:2.48.1")
 
     // Navigation
