@@ -93,8 +93,9 @@ data class PaginatioInfo(
             start = start.coerceAtLeast(1)
             end = end.coerceAtMost(totalPages)
 
-            return start..end
+
         }
+        return start..end
     }
 }
 data class PaginationRequest(
