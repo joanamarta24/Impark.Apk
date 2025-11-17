@@ -37,5 +37,16 @@ interface EstacionamentoDao {
     @Query("UPDATE estacionamentos SET ativo = :ativo WHERE id = :id")
     suspend fun updateStatusEstacionamento(id: String, ativo: Boolean)
 
+    @Query("SELECT * FROM estacionamentos WHERE id = id")
+    suspend fun buscarPorI(id: String): EstacionamentoEntity?
+
+    @Query("SELECT * FROM estacionamentos WHERE nome LIKE nome AND ativo = 1")
+    suspend fun buscarPorNome(nome: String): List<EstacionamentoEntity>
+
+    @Query("SELECT * FROM estacionamentos WHERE ativo = 1")
+    suspend fun buscarTodosAtivos(): List<EstacionamentoEntity>
+
+    @Query("SELECT * FROM estacionamentos WHERE valor_hora <= :maxPreco")
+
 
 }

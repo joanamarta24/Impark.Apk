@@ -1,12 +1,15 @@
 package com.example.imparkapk.data.dao.remote.api.repository.estacionamento
 
+import android.util.Log
 import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.model.Estacionamento
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -158,8 +161,36 @@ class EstacionamentoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun buscarEstacionamentoPorId(id: String): Estacionamento? {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            try {
+                // Buscar no banco local primeiro
+                val estacionamentoLocal = estacionamentoDao.buscarPorId(id)
+
+                if (estacionamentoLocal != null) {
+                    // Se encontrou localmente, converter para domain model
+                    return@withContext estacionamentoLocal.toEstacionamento()
+                }
+
+                // Se não encontrou localmente, buscar na API
+                val response = estacionamentoApiService.buscarPorId(id)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val estacionamentoApi = response.body()!!
+                    // Salvar no banco local para cache
+                    estacionamentoDao.inserir(estacionamentoApi.toEstacionamentoEntity())
+                    return@withContext estacionamentoApi
+                } else {
+                    // Log de erro
+                    Log.e("EstacionamentoRepo", "Erro ao buscar estacionamento por ID: ${response.message()}")
+                    return@withContext null
+                }
+            } catch (e: Exception) {
+                Log.e("EstacionamentoRepo", "Erro ao buscar estacionamento por ID: ${e.message}", e)
+                return@withContext null
+            }
+        }
     }
+
 
     override suspend fun buscarEstacionamentoPorNome(nome: String): List<Estacionamento> {
         TODO("Not yet implemented")
@@ -174,6 +205,17 @@ class EstacionamentoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun buscarEstacionamentoPorPreco(maxPreco: Double): List<Estacionamento> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun buscarEstacionamentoComFiltros(
+        nome: String?,
+        maxPreco: Double?,
+        latitude: Double?,
+        longitude: Double?,
+        raioKm: Double?,
+        comVagas: Boolean
+    ): List<Estacionamento> {
         TODO("Not yet implemented")
     }
 

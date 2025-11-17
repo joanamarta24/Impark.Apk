@@ -1,5 +1,6 @@
 package com.example.imparkapk.data.dao.remote.api.api
 
+import com.example.imparkapk.data.dao.remote.api.dto.PaginationDto
 import com.example.imparkapk.data.dao.remote.api.request.AtualizarEstacionamentoRequest
 import com.example.imparkapk.data.dao.remote.api.request.BuscarEstacionamentosRequest
 import com.example.imparkapk.data.dao.remote.api.request.EstacionamentoRequest
@@ -31,17 +32,18 @@ interface EstacionamentoApi {
     @POST("estacionamentos/buscar")
     suspend fun buscarEstacionamentos(
         @Body request: BuscarEstacionamentosRequest
-    ): Response<ApiResponse<PaginationDTO<EstacionamentoResponse>>>
+    ): Response<ApiResponse<PaginationDto<EstacionamentoResponse>>>
 
     @GET("estacionamentos/{id}/veiculos")
     suspend fun getVeiculosEstacionamento(
         @Path("id") id: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 50
-    ): Response<ApiResponse<PaginationDTO<VeiculoResponse>>>
+    ): Response<ApiResponse<PaginationDto<VeiculoResponse>>>
 
     @POST("estacionamentos/buscar")
-    suspend fun buscarEstacionamentos(@Body request: BuscarEstacionamentosRequest): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
+    suspend fun buscarEstacionamentos(
+        @Body request: BuscarEstacionamentosRequest): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
 
     @GET("estacionamentos/{id}")
     suspend fun getEstacionamento(@Path("id") id: String): Response<ApiResponse<EstacionamentoResponse>>
