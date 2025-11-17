@@ -1,7 +1,9 @@
 package com.example.imparkapk.data.dao.remote.api.api
 
+import com.example.imparkapk.data.dao.remote.api.request.AtualizarEstacionamentoRequest
 import com.example.imparkapk.data.dao.remote.api.request.BuscarEstacionamentosRequest
 import com.example.imparkapk.data.dao.remote.api.request.EstacionamentoRequest
+import com.example.imparkapk.data.dao.remote.api.request.VeiculoResponse
 import com.example.imparkapk.data.dao.remote.api.response.ApiResponse
 import com.example.imparkapk.data.dao.remote.api.response.AtualizarEstacionamentoRequest
 import com.example.imparkapk.data.dao.remote.api.response.EstacionamentoDetalhesResponse
@@ -21,8 +23,22 @@ interface EstacionamentoApi {
     @GET("estacionamentos")
     suspend fun listarEstacionamentos(
         @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 20
+        @Query("limit") limit: Int = 20,
+        @Query("sort_by") sortBy: String? = null,
+        @Query("sort_order") sortOrder: String = "asc"
     ): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
+
+    @POST("estacionamentos/buscar")
+    suspend fun buscarEstacionamentos(
+        @Body request: BuscarEstacionamentosRequest
+    ): Response<ApiResponse<PaginationDTO<EstacionamentoResponse>>>
+
+    @GET("estacionamentos/{id}/veiculos")
+    suspend fun getVeiculosEstacionamento(
+        @Path("id") id: String,
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 50
+    ): Response<ApiResponse<PaginationDTO<VeiculoResponse>>>
 
     @POST("estacionamentos/buscar")
     suspend fun buscarEstacionamentos(@Body request: BuscarEstacionamentosRequest): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>

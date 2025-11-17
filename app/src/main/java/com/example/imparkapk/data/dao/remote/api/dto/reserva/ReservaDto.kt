@@ -24,6 +24,8 @@ data class ReservaUpdateRequest(
 )
 
 data class ReservaFilterRequest(
+    val donoId: Long,
+    val donoNome: String? = null,
     val clienteId: String? = null,
     val estacionamentoId: String? = null,
     val status: String? = null,
@@ -60,7 +62,7 @@ data class ReservaDetailResponse(
 
 data class ReservaListResponse(
     val reservas: List<ReservaDTO>,
-    val pagination: com.example.imparkapk.data.dto.shared.PaginationDTO
+    val pagination: com.example.imparkapk.data.dto.PaginationDTO
 )
 
 data class ReservaCreateResponse(
@@ -97,4 +99,32 @@ data class TaxaDTO(
     val nome: String,
     val valor: Double,
     val tipo: String // PERCENTUAL, FIXO
+)
+//AVALIAÇÃO
+data class AvaliacaoCreateRequest(
+    val usuarioId:String,
+    val estacionamentoId: String,
+    val reservaId: String,
+    val nota: Int,
+    val comentario: String? = null,
+    val tags: List<String> = emptyList()
+)
+data class AvaliacaoUpdateRequest(
+    val nota: Int? = null,
+    val comentario: String? = null,
+    val tags: List<String> = emptyList()
+
+)
+data class AvaliacaoFilterRequest(
+    val estacionamentoId: String? = null,
+    val usuarioId: String? = null,
+    val notaMinima: Int? = null,
+    val notaMaxima: Int? = null,
+    val comComentario: Boolean? = null,
+    val page: Int = 1,
+    val pageSize: Int = 20
+)
+//RESPONSE DTOS
+data class AvalicaoDTO(
+
 )

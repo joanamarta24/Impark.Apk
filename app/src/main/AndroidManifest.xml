@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ImparkApk">
 
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -25,9 +26,10 @@
         </activity>
 
         <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:name="androidx.work.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
-            android:exported="false" />
+            android:exported="false"
+            tools:node="remove" />
     </application>
 
 </manifest>

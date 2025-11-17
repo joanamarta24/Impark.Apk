@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.data.dao.model.Estacionamento
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
+import com.example.imparkapk.data.dao.remote.api.request.EstacionamentoResponse
+import com.example.imparkapk.data.manager.PaginationManager
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,9 +26,16 @@ class EstacionamentoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(EstacionamentoUiState())
     val uiState: StateFlow<EstacionamentoUiState> = _uiState.asStateFlow()
 
+    private val paginationManager = PaginationManager<EstacionamentoResponse>()
+
+    val estacionamentos = paginationManager.currentData
+    val paginationState = paginationManager.paginationState
+
+
     init {
         carregarEstacionamentos()
     }
+
 
     fun carregarEstacionamentos() {
         _uiState.update { it.copy(isLoading = true) }
@@ -140,6 +149,7 @@ class EstacionamentoViewModel @Inject constructor(
         }
     }
 }
+
 
 data class EstacionamentoUiState(
     val estacionamentos: List<Estacionamento> = emptyList(),

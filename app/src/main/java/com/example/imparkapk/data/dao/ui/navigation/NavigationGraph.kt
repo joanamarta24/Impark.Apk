@@ -3,9 +3,22 @@ package com.example.imparktcc.ui.navigation
 import android.window.SplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.imparkApp.CadastroUsuarioScreen
+import com.example.imparkapk.data.dao.ui.Screen.avaliacao.AvaliacaoScreen
+import com.example.imparkapk.data.dao.ui.Screen.cadastro.CadastroEstacionamentoScreen
+import com.example.imparkapk.data.dao.ui.Screen.cadastro.CadastroGerenteScreen
+import com.example.imparkapk.data.dao.ui.Screen.estacionamento.ListaEstacionamentosScreen
+import com.example.imparkapk.data.dao.ui.Screen.perfil.EditarPerfilScreen
+import com.example.imparkapk.data.dao.ui.Screen.recuperacao.RecuperacaoScreen
+import com.example.imparkapk.data.dao.ui.Screen.recuperacao.RedefinirSenhaScreen
+import com.example.imparkapk.data.dao.ui.Screen.reserva.ReservaScreen
+import com.example.imparkapk.data.dao.ui.feature.login.home.HomeScreen
+import com.example.imparkapk.data.dao.ui.feature.login.login.LoginScreen
+import com.example.imparktcc.ui.screen.estacionamento.DetalhesEstacionamentoScreen
 
 object AppRoutes {
     // Navegação principal
