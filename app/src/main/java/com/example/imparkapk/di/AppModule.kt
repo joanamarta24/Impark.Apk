@@ -5,6 +5,9 @@ import com.example.imparkapk.data.local.TokenStore
 import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.remote.AuthApiService
 import com.example.imparkapk.data.remote.RefreshRequest
+import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
+import com.example.imparkapk.data.remote.api.api.usuarios.DonoApi
+import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -157,8 +160,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUsuarioApi(@Named("secure") retrofit: Retrofit): UsuarioApi =
-        retrofit.create(UsuarioApi::class.java)
+    fun provideClienteApi(@Named("secure") retrofit: Retrofit): ClienteApi =
+        retrofit.create(ClienteApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDonoApi(@Named("secure") retrofit: Retrofit): DonoApi =
+        retrofit.create(DonoApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideGerenteApi(@Named("secure") retrofit: Retrofit): GerenteApi =
+        retrofit.create(GerenteApi::class.java)
 
     @Provides
     @Singleton

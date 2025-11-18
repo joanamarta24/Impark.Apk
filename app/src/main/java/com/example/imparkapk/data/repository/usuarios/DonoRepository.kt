@@ -109,8 +109,7 @@ class DonoRepository @Inject constructor(
                 operationType = "CREATE",
                 telefone = telefone,
                 dataNascimento = nascimento,
-                tipoUsuario = tipoDeUsuario,
-                estacionamentosId = estacionamentosId,
+                tipoUsuario = tipoDeUsuario
             )
 
             dao.upsert(localUsuario)

@@ -84,7 +84,7 @@ class CarroRepository @Inject constructor(
 
 
     suspend fun create(
-        usuarioId: Long,
+        clienteId: Long,
         modelo: String,
         placa: String
     ): Carro {
@@ -98,7 +98,7 @@ class CarroRepository @Inject constructor(
                 localOnly = true,
                 ativo = false,
                 operationType = "CREATE",
-                usuarioId = usuarioId,
+                clienteId = clienteId,
                 modelo = modelo,
                 placa = placa,
             )
@@ -113,7 +113,7 @@ class CarroRepository @Inject constructor(
 
     suspend fun update(
         id: Long,
-        usuarioId: Long,
+        clienteId: Long,
         modelo: String,
         placa: String
     ): Carro {
@@ -125,7 +125,7 @@ class CarroRepository @Inject constructor(
                 localOnly = local.localOnly,
                 ativo = false,
                 operationType = "UPDATE",
-                usuarioId = usuarioId,
+                clienteId = clienteId,
                 modelo = modelo,
                 placa = placa,
             )
@@ -164,7 +164,7 @@ class CarroRepository @Inject constructor(
         pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
             try {
                 val dados = mapOf(
-                    "usuarioId" to u.usuarioId,
+                    "usuarioId" to u.clienteId,
                     "modelo" to u.modelo,
                     "placa" to u.placa
                 )
@@ -248,7 +248,7 @@ class CarroRepository @Inject constructor(
             try {
                 if (e.localOnly) {
                     val dados = mapOf(
-                        "usuarioId" to e.usuarioId,
+                        "usuarioId" to e.clienteId,
                         "modelo" to e.modelo,
                         "placa" to e.placa
                     )

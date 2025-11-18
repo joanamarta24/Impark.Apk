@@ -70,18 +70,10 @@ class ClienteRepository @Inject constructor(
     }
 
     fun observeUsuarios(): Flow<List<Cliente>> =
-        dao.observerAll().map { list -> list.map { it.toDomain(
-            carros = it.carros.map { carroRepository.observeUsuario(it).toList().first() } as List<Carro>?,
-            reservas = it.reservas.map { reservaRepository.observeUsuario(it).toList().first() } as List<Reserva>?,
-            avaliacoes = it.reservas.map { avaliacaoRepository.observeUsuario(it).toList().first() } as List<Avaliacao>?
-        ) } }
+        dao.observerAll().map { list -> list.map { it.toDomain() } }
 
     fun observeUsuario(id: Long?): Flow<Cliente?> =
-        dao.observeById(id).map { it?.toDomain(
-            carros = it.carros.map { carroRepository.observeUsuario(it).toList().first() } as List<Carro>?,
-            reservas = it.reservas.map { reservaRepository.observeUsuario(it).toList().first() } as List<Reserva>?,
-            avaliacoes = it.reservas.map { avaliacaoRepository.observeUsuario(it).toList().first() } as List<Avaliacao>?
-        ) }
+        dao.observeById(id).map { it?.toDomain() }
 
     suspend fun refresh(): Result<Unit> = runCatching {
         val remote = api.list()
@@ -126,10 +118,7 @@ class ClienteRepository @Inject constructor(
                 operationType = "CREATE",
                 telefone = telefone,
                 dataNascimento = nascimento,
-                tipoUsuario = tipoDeUsuario,
-                carros = carros,
-                avaliacoes = avaliacoes,
-                reservas = reservas
+                tipoUsuario = tipoDeUsuario
             )
 
             dao.upsert(localUsuario)

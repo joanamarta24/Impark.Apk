@@ -2,6 +2,9 @@ package com.example.imparkapk.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.imparkapk.data.local.dao.usuarios.ClienteDao
+import com.example.imparkapk.data.local.dao.usuarios.DonoDao
+import com.example.imparkapk.data.local.dao.usuarios.GerenteDao
 import com.example.imparkapk.data.local.db.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -26,5 +29,13 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideUsuarioDao(db: AppDatabase): UsuarioDao = db.usuarioDao()
+    fun provideClienteDao(db: AppDatabase): ClienteDao = db.clienteDao()
+
+    @Provides
+    @Singleton
+    fun provideGerenteDao(db: AppDatabase): GerenteDao = db.gerenteDao()
+
+    @Provides
+    @Singleton
+    fun provideDonoDao(db: AppDatabase): DonoDao = db.donoDao()
 }

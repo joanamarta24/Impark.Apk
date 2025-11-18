@@ -123,9 +123,7 @@ class EstacionamentoRepository @Inject constructor(
                 vagasTotal = vagasTotal,
                 precoHora = precoHora,
                 horarioFuncionamento = horarioFuncionamento,
-                reservasId = reservasId,
                 donoId = donoId,
-                gerentesId = gerentesId,
                 telefone = telefone
             )
 
@@ -198,9 +196,7 @@ class EstacionamentoRepository @Inject constructor(
                     "vagasTotal" to u.vagasTotal,
                     "precoHora" to u.precoHora,
                     "horarioFuncionamento" to u.horarioFuncionamento,
-                    "reservasId" to u.reservasId,
                     "donoId" to u.donoId,
-                    "gerentesId" to u.gerentesId,
                     "telefone" to u.telefone
                 )
                 val resp = api.create(
@@ -306,9 +302,7 @@ class EstacionamentoRepository @Inject constructor(
                         "vagasTotal" to e.vagasTotal,
                         "precoHora" to e.precoHora,
                         "horarioFuncionamento" to e.horarioFuncionamento,
-                        "reservasId" to e.reservasId,
                         "donoId" to e.donoId,
-                        "gerentesId" to e.gerentesId,
                         "telefone" to e.telefone
                     )
                     val resp = api.create(
