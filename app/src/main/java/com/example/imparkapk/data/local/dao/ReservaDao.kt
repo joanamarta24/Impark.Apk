@@ -45,6 +45,6 @@ interface ReservaDao {
     suspend fun delete(reserva: ReservaEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM reserva WHERE id = :id")
     suspend fun deleteById(id: Long)
 }

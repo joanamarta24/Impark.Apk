@@ -46,6 +46,6 @@ interface GerenteDao {
     suspend fun delete(gerente: GerenteEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM gerente WHERE id = :id")
     suspend fun deleteById(id: Long)
 }

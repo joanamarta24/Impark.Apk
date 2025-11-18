@@ -45,6 +45,6 @@ interface AcessoDao {
     suspend fun delete(acesso: AcessoEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM acesso WHERE id = :id")
     suspend fun deleteById(id: Long)
 }

@@ -45,6 +45,6 @@ interface CarroDao {
     suspend fun delete(carro: CarroEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM carro WHERE id = :id")
     suspend fun deleteById(id: Long)
 }

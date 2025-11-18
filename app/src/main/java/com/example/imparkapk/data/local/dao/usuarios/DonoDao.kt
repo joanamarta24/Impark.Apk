@@ -42,6 +42,6 @@ interface DonoDao {
     suspend fun delete(dono: DonoEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM dono WHERE id = :id")
     suspend fun deleteById(id: Long)
 }

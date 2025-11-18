@@ -45,6 +45,6 @@ interface EstacionamentoDao {
     suspend fun delete(estacionamento: EstacionamentoEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM estacionamento WHERE id = :id")
     suspend fun deleteById(id: Long)
 }

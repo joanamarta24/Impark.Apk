@@ -46,6 +46,6 @@ interface AvaliacaoDao {
     suspend fun delete(avaliacoes: AvaliacaoEntity)
 
     @Transaction
-    @Delete
+    @Query("DELETE FROM avaliacoes WHERE id = :id")
     suspend fun deleteById(id: Long)
 }
