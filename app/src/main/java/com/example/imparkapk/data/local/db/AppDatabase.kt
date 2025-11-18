@@ -30,7 +30,6 @@ import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
         ClienteEntity::class,
         CarroEntity::class,
         EstacionamentoEntity::class,
-        GerenteEntity::class,
         ReservaEntity::class,
         AvaliacaoEntity::class,
         AcessoEntity::class
