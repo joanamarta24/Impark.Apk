@@ -3,9 +3,11 @@ package com.example.imparkapk.data.local.entity.crossRefs.ClienteWithAvaliaçõe
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.example.imparkapk.data.local.entity.AvaliacaoEntity
+import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 
 data class ClienteWithAvaliacoes(
-    @Embedded val clienteId: Long,
+    @Embedded val clienteId: ClienteEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
@@ -15,5 +17,5 @@ data class ClienteWithAvaliacoes(
             entityColumn = "avaliacaoId"
         )
     )
-    val avaliacoesIds: List<Long>
+    val avaliacoesIds: List<AvaliacaoEntity>
 )

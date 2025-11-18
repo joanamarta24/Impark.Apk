@@ -28,8 +28,7 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["gerentes"],
             onDelete = ForeignKey.CASCADE
-        )
-
+        ),
     ])
 data class EstacionamentoEntity(
     @PrimaryKey
@@ -77,12 +76,12 @@ data class EstacionamentoEntity(
     @ColumnInfo(name = "horario_de_funcionamento")
     val horarioFuncionamento: String,
 
-    //TODO(Ponto de relação #4 OneToMany)
-
     @ColumnInfo(name = "dono_id")
     val donoId: Long?,
 
-    //TODO(Ponto de relação #5 OneToMany)
+    //TODO(Ponto de relação #2 OneToMany)
+
+    //TODO(Ponto de relação #3 OneToMany)
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long,
