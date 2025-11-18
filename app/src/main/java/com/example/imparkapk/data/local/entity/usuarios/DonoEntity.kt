@@ -9,15 +9,7 @@ import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
 import java.util.Date
 
 @Entity(
-    tableName = "dono",
-    foreignKeys = [
-        ForeignKey(
-            entity = EstacionamentoEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["estacionamentos"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+    tableName = "dono"
 )
 data class DonoEntity (
     @PrimaryKey
@@ -41,8 +33,6 @@ data class DonoEntity (
 
     @ColumnInfo(name = "tipo_usuario")
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
-
-    //TODO(Ponto de relação #1 OneToMany)
 
     @ColumnInfo(name = "ativo")
     val ativo: Boolean,

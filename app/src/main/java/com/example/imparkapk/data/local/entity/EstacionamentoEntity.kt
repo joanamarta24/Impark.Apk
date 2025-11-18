@@ -79,7 +79,7 @@ data class EstacionamentoEntity(
 
     //TODO(Ponto de relação #4 OneToMany)
 
-    @ColumnInfo(name = "dono")
+    @ColumnInfo(name = "dono_id")
     val donoId: Long?,
 
     //TODO(Ponto de relação #5 OneToMany)
