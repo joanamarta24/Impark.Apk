@@ -54,7 +54,10 @@ android {
 dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.0")
-
+    
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     // Core AndroidX e Compose
     implementation(libs.androidx.core.ktx)

@@ -1,9 +1,9 @@
 package com.example.imparkapk.data.dao.remote.api.repository.estacionamento
 
 import android.util.Log
-import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
 import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
+import com.example.imparkapk.data.dao.local.dao.entity.toEstacionamento
 import com.example.imparkapk.data.dao.model.Estacionamento
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class EstacionamentoRepositoryImpl @Inject constructor(
     private val estacionamentoDao: EstacionamentoDao,
-    private val estacionamentoApi: EstacionamentoApi
+    private val estacionamentosApi: EstacionamentosApi
 ) : EstacionamentoRepository {
 
     private val estacionamentosCache = mutableListOf<Estacionamento>().apply {
@@ -193,7 +193,15 @@ class EstacionamentoRepositoryImpl @Inject constructor(
 
 
     override suspend fun buscarEstacionamentoPorNome(nome: String): List<Estacionamento> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO){
+            try {
+                val estacionamentosLocais = estacionamentoDao.buscarPorNome("%$nome%")
+                if (estacionamentosLocais.isNotEmpty()){
+                    return@withContext estacionamentosLocais.map{it.toEstacionamento()}
+                }
+            }
+            val response = estacionamentosApi.busrPorNome(nome)
+        }
     }
 
     override suspend fun buscarEstacionamentoProximos(

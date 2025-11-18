@@ -25,7 +25,8 @@ data class Estacionamento(
     val notaMedia: Double = 0.0,
     val totalAvaliacoes: Int = 0,
     val dataCriacao: Date = Date(),
-    val dataAtualizacao: Date = Date()
+    val dataAtualizacao: Date = Date(),
+
 ) {
     companion object {
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -148,6 +149,7 @@ data class Estacionamento(
     }
 
     /*CRIAR UMA CÓPIA COM VAGAS ATUALIZADAS*/
+
     fun copyComNovaAvaliacao(novaNota: Double, totalAval: Int): Estacionamento {
         return this.copy(
             notaMedia = novaNota,

@@ -46,7 +46,17 @@ interface EstacionamentoDao {
     @Query("SELECT * FROM estacionamentos WHERE ativo = 1")
     suspend fun buscarTodosAtivos(): List<EstacionamentoEntity>
 
-    @Query("SELECT * FROM estacionamentos WHERE valor_hora <= :maxPreco")
+    @Query("SELECT * FROM estacionamentos WHERE valor_hora <= :maxPreco AND ativo =1 ORDER BY valor_hora ASC")
+    suspend fun buscarPorPrecoMaximo(maxPreco: Double): List<EstacionamentoEntity>
+
+ @Insert(onConflict = OnConflictStrategy.REPLACE)
+ suspend fun inserir(estacionamento: EstacionamentoEntity)
+
+ @Insert(onConflict = OnConflictStrategy.REPLACE)
+ suspend fun inserirTodos(estacionamentos: List<EstacionamentoEntity>)
+
+ @Query("DELETE FROM estacionamentos WHERE cache_timestamp < :timestamp")
+ suspend fun limparEstacionamentosProximos(timestamp: Long = System.currentTimeMillis() - 30*60*100) // 30 minutos
 
 
 }

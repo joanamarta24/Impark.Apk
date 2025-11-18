@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.remote.api.api
+package com.example.imparkapk.data.dao.remote.api.repository.estacionamento
 
 import com.example.imparkapk.data.dao.remote.api.dto.PaginationDto
 import com.example.imparkapk.data.dao.remote.api.request.AtualizarEstacionamentoRequest
@@ -6,7 +6,6 @@ import com.example.imparkapk.data.dao.remote.api.request.BuscarEstacionamentosRe
 import com.example.imparkapk.data.dao.remote.api.request.EstacionamentoRequest
 import com.example.imparkapk.data.dao.remote.api.request.VeiculoResponse
 import com.example.imparkapk.data.dao.remote.api.response.ApiResponse
-import com.example.imparkapk.data.dao.remote.api.response.AtualizarEstacionamentoRequest
 import com.example.imparkapk.data.dao.remote.api.response.EstacionamentoDetalhesResponse
 import com.example.imparkapk.data.dao.remote.api.response.EstacionamentoResponse
 import com.example.imparkapk.data.dao.remote.api.response.PaginatedResponse
@@ -19,7 +18,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface EstacionamentoApi {
+interface EstacionamentosApi {
 
     @GET("estacionamentos")
     suspend fun listarEstacionamentos(
@@ -43,7 +42,8 @@ interface EstacionamentoApi {
 
     @POST("estacionamentos/buscar")
     suspend fun buscarEstacionamentos(
-        @Body request: BuscarEstacionamentosRequest): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
+        @Body request: BuscarEstacionamentosRequest
+    ): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
 
     @GET("estacionamentos/{id}")
     suspend fun getEstacionamento(@Path("id") id: String): Response<ApiResponse<EstacionamentoResponse>>

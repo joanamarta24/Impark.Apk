@@ -2,11 +2,13 @@ package com.example.imparkapk.data.dao.di
 
 import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.dao.remote.api.api.CarroApi
-import com.example.imparkapk.data.dao.remote.api.api.EstacionamentoApi
+import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentosApi
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
 import com.google.firebase.BuildConfig
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -90,7 +92,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideEstacionamentoApi(retrofit: Retrofit): EstacionamentoApi = retrofit.create()
+    fun provideEstacionamentoApi(retrofit: Retrofit): EstacionamentosApi = retrofit.create()
 
     @Provides
     @Singleton
@@ -103,3 +105,49 @@ object NetworkModule {
 
 }
 private inline fun <reified T> Retrofit.create(): T = create(T::class.java)
+object NewtworkModelu{
+    @Provides
+    @Singleton
+    fun  provideEstacionamentoApi(retrofit: Retrofit): EstacionamentosApi{
+        return retrofit.create(EstacionamentosApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        gson: Gson
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://api.impark.com/v1/") // URL base da API
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Accept", "application/json")
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+    }
+    @Provides
+    @Singleton
+    fun provideGson(): Gson{
+        return GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .create()
+    }
+
+}

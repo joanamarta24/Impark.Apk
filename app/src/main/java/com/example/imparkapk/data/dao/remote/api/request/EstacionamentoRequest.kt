@@ -213,7 +213,7 @@ data class EnderecoRequest(
 
 companion object {
     fun fromString(value: String): TipoVeiculo {
-        return value.find { it.descricao.equals(value, ignoreCase = true) } ?: TipoVeiculo.OUTROS
+        return (value.find { it.descricao.equals(value, ignoreCase = true) } ?: TipoVeiculo.OUTROS) as TipoVeiculo
     }
 
     fun toMapString(veiculosPorTipo: Map<TipoVeiculo, Int>): Map<String, Int> {
