@@ -18,12 +18,6 @@ import java.util.Date
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = ReservaEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["reservas"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
             entity = GerenteEntity::class,
             parentColumns = ["id"],
             childColumns = ["gerentes"],
@@ -78,8 +72,6 @@ data class EstacionamentoEntity(
 
     @ColumnInfo(name = "dono_id")
     val donoId: Long?,
-
-    //TODO(Ponto de relação #2 OneToMany)
 
     //TODO(Ponto de relação #3 OneToMany)
 
