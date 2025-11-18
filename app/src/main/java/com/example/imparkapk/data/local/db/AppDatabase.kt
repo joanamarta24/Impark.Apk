@@ -5,26 +5,35 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.imparkapk.data.local.dao.AcessoDao
 import com.example.imparkapk.data.local.dao.ReservaDao
 import com.example.imparkapk.data.local.dao.AvaliacaoDao
 import com.example.imparkapk.data.local.dao.CarroDao
 import com.example.imparkapk.data.local.dao.EstacionamentoDao
+import com.example.imparkapk.data.local.dao.usuarios.ClienteDao
+import com.example.imparkapk.data.local.dao.usuarios.DonoDao
 import com.example.imparkapk.data.local.dao.usuarios.GerenteDao
+import com.example.imparkapk.data.local.entity.AcessoEntity
 import com.example.imparkapk.data.local.entity.AvaliacaoEntity
 import com.example.imparkapk.data.local.entity.CarroEntity
 import com.example.imparkapk.data.local.entity.EstacionamentoEntity
 import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
 import com.example.imparkapk.data.local.entity.ReservaEntity
+import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
+import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
 
 
 @Database(
     entities = [
-        UsuarioEntity::class,
+        DonoEntity::class,
+        GerenteEntity::class,
+        ClienteEntity::class,
         CarroEntity::class,
         EstacionamentoEntity::class,
         GerenteEntity::class,
         ReservaEntity::class,
-        AvaliacaoEntity::class
+        AvaliacaoEntity::class,
+        AcessoEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -32,12 +41,14 @@ import com.example.imparkapk.data.local.entity.ReservaEntity
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun usuarioDao(): UsuarioDao
+    abstract fun clienteDao(): ClienteDao
+    abstract fun donoDao(): DonoDao
+    abstract fun gerenteDao(): GerenteDao
     abstract fun carroDao(): CarroDao
     abstract fun estacionamentoDao(): EstacionamentoDao
-    abstract fun gerenteDao(): GerenteDao
     abstract fun reservaDao(): ReservaDao
     abstract fun avaliacaoDao(): AvaliacaoDao
+    abstract fun acessoDao(): AcessoDao
 
     companion object {
         @Volatile
