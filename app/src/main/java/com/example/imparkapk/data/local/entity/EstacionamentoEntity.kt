@@ -16,13 +16,7 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["dono_id"],
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = GerenteEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["gerentes"],
-            onDelete = ForeignKey.CASCADE
-        ),
+        )
     ])
 data class EstacionamentoEntity(
     @PrimaryKey
@@ -72,8 +66,6 @@ data class EstacionamentoEntity(
 
     @ColumnInfo(name = "dono_id")
     val donoId: Long?,
-
-    //TODO(Ponto de relação #3 OneToMany)
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long,
