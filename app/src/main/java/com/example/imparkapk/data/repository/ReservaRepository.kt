@@ -105,7 +105,7 @@ class ReservaRepository @Inject constructor(
                 localOnly = true,
                 ativo = false,
                 operationType = "CREATE",
-                usuarioId = usuarioId,
+                clienteId = usuarioId,
                 carroId = carroId,
                 estacionamentoId = estacionamentoId,
                 dataReserva = dataReserva,
@@ -137,7 +137,7 @@ class ReservaRepository @Inject constructor(
         return withContext(io) {
             val local = dao.getById(id) ?: throw IllegalArgumentException("Usuário não encontrado")
             val updated = local.copy(
-                usuarioId = usuarioId,
+                clienteId = usuarioId,
                 carroId = carroId,
                 estacionamentoId = estacionamentoId,
                 dataReserva = dataReserva,
@@ -186,7 +186,7 @@ class ReservaRepository @Inject constructor(
         pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
             try {
                 val dados = mapOf(
-                    "usuarioId" to u.usuarioId,
+                    "usuarioId" to u.clienteId,
                     "carroId" to u.carroId,
                     "estacionamentoId" to u.estacionamentoId,
                     "dataReserva" to u.dataReserva,
@@ -278,7 +278,7 @@ class ReservaRepository @Inject constructor(
             try {
                 if (e.localOnly) {
                     val dados = mapOf(
-                        "usuarioId" to e.usuarioId,
+                        "usuarioId" to e.clienteId,
                         "carroId" to e.carroId,
                         "estacionamentoId" to e.estacionamentoId,
                         "dataReserva" to e.dataReserva,

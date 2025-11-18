@@ -5,6 +5,7 @@ import com.example.imparkapk.data.remote.dto.ReservaDto
 import com.example.imparkapk.domain.model.Carro
 import com.example.imparkapk.domain.model.Estacionamento
 import com.example.imparkapk.domain.model.Reserva
+import com.example.imparkapk.domain.model.enuns.StatusDeReserva
 import com.example.imparkapk.domain.model.usuarios.Cliente
 
 fun Reserva.toDto() = ReservaDto(
@@ -16,21 +17,21 @@ fun Reserva.toDto() = ReservaDto(
     horaEntrada = horaEntrada,
     horaSaida = horaSaida,
     valorTotal = valorTotal,
-    status = status,
+    status = status.name,
     ativo = ativo,
     updatedAt = updatedAt
 )
 
 fun ReservaEntity.toDto() = ReservaDto(
     id = id,
-    usuarioId = usuarioId,
+    usuarioId = clienteId,
     carroId = carroId,
     estacionamentoId = estacionamentoId,
     dataReserva = dataReserva,
     horaEntrada = horaEntrada,
     horaSaida = horaSaida,
     valorTotal = valorTotal,
-    status = status,
+    status = status.name,
     ativo = ativo,
     updatedAt = updatedAt
 )
@@ -39,7 +40,7 @@ fun Reserva.toEntity(
     pending: Boolean = false
 ) = ReservaEntity(
     id = id,
-    usuarioId = cliente?.id,
+    clienteId = cliente?.id,
     carroId = carro?.id,
     estacionamentoId = estacionamento?.id,
     dataReserva = dataReserva,
@@ -56,14 +57,14 @@ fun ReservaDto.toEntity(
     pending: Boolean = false
 ) = ReservaEntity(
     id = id,
-    usuarioId = usuarioId,
+    clienteId = usuarioId,
     carroId = carroId,
     estacionamentoId = estacionamentoId,
     dataReserva = dataReserva,
     horaEntrada = horaEntrada,
     horaSaida = horaSaida,
     valorTotal = valorTotal,
-    status = status,
+    status = StatusDeReserva.valueOf(status),
     ativo = ativo,
     updatedAt = updatedAt,
     pendingSync = pending
@@ -82,7 +83,7 @@ fun ReservaDto.toDomain(
     horaEntrada = horaEntrada,
     horaSaida = horaSaida,
     valorTotal = valorTotal,
-    status = status,
+    status = StatusDeReserva.valueOf(status),
     ativo = ativo,
     updatedAt = updatedAt
 )

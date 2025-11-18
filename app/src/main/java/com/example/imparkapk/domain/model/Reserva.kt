@@ -1,5 +1,6 @@
 package com.example.imparkapk.domain.model
 
+import com.example.imparkapk.domain.model.enuns.StatusDeReserva
 import com.example.imparkapk.domain.model.usuarios.Cliente
 import java.sql.Time
 import java.util.Date
@@ -13,7 +14,7 @@ data class Reserva(
     val horaEntrada: Time,
     val horaSaida: Time,
     val valorTotal: Double,
-    val status: String,
+    val status: StatusDeReserva,
     val updatedAt: Long,
     val ativo: Boolean = true
 )

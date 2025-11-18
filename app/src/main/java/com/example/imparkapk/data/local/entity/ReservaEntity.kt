@@ -36,8 +36,8 @@ data class ReservaEntity(
     @PrimaryKey
     val id: Long,
 
-    @ColumnInfo(name = "usuario_id")
-    val usuarioId: Long?,
+    @ColumnInfo(name = "cliente_id")
+    val clienteId: Long?,
 
     @ColumnInfo(name = "carro_id")
     val carroId: Long?,
