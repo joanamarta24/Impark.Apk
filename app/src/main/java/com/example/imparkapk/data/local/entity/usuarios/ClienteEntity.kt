@@ -18,18 +18,6 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["carros"],
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = ReservaEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["reservas"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = AvaliacaoEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["avaliacoes"],
-            onDelete = ForeignKey.CASCADE
         )
     ]
     )
@@ -55,8 +43,6 @@ data class ClienteEntity(
 
     @ColumnInfo(name = "tipo_usuario")
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
-
-    //TODO(Ponto de relação #5 OneToMany)
 
     //TODO(Ponto de relação #3 OneToMany)
 

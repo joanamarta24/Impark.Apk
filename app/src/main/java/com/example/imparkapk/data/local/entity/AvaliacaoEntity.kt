@@ -13,7 +13,7 @@ import java.util.Date
         ForeignKey(
             entity = ClienteEntity::class,
             parentColumns = ["id"],
-            childColumns = ["usuario_id"],
+            childColumns = ["cliente_id"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
@@ -29,7 +29,7 @@ data class AvaliacaoEntity(
     @PrimaryKey
     val id: Long,
 
-    @ColumnInfo(name = "usuario_id")
+    @ColumnInfo(name = "cliente_id")
     val clienteId: Long?,
 
     @ColumnInfo(name = "estacionamento_id")
