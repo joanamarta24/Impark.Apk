@@ -15,7 +15,6 @@ fun Dono.toEntity(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamentosId = estacionamentos?.map { it.id } ?: emptyList(),
     ativo = ativo,
     updatedAt = updatedAt,
     pendingSync = pending
@@ -31,7 +30,6 @@ fun DonoDto.toEntity(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamentosId = estacionamentosId,
     ativo = ativo,
     updatedAt = updatedAt,
     pendingSync = pending
@@ -88,7 +86,6 @@ fun DonoEntity.toDto() = DonoDto(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    estacionamentosId = estacionamentosId,
     ativo = ativo,
     updatedAt = updatedAt
 )

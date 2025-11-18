@@ -18,8 +18,8 @@ data class EstacionamentoDto(
     val vagasTotal: Int,
     val precoHora: Double,
     val horarioFuncionamento: String,
-    val reservasId: List<Long>?,
+    val reservasId: List<Long>? = null,
     val donoId: Long?,
     val updatedAt: Long,
-    val gerentesId: List<Long>?
+    val gerentesId: List<Long>? = null
 )

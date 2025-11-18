@@ -30,9 +30,6 @@ fun ClienteEntity.toDto() = ClienteDto(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    carros = carros,
-    avaliacoes = avaliacoes,
-    reservas = reservas,
     ativo = ativo,
     updatedAt = updatedAt
 )
@@ -47,9 +44,6 @@ fun Cliente.toEntity(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    carros = carros?.map { it.id } ?: emptyList(),
-    avaliacoes = avaliacoes?.map { it.id } ?: emptyList(),
-    reservas = reservas?.map { it.id } ?: emptyList(),
     ativo = ativo,
     updatedAt = updatedAt,
     pendingSync = pending
@@ -65,9 +59,6 @@ fun ClienteDto.toEntity(
     telefone = telefone,
     dataNascimento = dataNascimento,
     tipoUsuario = tipoUsuario,
-    carros = carros,
-    avaliacoes = avaliacoes,
-    reservas = reservas,
     ativo = ativo,
     updatedAt = updatedAt,
     pendingSync = pending

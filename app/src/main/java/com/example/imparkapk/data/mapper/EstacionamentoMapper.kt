@@ -45,9 +45,7 @@ fun EstacionamentoEntity.toDto() = EstacionamentoDto(
     vagasTotal = vagasTotal,
     precoHora = precoHora,
     horarioFuncionamento = horarioFuncionamento,
-    reservasId = reservasId,
     donoId = donoId,
-    gerentesId = gerentesId,
     updatedAt = updatedAt
 )
 
@@ -70,9 +68,7 @@ fun Estacionamento.toEntity(
     vagasTotal = vagasTotal,
     precoHora = precoHora,
     horarioFuncionamento = horarioFuncionamento,
-    reservasId = reservas?.map { it.id } ?: emptyList(),
     donoId = dono?.id,
-    gerentesId = gerentes?.map { it.id } ?: emptyList(),
     updatedAt = updatedAt,
     pendingSync = pending
 )
@@ -95,9 +91,7 @@ fun EstacionamentoDto.toEntity(
     vagasTotal = vagasTotal,
     precoHora = precoHora,
     horarioFuncionamento = horarioFuncionamento,
-    reservasId = reservasId,
     donoId = donoId,
-    gerentesId = gerentesId,
     updatedAt = updatedAt,
     pendingSync = pending
 )
