@@ -77,14 +77,12 @@ data class EstacionamentoEntity(
     @ColumnInfo(name = "horario_de_funcionamento")
     val horarioFuncionamento: String,
 
-    @ColumnInfo(name = "reservas")
-    val reservasId: List<Long>?,
+    //TODO(Ponto de relação #4 OneToMany)
 
     @ColumnInfo(name = "dono")
     val donoId: Long?,
 
-    @ColumnInfo(name = "gerentes")
-    val gerentesId: List<Long>?,
+    //TODO(Ponto de relação #5 OneToMany)
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long,

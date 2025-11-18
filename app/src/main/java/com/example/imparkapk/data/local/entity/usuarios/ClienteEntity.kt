@@ -56,14 +56,12 @@ data class ClienteEntity(
     @ColumnInfo(name = "tipo_usuario")
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
 
-    @ColumnInfo(name = "carros")
-    val carros: List<Long>,
+    //TODO(Ponto de relação #2 OneToMany)
 
     @ColumnInfo(name = "avaliacoes")
     val avaliacoes: List<Long>,
 
-    @ColumnInfo(name = "reservas")
-    val reservas: List<Long>,
+    //TODO(Ponto de relação #3 OneToMany)
 
     @ColumnInfo(name = "ativo")
     val ativo: Boolean,

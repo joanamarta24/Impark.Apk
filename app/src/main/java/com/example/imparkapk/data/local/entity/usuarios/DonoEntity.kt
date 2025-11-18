@@ -42,8 +42,7 @@ data class DonoEntity (
     @ColumnInfo(name = "tipo_usuario")
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
 
-    @ColumnInfo(name = "estacionamentos")
-    val estacionamentosId: List<Long>,
+    //TODO(Ponto de relação #1 OneToMany)
 
     @ColumnInfo(name = "ativo")
     val ativo: Boolean,
