@@ -9,7 +9,7 @@ fun Carro.toEntity(
     pending: Boolean = false
 ) = CarroEntity(
     id = id,
-    usuarioId = cliente?.id,
+    clienteId = cliente?.id,
     modelo = modelo,
     placa = placa,
     ativo = ativo,
@@ -22,7 +22,7 @@ fun CarroDto.toEntity(
     pending: Boolean = false
 ) = CarroEntity(
     id = id,
-    usuarioId = usuarioId,
+    clienteId = clienteId,
     modelo = modelo,
     placa = placa,
     ativo = ativo,
@@ -32,7 +32,7 @@ fun CarroDto.toEntity(
 
 fun CarroEntity.toDto() = CarroDto(
     id = id,
-    usuarioId = usuarioId,
+    clienteId = clienteId,
     modelo = modelo,
     placa = placa,
     ativo = ativo,
@@ -41,7 +41,7 @@ fun CarroEntity.toDto() = CarroDto(
 
 fun Carro.toDto() = CarroDto(
     id = id,
-    usuarioId = cliente?.id,
+    clienteId = cliente?.id,
     modelo = modelo,
     placa = placa,
     ativo = ativo,
