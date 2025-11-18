@@ -12,7 +12,7 @@ import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
         ForeignKey(
             entity = ClienteEntity::class,
             parentColumns = ["id"],
-            childColumns = ["usuario_id"],
+            childColumns = ["cliente_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -21,8 +21,8 @@ data class CarroEntity(
     @PrimaryKey
     val id: Long,
 
-    @ColumnInfo(name = "usuario_id")
-    val usuarioId: Long?,
+    @ColumnInfo(name = "cliente_id")
+    val clienteId: Long?,
 
     @ColumnInfo(name = "modelo")
     val modelo: String,
