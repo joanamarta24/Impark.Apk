@@ -9,25 +9,25 @@ import androidx.compose.ui.text.input.VisualTransformation
 @Composable
 fun ValidatedTextField(
     value: String,
-    onVAlueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     supportingText: String? = null,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onValueChange: (String) -> Unit = {}
 ){
     OutlinedTextField(
         value = value,
-        onValueChange = onVAlueChange,
-        label = { Text(label)},
+        onValueChange = onValueChange,
+        label = { Text(label) },
         modifier = Modifier,
         isError = isError,
         supportingText = {
-            if (supportingText != null){
+            if (supportingText != null) {
                 Text(supportingText)
             }
         },
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation,
     )
 
 }
