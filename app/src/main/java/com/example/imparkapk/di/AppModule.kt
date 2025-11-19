@@ -5,6 +5,11 @@ import com.example.imparkapk.data.local.TokenStore
 import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.remote.AuthApiService
 import com.example.imparkapk.data.remote.RefreshRequest
+import com.example.imparkapk.data.remote.api.api.AcessoApi
+import com.example.imparkapk.data.remote.api.api.AvaliacaoApi
+import com.example.imparkapk.data.remote.api.api.CarroApi
+import com.example.imparkapk.data.remote.api.api.EstacionamentoApi
+import com.example.imparkapk.data.remote.api.api.ReservaApi
 import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
 import com.example.imparkapk.data.remote.api.api.usuarios.DonoApi
 import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
@@ -21,7 +26,6 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -172,6 +176,31 @@ object AppModule {
     @Singleton
     fun provideGerenteApi(@Named("secure") retrofit: Retrofit): GerenteApi =
         retrofit.create(GerenteApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReservaApi(@Named("secure") retrofit: Retrofit): ReservaApi =
+        retrofit.create(ReservaApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesCarroApi(@Named("secure") retrofit: Retrofit): CarroApi =
+        retrofit.create(CarroApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesEstacionamentoApi(@Named("secure") retrofit: Retrofit): EstacionamentoApi =
+        retrofit.create(EstacionamentoApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesAcessoApi(@Named("secure") retrofit: Retrofit): AcessoApi =
+        retrofit.create(AcessoApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesAvaliacaoApi(@Named("secure") retrofit: Retrofit): AvaliacaoApi =
+        retrofit.create(AvaliacaoApi::class.java)
 
     @Provides
     @Singleton
