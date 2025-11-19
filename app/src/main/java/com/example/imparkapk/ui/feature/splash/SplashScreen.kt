@@ -15,14 +15,11 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToHome: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         delay(2000) // Simula tempo de carregamento
         // Aqui você verificaria se o usuário está logado
         // Por enquanto, vamos sempre para o login
-        onNavigateToLogin()
     }
     Box(
         modifier = Modifier
