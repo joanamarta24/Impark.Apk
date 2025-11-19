@@ -39,9 +39,6 @@ import javax.inject.Singleton
 class ClienteRepository @Inject constructor(
     private val api: ClienteApi,
     private val dao: ClienteDao,
-    private val carroRepository: CarroRepository,
-    private val avaliacaoRepository: AvaliacaoRepository,
-    private val reservaRepository: ReservaRepository,
     @IoDispatcher private val io: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val gson: Gson
@@ -99,9 +96,6 @@ class ClienteRepository @Inject constructor(
         telefone: String,
         nascimento: Date,
         tipoDeUsuario: TipoDeUsuario,
-        carros: List<Long>,
-        avaliacoes: List<Long>,
-        reservas: List<Long>
     ): Cliente {
         return withContext(io) {
 
