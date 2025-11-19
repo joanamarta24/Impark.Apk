@@ -13,10 +13,8 @@ import com.example.imparkapk.data.worker.acesso.AcessoSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Acesso
 import com.google.gson.Gson
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
-import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -29,6 +27,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.sql.Time
+import javax.inject.Singleton
+
 @Singleton
 class AcessoRepository @Inject constructor(
     private val api: AcessoApi,
