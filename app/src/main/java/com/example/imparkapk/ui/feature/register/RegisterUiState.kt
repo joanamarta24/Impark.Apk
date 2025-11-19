@@ -7,7 +7,7 @@ data class RegisterUiState (
     var email: String = "",
     var senha: String = "",
     var confirmarSenha: String = "",
-    var tipoDeUsuario: TipoDeUsuario,
+    var tipoDeUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     var isLoading: Boolean = false,
     var errorMessage: String? = null
 )

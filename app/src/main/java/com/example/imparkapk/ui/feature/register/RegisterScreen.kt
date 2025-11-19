@@ -1,6 +1,8 @@
 package com.example.imparkapk.ui.feature.register
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -14,5 +16,5 @@ fun RegisterScreen(
     onLoginButtonPressed: () -> Unit = {},
     vm: RegisterViewModel = hiltViewModel()
 ) {
-
+    val state by vm.state.collectAsState();
 }
