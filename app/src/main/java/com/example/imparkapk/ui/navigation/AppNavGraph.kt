@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.imparkapk.ui.feature.login.LoginScreen
+import com.example.imparkapk.ui.feature.register.RegisterScreen
 import com.example.imparkapk.ui.feature.splash.SplashScreen
 
 @Composable
@@ -40,7 +41,10 @@ fun AppNavGraph(navGraph: NavHostController, modifier: Modifier) {
         }
 
         composable(Routes.Register) {
-
+            RegisterScreen(
+                onRegisterSuccess = {},
+                onLoginButtonPressed = { navGraph.navigate(Routes.Login) }
+            )
         }
     }
 }

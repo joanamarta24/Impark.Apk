@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit = {},
+    onLoginButtonPressed: () -> Unit = {},
     vm: RegisterViewModel = hiltViewModel()
 ) {
 
