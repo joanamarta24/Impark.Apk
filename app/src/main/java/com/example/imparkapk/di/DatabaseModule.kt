@@ -2,6 +2,11 @@ package com.example.imparkapk.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.imparkapk.data.local.dao.AcessoDao
+import com.example.imparkapk.data.local.dao.AvaliacaoDao
+import com.example.imparkapk.data.local.dao.CarroDao
+import com.example.imparkapk.data.local.dao.EstacionamentoDao
+import com.example.imparkapk.data.local.dao.ReservaDao
 import com.example.imparkapk.data.local.dao.usuarios.ClienteDao
 import com.example.imparkapk.data.local.dao.usuarios.DonoDao
 import com.example.imparkapk.data.local.dao.usuarios.GerenteDao
@@ -38,4 +43,25 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDonoDao(db: AppDatabase): DonoDao = db.donoDao()
+
+    @Provides
+    @Singleton
+    fun provideEstacionamentoDao(db: AppDatabase): EstacionamentoDao = db.estacionamentoDao()
+
+    @Provides
+    @Singleton
+    fun provideReservaDao(db: AppDatabase): ReservaDao = db.reservaDao()
+
+    @Provides
+    @Singleton
+    fun provideAvaliacaoDao(db: AppDatabase): AvaliacaoDao = db.avaliacaoDao()
+
+    @Provides
+    @Singleton
+    fun provideCarroDao(db: AppDatabase): CarroDao = db.carroDao()
+
+
+    @Provides
+    @Singleton
+    fun provideAcessoDao(db: AppDatabase): AcessoDao = db.acessoDao()
 }

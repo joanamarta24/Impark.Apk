@@ -1,12 +1,14 @@
 package com.example.imparkapk.ui.feature.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Preview(
     showBackground = true,
@@ -14,13 +16,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 )
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit = {},
-    vm: LoginViewModel = hiltViewModel()
+    onLoginSuccess: () -> Unit = {}
 ) {
-    Scaffold { paddingValues ->
+    Scaffold{ paddingValues ->
         Column(
-            Modifier
+            modifier = Modifier
                 .padding(paddingValues)
+                .fillMaxSize()
+                .background(Color.Green)
         ) {
 
         }

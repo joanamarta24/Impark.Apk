@@ -21,6 +21,7 @@ import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
 import com.example.imparkapk.data.local.entity.ReservaEntity
 import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
+import com.example.imparkapk.di.DateConverter
 
 
 @Database(

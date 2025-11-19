@@ -7,7 +7,7 @@ data class GerenteDto(
     val id: Long,
     val nome: String,
     val email: String,
-    val senha: String,
+    val senha: String?,
     val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
