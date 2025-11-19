@@ -34,8 +34,8 @@ fun LoginScreen(
 ) {
     val state by vm._uiState.collectAsState()
 
-    Scaffold{ paddingValues ->
-        Surface (
+    Scaffold { paddingValues ->
+        Surface(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
@@ -53,7 +53,7 @@ fun LoginScreen(
                         .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column (
+                    Column(
                         verticalArrangement = Arrangement.spacedBy(1.dp)
                     ) {
                         ValidatedTextField(
@@ -66,7 +66,7 @@ fun LoginScreen(
                             onValueChange = { vm.onSenhaChange(it) },
                             label = "Senha"
                         )
-                        Button (
+                        Button(
                             modifier = Modifier,
                             content = { Text("Login") },
                             colors = ButtonColors(
@@ -80,7 +80,6 @@ fun LoginScreen(
                     }
                 }
             }
-
         }
     }
 }
