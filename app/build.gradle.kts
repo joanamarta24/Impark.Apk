@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -58,6 +59,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+
 
     // Core AndroidX e Compose
     implementation(libs.androidx.core.ktx)

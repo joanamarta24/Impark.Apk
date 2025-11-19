@@ -1,10 +1,13 @@
 package com.example.imparkapk.data.dao.model
 
+import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.model.enus.StatusVagas
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
 
 data class Estacionamento(
     val id: String = "",
@@ -58,9 +61,15 @@ data class Estacionamento(
             vagasDisponiveis == 0 -> StatusVagas.LOTADO
             porcentagemVagas < 20 -> StatusVagas.QUASE_LOTADO
             porcentagemVagas < 50 -> StatusVagas.MODERADO
+            false -> StatusVagas.INATIVO
             else -> StatusVagas.DISPONIVEL
 
+
         }
+
+    val temVagas: Boolean
+        get() = vagasDisponiveis > 0
+
     val horarioFuncionamento: String
         get() = "$horarioAbertura - $horarioFechamento"
     val valorHoraFormatado: String
@@ -184,13 +193,42 @@ fun List<Estacionamento>.ordenarPorMaisVagas(): List<Estacionamento> {
 }
 
 /*BUSCA ESTACIONAMENTO POR NOME OU ENDEREÇO*/
-fun List<Estacionamento>.buscar(query: String): List<Estacionamento>{
+fun List<Estacionamento>.buscar(query: String): List<Estacionamento> {
     return this.filter {
         it.nome.contains(query, ignoreCase = true) ||
                 it.endereco.contains(query, ignoreCase = true)
 
     }
-
 }
+fun EstacionamentoEntity.toEstacionamento(): Estacionamento {
+    val amenitiesList = try {
+        this.amenities?.let {
+            Gson().fromJson(it, Array<String>::class.java).toList()
+        } ?: emptyList()
+    } catch (e: Exception) {
+        emptyList()
+    }
+
+    return Estacionamento(
+        id = this.id.toString(),
+        nome = this.nome,
+        endereco = this.endereco,
+        latitude = this.latitude,
+        longitude = this.longitude,
+        valorHora = this.valorHora,
+        vagasDisponiveis = this.vagasDisponiveis,
+        vagasTotal = this.vagasTotal,
+        ativo = this.ativo,
+        dataAtualizacao = this.dataAtualizacao,
+        horarioFuncionamento = this.horarioFuncionamento,
+        telefone = this.telefone,
+        email = this.email,
+        notaMedia = this.notaMedia,
+        totalAvaliacoes = this.totalAvaliacoes,
+        amenities = amenitiesList
+    )
+}
+
+
 
 

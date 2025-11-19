@@ -1,11 +1,12 @@
-// Em: com/example/imparkapk/data/manager/
+
 package com.example.imparkapk.data.manager
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.imparkapk.data.dao.remote.api.dto.PaginationRequest
-import com.example.imparkapk.data.dto.PaginationDTO
-import com.example.imparkapk.data.dto.PaginationRequest
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class PaginationManager<T> {
     private val _currentData = MutableLiveData<List<T>>()
@@ -39,18 +40,19 @@ class PaginationManager<T> {
     ) {
         _paginationState.value = PaginationState.Loading
 
-        // Em uma coroutine:
-        // try {
-        //     val result = apiCall(currentRequest.withPage(page))
-        //     if (result != null) {
-        //         handleNewData(result, page == 1)
-        //         _paginationState.value = PaginationState.Success
-        //     } else {
-        //         _paginationState.value = PaginationState.Error("Falha ao carregar dados")
-        //     }
-        // } catch (e: Exception) {
-        //     _paginationState.value = PaginationState.Error(e.message ?: "Erro desconhecido")
-        // }
+        GlobalScope.launch{
+            try {
+                val result = apiCall(currentRequest.withPage(page))
+                if (result !=null){
+                    handleNewData(result,page == 1)
+                    _paginationState.value = PaginationState.Success
+                }else{
+                    _paginationState.value = PaginationState.Error("Falha ao carregar dados")
+                }
+            }catch (e: Exception){
+                _paginationState.value = PaginationState.Error(e.message ?:"Erro desconhecido" )
+            }
+        }
     }
 
     private fun handleNewData(newData: PaginationDTO<T>, isFirstPage: Boolean) {
@@ -79,4 +81,20 @@ sealed class PaginationState {
     object Loading : PaginationState()
     object Success : PaginationState()
     data class Error(val message: String) : PaginationState()
+}
+data class PaginationDTO<T>(
+    val data: List<T>,
+    val page: Int,
+    val totalPages: Int
+) {
+    fun hasNextPage(): Boolean = page < totalPages
+
+    fun getNextPage(): Int? = if (hasNextPage()) page + 1 else null
+
+    fun append(other: PaginationDTO<T>): PaginationDTO<T> =
+        PaginationDTO(
+            data = this.data + other.data,
+            page = other.page,
+            totalPages = other.totalPages
+        )
 }

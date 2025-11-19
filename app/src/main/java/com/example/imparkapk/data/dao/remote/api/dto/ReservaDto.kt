@@ -19,7 +19,7 @@ data class ReservaDto(
     val status: String, // "PENDENTE", "CONFIRMADA", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA"
     val valorPrevisto: BigDecimal,
     val valorFinal: BigDecimal? = null,
-    vformaPagamento: String? = null,
+    val vformaPagamento: String? = null,
     val codigoReserva: String? = null,
     val vagaNumero: String? = null,
     val observacoes: String? = null,

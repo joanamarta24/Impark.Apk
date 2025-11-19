@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.remote.api.repository.carro
 
 import com.example.imparkapk.data.dao.local.dao.dao.CarroDao
 import com.example.imparkapk.data.dao.local.dao.entity.CarroEntity
-import com.example.imparkapk.data.dao.remote.api.api.CarroApi
+import com.example.imparkapk.data.dao.remote.api.api.ClienteCarroApi
 import com.example.imparktcc.data.remote.request.CarroRequest
 import com.example.imparktcc.model.Carro
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class CarroRepositoryImpl @Inject constructor(
     private val carroDao: CarroDao,
-    private val carroApi: CarroApi
+    private val clienteCarroApi: ClienteCarroApi
 ) : CarroRepository {
 
     override suspend fun cadastrarCarro(carro: Carro): Result<Boolean> {
@@ -26,7 +26,7 @@ class CarroRepositoryImpl @Inject constructor(
                 cor = carro.cor
             )
 
-            val response = carroApi.criarCarro(request)
+            val response = clienteCarroApi.criarCarro(request)
 
             if (response.isSuccessful && response.body() != null) {
                 val carroResponse = response.body()!!

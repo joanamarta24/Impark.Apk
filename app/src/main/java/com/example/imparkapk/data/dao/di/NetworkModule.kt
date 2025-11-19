@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.di
 
 import java.util.concurrent.TimeUnit
-import com.example.imparkapk.data.dao.remote.api.api.CarroApi
+import com.example.imparkapk.data.dao.remote.api.api.ClienteCarroApi
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentosApi
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
@@ -88,7 +88,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCarroApi(retrofit: Retrofit): CarroApi = retrofit.create()
+    fun provideCarroApi(retrofit: Retrofit): ClienteCarroApi = retrofit.create()
 
     @Provides
     @Singleton

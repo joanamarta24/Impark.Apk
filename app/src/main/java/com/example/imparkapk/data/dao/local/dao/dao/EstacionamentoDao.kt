@@ -19,7 +19,7 @@ interface EstacionamentoDao {
     @Query("SELECT* FROM estacionamentos WHERE ativo = 1")
     fun getEstacionamentosAtivos(): Flow<List<EstacionamentoEntity>>
 
-    @Query("SELECT * FROM estacionamentos WHERE vagas_disponiveis > 0 AND ativo = 1")
+    @Query("SELECT * FROM estacionamentos WHERE vagasDisponiveis > 0 AND ativo = 1")
     fun getEstacionamentosComVagas(): Flow<List<EstacionamentoEntity>>
 
     @Query("SELECT * FROM estacionamentos WHERE nome LIKE '%'|| :query || '%' || AND ativo = 1")
@@ -31,7 +31,7 @@ interface EstacionamentoDao {
     @Update
     suspend fun updateEstacionamento(estacionamento: EstacionamentoEntity)
 
-    @Query("UPDATE estacionamentos SET vagas_disponiveis = :vagas WHERE id = :id")
+    @Query("UPDATE estacionamentos SET vagasDisponiveis= :vagas WHERE id = :id")
     suspend fun updateVagasDisponiveis(id: String, vagas: Int)
 
     @Query("UPDATE estacionamentos SET ativo = :ativo WHERE id = :id")
@@ -46,7 +46,7 @@ interface EstacionamentoDao {
     @Query("SELECT * FROM estacionamentos WHERE ativo = 1")
     suspend fun buscarTodosAtivos(): List<EstacionamentoEntity>
 
-    @Query("SELECT * FROM estacionamentos WHERE valor_hora <= :maxPreco AND ativo =1 ORDER BY valor_hora ASC")
+    @Query("SELECT * FROM estacionamentos WHERE valorHora <= :maxPreco AND ativo =1 ORDER BY valor_hora ASC")
     suspend fun buscarPorPrecoMaximo(maxPreco: Double): List<EstacionamentoEntity>
 
  @Insert(onConflict = OnConflictStrategy.REPLACE)

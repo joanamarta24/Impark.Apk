@@ -4,5 +4,7 @@ enum class StatusVagas {
     DISPONIVEL,
     MODERADO,
     QUASE_LOTADO,
-    LOTADO
+    LOTADO,
+
+    INATIVO
 }

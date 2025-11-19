@@ -56,11 +56,3 @@ fun EstacionamentoEntity.toEstacionamento() = Estacionamento(
     ativo = this.ativo
 
 )
-fun EstacionamentoEntity.toEstacionamento(): Estacionamento {
-    val amenitiesList = try {
-        this.amenities?.let {
-            Gson().fromJson(it, Array<String>::class.java).toList()
-        } ?: emptyList()
-    } catch (e: Exception) {
-        emptyList()
-    }

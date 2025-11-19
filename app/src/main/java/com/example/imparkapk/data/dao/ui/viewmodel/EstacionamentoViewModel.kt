@@ -3,6 +3,7 @@ package com.example.imparkapk.data.dao.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.data.dao.model.Estacionamento
+import com.example.imparkapk.data.dao.model.enus.OrdemEstacionamento
 import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentoRepository
 import com.example.imparkapk.data.dao.remote.api.request.EstacionamentoResponse
 import com.example.imparkapk.data.manager.PaginationManager
@@ -90,25 +91,25 @@ class EstacionamentoViewModel @Inject constructor(
         }
     }
 
-    fun onOrdenacaoChange(ordenacao: OrdenacaoEstacionamento) {
+    fun onOrdemChange(ordenacao: OrdemEstacionamento) {
         _uiState.update { currentState ->
             val ordenados = when (ordenacao) {
-                OrdenacaoEstacionamento.MENOR_PRECO -> {
+                OrdemEstacionamento.MENOR_PRECO -> {
                     currentState.estacionamentosFiltrados.sortedBy { it.valorHora }
                 }
-                OrdenacaoEstacionamento.MAIOR_PRECO -> {
+                OrdemEstacionamento.MAIOR_PRECO -> {
                     currentState.estacionamentosFiltrados.sortedByDescending { it.valorHora }
                 }
-                OrdenacaoEstacionamento.MAIS_VAGAS -> {
+                OrdemEstacionamento.MAIS_VAGAS -> {
                     currentState.estacionamentosFiltrados.sortedByDescending { it.vagasDisponiveis }
                 }
-                OrdenacaoEstacionamento.MAIS_PROXIMO -> {
+                OrdemEstacionamento.MAIS_PROXIMO -> {
                     currentState.estacionamentosFiltrados // Ordenação por proximidade seria implementada com GPS
                 }
             }
 
             currentState.copy(
-                ordenacaoSelecionada = ordenacao,
+                ordemSelecionada = ordenacao,
                 estacionamentosFiltrados = ordenados
             )
         }
@@ -157,12 +158,9 @@ data class EstacionamentoUiState(
     val estacionamentoSelecionado: Estacionamento? = null,
     val searchQuery: String = "",
     val filtrarComVagas: Boolean = false,
-    val ordenacaoSelecionada: OrdenacaoEstacionamento = OrdenacaoEstacionamento.MENOR_PRECO,
+    val ordemSelecionada: OrdemEstacionamento = OrdemEstacionamento.MENOR_PRECO,
     val isLoading: Boolean = false,
     val mensagemErro: String = "",
     val mensagemSucesso: String = ""
 )
 
-enum class OrdenacaoEstacionamento {
-    MENOR_PRECO, MAIOR_PRECO, MAIS_VAGAS, MAIS_PROXIMO
-}
