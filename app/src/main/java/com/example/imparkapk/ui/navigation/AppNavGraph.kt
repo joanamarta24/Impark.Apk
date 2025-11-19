@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,11 +31,16 @@ fun AppNavGraph(navGraph: NavHostController, modifier: Modifier) {
         }
 
         composable(Routes.Login) {
-            LoginScreen()
+            LoginScreen(
+                onLoginSuccess = {},
+                onRegisterButtonPressed = {
+                    navGraph.navigate(Routes.Register)
+                }
+            )
         }
 
         composable(Routes.Register) {
-            // Register Screen Content
+
         }
     }
 }
