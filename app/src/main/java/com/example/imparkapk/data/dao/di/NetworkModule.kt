@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.di
 
 import java.util.concurrent.TimeUnit
 import com.example.imparkapk.data.dao.remote.api.api.ClienteCarroApi
-import com.example.imparkapk.data.dao.remote.api.repository.estacionamento.EstacionamentosApi
+import com.example.imparkapk.data.dao.remote.api.EstacionamentosApi
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi

@@ -46,7 +46,7 @@ interface EstacionamentoDao {
     @Query("SELECT * FROM estacionamentos WHERE ativo = 1")
     suspend fun buscarTodosAtivos(): List<EstacionamentoEntity>
 
-    @Query("SELECT * FROM estacionamentos WHERE valorHora <= :maxPreco AND ativo =1 ORDER BY valor_hora ASC")
+    @Query("SELECT * FROM estacionamentos WHERE valorHora <= :maxPreco AND ativo =1 ORDER BY valorHora ASC")
     suspend fun buscarPorPrecoMaximo(maxPreco: Double): List<EstacionamentoEntity>
 
  @Insert(onConflict = OnConflictStrategy.REPLACE)

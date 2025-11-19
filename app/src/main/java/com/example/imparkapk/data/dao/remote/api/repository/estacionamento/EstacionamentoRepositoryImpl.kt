@@ -5,6 +5,7 @@ import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.local.dao.entity.toEstacionamento
 import com.example.imparkapk.data.dao.model.Estacionamento
+import com.example.imparkapk.data.dao.remote.api.EstacionamentosApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -86,13 +87,14 @@ class EstacionamentoRepositoryImpl @Inject constructor(
             estacionamentosCache.add(novoEstacionamento)
 
             // Salva no banco local também
-            estacionamentoDao.insertEstacionamento(novoEstacionamento.toEntity())
+            estacionamentoDao.inserir(novoEstacionamento.toEstacionamentoEntity()) // Corrigido: insertEstacionamento -> inserir
 
             Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 
     override suspend fun getEstacionamentoPorId(id: String): Result<Estacionamento?> {
         return try {
@@ -193,14 +195,31 @@ class EstacionamentoRepositoryImpl @Inject constructor(
 
 
     override suspend fun buscarEstacionamentoPorNome(nome: String): List<Estacionamento> {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
+                // Buscar no banco local primeiro
                 val estacionamentosLocais = estacionamentoDao.buscarPorNome("%$nome%")
-                if (estacionamentosLocais.isNotEmpty()){
-                    return@withContext estacionamentosLocais.map{it.toEstacionamento()}
+
+                if (estacionamentosLocais.isNotEmpty()) {
+                    return@withContext estacionamentosLocais.map { it.toEstacionamento() }
                 }
+
+                // Buscar na API se não encontrou localmente
+                val response = estacionamentosApi.buscarPorNome(nome) // Corrigido: busrPorNome -> buscarPorNome
+
+                if (response.isSuccessful && response.body() != null) {
+                    val estacionamentosApi = response.body()!!
+                    // Salvar no cache local
+                    estacionamentoDao.inserirTodos(estacionamentoApi.map { it.toEstacionamentoEntity() })
+                    return@withContext estacionamentoApi
+                } else {
+                    Log.e("EstacionamentoRepo", "Erro ao buscar estacionamento por nome: ${response.message()}")
+                    return@withContext emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("EstacionamentoRepo", "Erro ao buscar estacionamento por nome: ${e.message}", e)
+                return@withContext emptyList()
             }
-            val response = estacionamentosApi.busrPorNome(nome)
         }
     }
 
@@ -209,11 +228,86 @@ class EstacionamentoRepositoryImpl @Inject constructor(
         longitude: Double,
         raioKm: Double
     ): List<Estacionamento> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            try {
+                // Buscar na API para dados mais precisos
+                val response = estacionamentosApi.buscarProximos(latitude, longitude, raioKm)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val estacionamentosApi = response.body()!!
+
+                    // Atualizar cache local
+                    estacionamentoDao.limparCacheAntigo()
+                    estacionamentoDao.inserirTodos(estacionamentosApi.map { it.toEstacionamentoEntity() })
+
+                    // Ordenar por distância
+                    val estacionamentosOrdenados = estacionamentosApi.sortedBy { estacionamento ->
+                        calcularDistancia(
+                            latitude, longitude,
+                            estacionamento.latitude, estacionamento.longitude
+                        )
+                    }
+
+                    return@withContext estacionamentosOrdenados
+                } else {
+                    // Fallback: buscar no banco local
+                    Log.w("EstacionamentoRepo", "API falhou, usando cache local")
+                    val estacionamentosLocais = estacionamentoDao.buscarTodosAtivos()
+
+                    // Filtrar por distância
+                    val estacionamentosProximos = estacionamentosLocais.filter { estacionamento ->
+                        val distancia = calcularDistancia(
+                            latitude, longitude,
+                            estacionamento.latitude, estacionamento.longitude
+                        )
+                        distancia <= raioKm
+                    }.map { it.toEstacionamento() }
+
+                    // Ordenar por distância
+                    return@withContext estacionamentosProximos.sortedBy { estacionamento ->
+                        calcularDistancia(
+                            latitude, longitude,
+                            estacionamento.latitude, estacionamento.longitude
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("EstacionamentoRepo", "Erro ao buscar estacionamentos próximos: ${e.message}", e)
+                return@withContext emptyList()
+            }
+        }
     }
 
     override suspend fun buscarEstacionamentoPorPreco(maxPreco: Double): List<Estacionamento> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            try {
+                // Buscar no banco local primeiro
+                val estacionamentosLocais = estacionamentoDao.buscarPorPrecoMaximo(maxPreco)
+
+                if (estacionamentosLocais.isNotEmpty()) {
+                    return@withContext estacionamentosLocais.map { it.toEstacionamento() }
+                }
+
+                // Buscar na API
+                val response = estacionamentosApi.buscarPorPreco(maxPreco)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val estacionamentosApi = response.body()!!
+
+                    // Salvar no cache local
+                    estacionamentoDao.inserirTodos(estacionamentosApi.map { it.toEstacionamentoEntity() })
+
+                    // Ordenar por preço
+                    return@withContext estacionamentosApi.sortedBy { it.valorHora }
+                } else {
+                    Log.e("EstacionamentoRepo", "Erro ao buscar estacionamento por preço: ${response.message()}")
+                    return@withContext emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("EstacionamentoRepo", "Erro ao buscar estacionamento por preço: ${e.message}", e)
+                return@withContext emptyList()
+            }
+        }
     }
 
     override suspend fun buscarEstacionamentoComFiltros(
@@ -224,8 +318,53 @@ class EstacionamentoRepositoryImpl @Inject constructor(
         raioKm: Double?,
         comVagas: Boolean
     ): List<Estacionamento> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            try {
+                // Implementar lógica de filtros combinados
+                var resultados = estacionamentosCache.filter { it.ativo }
+
+                // Aplicar filtros
+                nome?.let {
+                    resultados = resultados.filter { it.nome.contains(nome, ignoreCase = true) }
+                }
+
+                maxPreco?.let {
+                    resultados = resultados.filter { it.valorHora <= maxPreco }
+                }
+
+                if (comVagas) {
+                    resultados = resultados.filter { it.vagasDisponiveis > 0 }
+                }
+
+                // Filtro por localização
+                if (latitude != null && longitude != null && raioKm != null) {
+                    resultados = resultados.filter { estacionamento ->
+                        val distancia = calcularDistancia(
+                            latitude, longitude,
+                            estacionamento.latitude, estacionamento.longitude
+                        )
+                        distancia <= raioKm
+                    }.sortedBy { estacionamento ->
+                        calcularDistancia(
+                            latitude, longitude,
+                            estacionamento.latitude, estacionamento.longitude
+                        )
+                    }
+                }
+
+                // Ordenar por nome se não há ordenação por distância
+                if (latitude == null || longitude == null) {
+                    resultados = resultados.sortedBy { it.nome }
+                }
+
+                return@withContext resultados
+            } catch (e: Exception) {
+                Log.e("EstacionamentoRepo", "Erro ao buscar com filtros: ${e.message}", e)
+                return@withContext emptyList()
+            }
+        }
     }
+
 
     suspend fun buscarEstacionamentosPorNome(nome: String): Result<List<Estacionamento>> {
         return try {

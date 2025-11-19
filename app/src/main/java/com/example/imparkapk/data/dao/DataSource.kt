@@ -18,7 +18,7 @@ class DataSource @Inject constructor(
     val avaliacaoRepository: AvaliacaoRepository
 ) {
     // Métodos auxiliares para operações complexas
-    suspend fun fazerReservaCompleta(
+    fun fazerReservaCompleta(
         usuarioId: String,
         carroId: String,
         estacionamentoId: String,
@@ -26,11 +26,10 @@ class DataSource @Inject constructor(
         horaEntrada: String,
         horaSaida: String
     ): Result<Boolean> {
-        // Lógica complexa de reserva
         return Result.success(true)
     }
 
-    suspend fun calcularValorReserva(
+    fun calcularValorReserva(
         estacionamentoId: String,
         horas: Int
     ): Result<Double> {

@@ -1,6 +1,9 @@
 package com.example.imparkapk.data.dto.reserva
 
+import com.example.imparkapk.data.dao.remote.api.dto.PaginationDto
+import com.example.imparkapk.data.dao.remote.api.dto.carro.CarroDto
 import com.example.imparkapk.data.dao.remote.api.dto.estacionamento.EstacionamentoDTO
+import com.example.imparkapk.data.dao.remote.api.dto.usuario.ClienteDTO
 import com.example.imparkapk.data.dto.carro.CarroDTO
 import java.util.*
 
@@ -56,13 +59,13 @@ data class ReservaDTO(
 data class ReservaDetailResponse(
     val reserva: ReservaDTO,
     val estacionamento: EstacionamentoDTO,
-    val carro: CarroDTO?,
-    val cliente: com.example.imparkapk.data.dto.Cliente.ClienteDTO?
+    val carro: CarroDto?,
+    val cliente: ClienteDTO?
 )
 
 data class ReservaListResponse(
     val reservas: List<ReservaDTO>,
-    val pagination: com.example.imparkapk.data.dto.PaginationDTO
+    val pagination: PaginationDto
 )
 
 data class ReservaCreateResponse(
@@ -100,21 +103,24 @@ data class TaxaDTO(
     val valor: Double,
     val tipo: String // PERCENTUAL, FIXO
 )
+
 //AVALIAÇÃO
 data class AvaliacaoCreateRequest(
-    val usuarioId:String,
+    val usuarioId: String,
     val estacionamentoId: String,
     val reservaId: String,
     val nota: Int,
     val comentario: String? = null,
     val tags: List<String> = emptyList()
 )
+
 data class AvaliacaoUpdateRequest(
     val nota: Int? = null,
     val comentario: String? = null,
     val tags: List<String> = emptyList()
 
 )
+
 data class AvaliacaoFilterRequest(
     val estacionamentoId: String? = null,
     val usuarioId: String? = null,
@@ -124,7 +130,20 @@ data class AvaliacaoFilterRequest(
     val page: Int = 1,
     val pageSize: Int = 20
 )
+
 //RESPONSE DTOS
 data class AvalicaoDTO(
-
-)
+    val id: String,
+    val usuarioId: String,
+    val estacionamentoId:String,
+    val reservaId: String,
+    val nota: Int,
+    val comentario: String?,
+    val tags: List<String>,
+    val dataAvaliacao: Date,
+    val usuarioNome: String? = null,
+    val estacionamentoNome: String? = null,
+    val likeCount: Int = 0,
+    val usuarioCurtiu: Boolean = false
+    )
+data class Avaliacao

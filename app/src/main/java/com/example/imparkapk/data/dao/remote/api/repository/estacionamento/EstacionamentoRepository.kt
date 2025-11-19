@@ -4,7 +4,7 @@ import com.example.imparkapk.data.dao.model.Estacionamento
 
 interface EstacionamentoRepository {
 
-    suspend fun cadastrarEstacionamento(estacionamento: Estacionamento): Boolean
+    suspend fun cadastrarEstacionamento(estacionamento: Estacionamento): Result<Boolean>
     suspend fun getEstacionamentoPorId(id: String): Result<Estacionamento?>
     suspend fun listarEstacionamentos(): Result<List<Estacionamento>>
     suspend fun listarEstacionamentosComVagas(): Result<List<Estacionamento>>

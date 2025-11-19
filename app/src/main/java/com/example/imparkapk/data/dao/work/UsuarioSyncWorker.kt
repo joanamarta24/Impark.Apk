@@ -1,4 +1,5 @@
 package com.example.imparkapk.data.dao.work
+import com.example.imparkapk.data.dao.converters.menager.UsuarioStateManager
 
 import android.content.Context
 import androidx.work.CoroutineWorker

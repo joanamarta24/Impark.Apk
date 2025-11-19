@@ -42,6 +42,7 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = "usuario") {
         composable("usuario") { CadastroUsuarioScreen(navController) }
         composable("carro") { CadastroCarroScreen() }
+        composable("")
     }
 }
 
