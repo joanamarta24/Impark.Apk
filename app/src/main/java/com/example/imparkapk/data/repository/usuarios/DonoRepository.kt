@@ -91,8 +91,7 @@ class DonoRepository @Inject constructor(
         senha: String,
         telefone: String,
         nascimento: Date,
-        tipoDeUsuario: TipoDeUsuario,
-        estacionamentosId: List<Long>
+        estacionamentosId: List<Long> = emptyList()
     ): Dono {
         return withContext(io) {
 
@@ -109,7 +108,7 @@ class DonoRepository @Inject constructor(
                 operationType = "CREATE",
                 telefone = telefone,
                 dataNascimento = nascimento,
-                tipoUsuario = tipoDeUsuario
+                tipoUsuario = TipoDeUsuario.DONO
             )
 
             dao.upsert(localUsuario)

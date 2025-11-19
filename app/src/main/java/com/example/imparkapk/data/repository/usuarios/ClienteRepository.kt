@@ -95,7 +95,6 @@ class ClienteRepository @Inject constructor(
         senha: String,
         telefone: String,
         nascimento: Date,
-        tipoDeUsuario: TipoDeUsuario,
     ): Cliente {
         return withContext(io) {
 
@@ -112,7 +111,7 @@ class ClienteRepository @Inject constructor(
                 operationType = "CREATE",
                 telefone = telefone,
                 dataNascimento = nascimento,
-                tipoUsuario = tipoDeUsuario
+                tipoUsuario = TipoDeUsuario.CLIENTE
             )
 
             dao.upsert(localUsuario)
