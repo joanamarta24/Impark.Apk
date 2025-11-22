@@ -1,4 +1,18 @@
 package com.example.imparkapk.data.dao.mapper.usuarios
 
-class GerenteMapper {
+import com.example.imparkapk.data.dao.model.Gerente
+import com.example.imparkapk.data.dao.remote.api.dto.GerenteDto
+import org.mapstruct.Mapper
+import org.mapstruct.MappingTarget
+import org.mapstruct.factory.Mappers
+
+@Mapper
+interface GerenteMapper {
+    companion object{
+        val INSTANCE: GerenteMapper = Mappers.getMapper(GerenteMapper::class.java)
+    }
+    fun  toDto(gerente: Gerente): GerenteDto
+    fun toEntity(gerenteDto: GerenteDto): Gerente
+    fun toDtoList(gerenteList: List<Gerente>): List<GerenteDto>
+    fun updateFromDto(gerenteDto: GerenteDto, @MappingTarget gerente: Gerente)
 }

@@ -6,8 +6,7 @@ enum class TipoUsuario {
     CLIENTE,
     ESTACIONAMENTO,
     GERENTE,
-    DONO,
-    DESENVOLVELDOR
+    DONO
 
 }
 data class Usuario(

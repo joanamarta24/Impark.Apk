@@ -60,6 +60,9 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
+
 
 
     // Core AndroidX e Compose
