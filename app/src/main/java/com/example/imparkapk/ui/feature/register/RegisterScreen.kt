@@ -91,14 +91,6 @@ fun RegisterScreen(
                         isError = false
                     )
                 }
-
-                ValidatedTextField(
-                    label = "Telefone",
-                    onValueChange = { vm.onTelefoneChange(it) },
-                    value = state.telefone,
-                    modifier = Modifier,
-                    isError = false
-                )
                 OutlinedTextField(
                     value = state.nascimento.toString(),
                     onValueChange = {  },

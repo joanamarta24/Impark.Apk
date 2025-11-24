@@ -92,10 +92,7 @@ fun LoginScreen(
                                     disabledContentColor = Color.Gray,
                                     disabledContainerColor = Color.LightGray
                                 ),
-                                onClick = {
-                                    onRegisterButtonPressed()
-                                    Log.d("Mudança de tela", "Comando executado")
-                                          },
+                                onClick = { onRegisterButtonPressed() },
                             )
                         }
                     }

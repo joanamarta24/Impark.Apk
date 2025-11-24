@@ -9,7 +9,6 @@ data class Dono(
     val nome: String,
     val email: String,
     val senha: String?,
-    val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     val estacionamentos: List<Estacionamento>?,

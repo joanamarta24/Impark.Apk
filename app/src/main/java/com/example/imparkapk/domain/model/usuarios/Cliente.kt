@@ -12,7 +12,6 @@ data class Cliente (
     val nome: String,
     val email: String,
     val senha: String?,
-    val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     val carros: List<Carro>?,

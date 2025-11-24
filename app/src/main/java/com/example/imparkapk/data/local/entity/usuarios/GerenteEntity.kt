@@ -33,9 +33,6 @@ data class GerenteEntity(
     @ColumnInfo(name = "senha")
     val senha: String?,
 
-    @ColumnInfo(name = "telefone")
-    val telefone: String,
-
     @ColumnInfo(name = "data_nascimento")
     val dataNascimento: Date,
 

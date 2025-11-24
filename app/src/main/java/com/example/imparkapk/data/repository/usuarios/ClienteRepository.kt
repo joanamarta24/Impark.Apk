@@ -93,7 +93,6 @@ class ClienteRepository @Inject constructor(
         nome: String,
         email: String,
         senha: String,
-        telefone: String,
         nascimento: Date,
     ): Cliente {
         return withContext(io) {
@@ -109,7 +108,6 @@ class ClienteRepository @Inject constructor(
                 localOnly = true,
                 ativo = false,
                 operationType = "CREATE",
-                telefone = telefone,
                 dataNascimento = nascimento,
                 tipoUsuario = TipoDeUsuario.CLIENTE
             )
@@ -209,7 +207,7 @@ class ClienteRepository @Inject constructor(
                 )
 
             } catch (e: Exception) {
-                Log.w("UsuarioRepository", "Falha ao sincronizar UPDATE ${u.id}: ${e.message}")
+                Log.w("CLienteRepository", "Falha ao sincronizar UPDATE ${u.id}: ${e.message}")
             }
         }
 
@@ -244,7 +242,7 @@ class ClienteRepository @Inject constructor(
             }.forEach { dao.deleteById(it.id) }
 
         } catch (e: Exception) {
-            Log.w("UsuarioRepository", "Sem conexão no pull: ${e.message}")
+            Log.w("ClienteRepository", "Sem conexão no pull: ${e.message}")
         }
     }
 

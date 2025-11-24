@@ -91,7 +91,6 @@ class GerenteRepository @Inject constructor(
         nome: String,
         email: String,
         senha: String,
-        telefone: String,
         nascimento: Date,
         tipoDeUsuario: TipoDeUsuario,
         estacionamento: Long
@@ -109,7 +108,6 @@ class GerenteRepository @Inject constructor(
                 localOnly = true,
                 ativo = false,
                 operationType = "CREATE",
-                telefone = telefone,
                 dataNascimento = nascimento,
                 tipoUsuario = tipoDeUsuario,
                 estacionamentoId = estacionamento,

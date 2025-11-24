@@ -59,7 +59,6 @@ fun AppNavGraph(navGraph: NavHostController, modifier: Modifier) {
         }
 
         composable(Routes.Register) {
-            Log.d("Mudança de tela", "Comando detectado")
             RegisterScreen(
                 onRegisterSuccess = {
                     navGraph.navigate(Routes.Login) {

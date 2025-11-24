@@ -9,7 +9,6 @@ data class Gerente(
     val nome: String,
     val email: String,
     val senha: String?,
-    val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     val estacionamento: Estacionamento?,

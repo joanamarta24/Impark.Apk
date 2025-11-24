@@ -8,7 +8,6 @@ data class DonoDto(
     val nome: String,
     val email: String,
     val senha: String?,
-    val telefone: String,
     val dataNascimento: Date,
     val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     val estacionamentosId: List<Long> = emptyList(),

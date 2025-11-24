@@ -39,10 +39,6 @@ class RegisterViewModel @Inject constructor(
         _state.value = _state.value.copy(tipoDeUsuario = TipoDeUsuario.valueOf(tipoDeUsuario))
     }
 
-    fun onTelefoneChange(telefone: String) {
-        _state.value = _state.value.copy(telefone = telefone)
-    }
-
     fun onNascimentoChange(nascimento: Date) {
         _state.value = _state.value.copy(nascimento = nascimento)
     }
@@ -57,7 +53,6 @@ class RegisterViewModel @Inject constructor(
                             nome = currentState.nome,
                             email = currentState.email,
                             senha = currentState.senha,
-                            telefone = currentState.telefone,
                             nascimento = currentState.nascimento
                         )
                         onRegisterSuccess()
@@ -68,7 +63,6 @@ class RegisterViewModel @Inject constructor(
                             nome = currentState.nome,
                             email = currentState.email,
                             senha = currentState.senha,
-                            telefone = currentState.telefone,
                             nascimento = currentState.nascimento
                         )
                         onRegisterSuccess()

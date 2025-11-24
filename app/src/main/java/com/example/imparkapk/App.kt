@@ -64,7 +64,7 @@ class App : Application(), Configuration.Provider {
             .build()
 
         val periodicWork = PeriodicWorkRequestBuilder<ClienteSyncWorker>(
-            15, TimeUnit.MINUTES
+            100, TimeUnit.SECONDS
         )
             .setConstraints(constraints)
             .build()
@@ -75,6 +75,6 @@ class App : Application(), Configuration.Provider {
             periodicWork
         )
 
-        Toast.makeText(this, "Sincronização agendada (a cada 15 min).", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Sincronização agendada (a cada 100 segundos).", Toast.LENGTH_SHORT).show()
     }
 }

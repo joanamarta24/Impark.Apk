@@ -89,7 +89,6 @@ class DonoRepository @Inject constructor(
         nome: String,
         email: String,
         senha: String,
-        telefone: String,
         nascimento: Date,
         estacionamentosId: List<Long> = emptyList()
     ): Dono {
@@ -106,7 +105,6 @@ class DonoRepository @Inject constructor(
                 localOnly = true,
                 ativo = false,
                 operationType = "CREATE",
-                telefone = telefone,
                 dataNascimento = nascimento,
                 tipoUsuario = TipoDeUsuario.DONO
             )
