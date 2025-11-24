@@ -35,7 +35,7 @@ import com.example.imparkapk.di.DateConverter
         AvaliacaoEntity::class,
         AcessoEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)
