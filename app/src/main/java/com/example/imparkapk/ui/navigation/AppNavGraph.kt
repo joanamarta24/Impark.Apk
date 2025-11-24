@@ -61,7 +61,11 @@ fun AppNavGraph(navGraph: NavHostController, modifier: Modifier) {
         composable(Routes.Register) {
             Log.d("Mudança de tela", "Comando detectado")
             RegisterScreen(
-                onRegisterSuccess = {},
+                onRegisterSuccess = {
+                    navGraph.navigate(Routes.Dashboard) {
+                        popUpTo(Routes.Register) { inclusive = true }
+                    }
+                },
                 onLoginButtonPressed = {
                     navGraph.navigate(Routes.Login) {
                         popUpTo(Routes.Register) { inclusive = true }
