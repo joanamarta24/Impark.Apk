@@ -17,4 +17,5 @@ fun RegisterScreen(
     vm: RegisterViewModel = hiltViewModel()
 ) {
     val state by vm.state.collectAsState();
+
 }

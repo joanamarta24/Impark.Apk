@@ -1,5 +1,6 @@
 package com.example.imparkapk.ui.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -7,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.imparkapk.ui.feature.dashboard.DashboardScreen
 import com.example.imparkapk.ui.feature.login.LoginScreen
 import com.example.imparkapk.ui.feature.register.RegisterScreen
 import com.example.imparkapk.ui.feature.splash.SplashScreen
@@ -33,17 +35,38 @@ fun AppNavGraph(navGraph: NavHostController, modifier: Modifier) {
 
         composable(Routes.Login) {
             LoginScreen(
-                onLoginSuccess = {},
+                onLoginSuccess = {
+                    navGraph.navigate(Routes.Dashboard) {
+                        popUpTo(Routes.Login) { inclusive = true }
+                    }
+                },
                 onRegisterButtonPressed = {
-                    navGraph.navigate(Routes.Register)
+                    navGraph.navigate(Routes.Register) {
+                        popUpTo(Routes.Login) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Routes.Dashboard) {
+            DashboardScreen(
+                onLogout = {
+                    navGraph.navigate(Routes.Login) {
+                        popUpTo(Routes.Dashboard) { inclusive = true }
+                    }
                 }
             )
         }
 
         composable(Routes.Register) {
+            Log.d("Mudança de tela", "Comando detectado")
             RegisterScreen(
                 onRegisterSuccess = {},
-                onLoginButtonPressed = { navGraph.navigate(Routes.Login) }
+                onLoginButtonPressed = {
+                    navGraph.navigate(Routes.Login) {
+                        popUpTo(Routes.Register) { inclusive = true }
+                    }
+                }
             )
         }
     }

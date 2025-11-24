@@ -1,5 +1,6 @@
 package com.example.imparkapk.ui.feature.login
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -91,7 +92,10 @@ fun LoginScreen(
                                     disabledContentColor = Color.Gray,
                                     disabledContainerColor = Color.LightGray
                                 ),
-                                onClick = { onRegisterButtonPressed },
+                                onClick = {
+                                    onRegisterButtonPressed()
+                                    Log.d("Mudança de tela", "Comando executado")
+                                          },
                             )
                         }
                     }
