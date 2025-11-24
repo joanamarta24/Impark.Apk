@@ -162,6 +162,11 @@ fun RegisterScreen(
                         DatePicker( state = datePickerState )
                     }
                 }
+                if (state.errorMessage != null) {
+                    Text(
+                        text = state.errorMessage!!,
+                    )
+                }
             }
         }
     }

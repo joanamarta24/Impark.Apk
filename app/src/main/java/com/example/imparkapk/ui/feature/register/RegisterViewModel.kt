@@ -53,23 +53,25 @@ class RegisterViewModel @Inject constructor(
             try {
                 when (currentState.tipoDeUsuario) {
                     TipoDeUsuario.CLIENTE -> {
-                        clienteRepo.create(
+                        val ok = clienteRepo.create(
                             nome = currentState.nome,
                             email = currentState.email,
                             senha = currentState.senha,
                             telefone = currentState.telefone,
                             nascimento = currentState.nascimento
                         )
+                        onRegisterSuccess()
                     }
 
                     TipoDeUsuario.DONO -> {
-                        donoRepo.create(
+                        val ok = donoRepo.create(
                             nome = currentState.nome,
                             email = currentState.email,
                             senha = currentState.senha,
                             telefone = currentState.telefone,
                             nascimento = currentState.nascimento
                         )
+                        onRegisterSuccess()
                     }
 
                     else -> null
