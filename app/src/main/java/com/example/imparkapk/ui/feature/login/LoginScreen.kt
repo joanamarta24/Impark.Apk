@@ -43,22 +43,22 @@ fun LoginScreen(
 ) {
     val state by vm._uiState.collectAsState()
 
-    val imParkGreen = Color(0xFF1DB954)
-    val imParkWhite = Color.White
-    val imParkDarkGray = Color(0xFF2A2A2A)
-    val imParkLightGray = Color(0xFFF5F5F5)
+    val inParkGreen = Color(0xFF1DB954)
+    val inParkWhite = Color.White
+    val inParkDarkGray = Color(0xFF2A2A2A)
+    val inParkLightGray = Color(0xFFF5F5F5)
 
     Scaffold { paddingValues ->
         Surface(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(imParkLightGray)
+                .background(inParkLightGray)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(imParkLightGray),
+                    .background(inParkLightGray),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -67,7 +67,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .size(80.dp)
                         .background(
-                            color = imParkGreen,
+                            color = inParkGreen,
                             shape = RoundedCornerShape(20.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -76,17 +76,17 @@ fun LoginScreen(
                         text = "P",
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
-                        color = imParkWhite
+                        color = inParkWhite
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Impark",
+                    text = "Inpark",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = imParkDarkGray
+                    color = inParkDarkGray
                 )
 
                 Text(
@@ -102,7 +102,7 @@ fun LoginScreen(
                         .fillMaxWidth(0.85f)
                         .padding(horizontal = 16.dp),
                     shape = RoundedCornerShape(16.dp),
-                    color = imParkWhite,
+                    color = inParkWhite,
                     shadowElevation = 8.dp
                 ) {
                     Column(
@@ -137,8 +137,8 @@ fun LoginScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonColors(
-                                containerColor = imParkGreen,
-                                contentColor = imParkWhite,
+                                containerColor = inParkGreen,
+                                contentColor = inParkWhite,
                                 disabledContentColor = Color.Gray,
                                 disabledContainerColor = Color.LightGray
                             ),
@@ -189,7 +189,7 @@ fun LoginScreen(
                                 text = "Criar uma conta",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = imParkGreen
+                                color = inParkGreen
                             )
                         }
                     }

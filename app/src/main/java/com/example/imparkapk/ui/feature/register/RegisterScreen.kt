@@ -62,22 +62,22 @@ fun RegisterScreen(
     var selectedDate by remember { mutableStateOf<Long?>(null) }
 
     val imParkGreen = Color(0xFF1DB954)
-    val imParkWhite = Color.White
-    val imParkDarkGray = Color(0xFF2A2A2A)
-    val imParkLightGray = Color(0xFFF5F5F5)
-    val imParkBorder = Color(0xFFE0E0E0)
+    val inParkWhite = Color.White
+    val inParkDarkGray = Color(0xFF2A2A2A)
+    val inParkLightGray = Color(0xFFF5F5F5)
+    val inParkBorder = Color(0xFFE0E0E0)
 
     Scaffold { innerPadding ->
         Surface(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(imParkLightGray)
+                .background(inParkLightGray)
         ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(imParkLightGray)
+                    .background(inParkLightGray)
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(
@@ -100,7 +100,7 @@ fun RegisterScreen(
                             text = "P",
                             fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
-                            color = imParkWhite
+                            color = inParkWhite
                         )
                     }
                 }
@@ -114,13 +114,13 @@ fun RegisterScreen(
                         text = "Criar Conta",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = imParkDarkGray
+                        color = inParkDarkGray
                     )
                 }
 
                 item {
                     Text(
-                        text = "Junte-se ao Impark",
+                        text = "Junte-se ao Inpark",
                         fontSize = 14.sp,
                         color = Color.Gray,
                         modifier = Modifier.padding(bottom = 24.dp)
@@ -133,7 +133,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        color = imParkWhite,
+                        color = inParkWhite,
                         shadowElevation = 8.dp
                     ) {
                         Column(
@@ -187,7 +187,7 @@ fun RegisterScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = imParkGreen,
-                                    unfocusedBorderColor = imParkBorder,
+                                    unfocusedBorderColor = inParkBorder,
                                     focusedLabelColor = imParkGreen
                                 ),
                                 trailingIcon = {
@@ -211,7 +211,7 @@ fun RegisterScreen(
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonColors(
                                     containerColor = imParkGreen,
-                                    contentColor = imParkWhite,
+                                    contentColor = inParkWhite,
                                     disabledContentColor = Color.Gray,
                                     disabledContainerColor = Color.LightGray
                                 ),
