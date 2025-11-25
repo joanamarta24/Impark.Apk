@@ -10,6 +10,9 @@ data class RegisterUiState (
     var confirmarSenha: String = "",
     var tipoDeUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
     var nascimento: Date = Date(),
+
+    // Informações inatas da tela
+
     var isLoading: Boolean = false,
-    var errorMessage: String? = null
+    var errorMessage: String? = null,
 )
