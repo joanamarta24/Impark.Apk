@@ -63,6 +63,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 
     // Core AndroidX e Compose

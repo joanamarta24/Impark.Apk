@@ -3,7 +3,7 @@ package com.example.imparktcc.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imparkapk.UiState.LoginUiState
-import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.ClienteApi
 import com.example.imparkapk.data.dao.remote.api.repository.usuario.ClienteRepository
 import com.example.imparkapk.data.dao.remote.api.request.LoginRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val clienteRepository: ClienteRepository,
-    private val usuarioApi: UsuarioApi,
+    private val clienteApi: ClienteApi,
     private val tokenManager: TokenManager
 ) : ViewModel() {
 
@@ -62,7 +62,7 @@ class LoginViewModel @Inject constructor(
                         email = _uiState.value.email,
                         senha = _uiState.value.senha
                     )
-                    val response = usuarioApi.login(request)
+                    val response = clienteApi.login(request)
                     if (response.isSuccessful){
                         val loginResponse = response.body()
                         val token = loginResponse?.token
@@ -79,7 +79,7 @@ class LoginViewModel @Inject constructor(
     fun login(email: String, senha: String) {
         viewModelScope.launch {
             try {
-                val response = usuarioApi.login(LoginRequest(email, senha))
+                val response = clienteApi.login(LoginRequest(email, senha))
                 if (response.isSuccessful) {
                     val token = response.body()?.token
                     token?.let { tokenManager.saveToken(it) }

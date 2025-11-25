@@ -5,7 +5,7 @@ import com.example.imparkapk.data.dao.remote.api.api.ClienteCarroApi
 import com.example.imparkapk.data.dao.remote.api.EstacionamentosApi
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import com.example.imparkapk.data.dao.remote.api.api.ReservaApi
-import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.ClienteApi
 import com.google.firebase.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -84,7 +84,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUsuarioApi(retrofit: Retrofit): UsuarioApi = retrofit.create()
+    fun provideUsuarioApi(retrofit: Retrofit): ClienteApi = retrofit.create()
 
     @Provides
     @Singleton

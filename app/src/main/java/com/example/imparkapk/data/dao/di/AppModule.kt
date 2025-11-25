@@ -2,7 +2,7 @@ import android.content.Context
 import androidx.browser.trusted.TokenStore
 import com.example.imparkapk.data.dao.remote.api.AuthApiService
 import com.example.imparkapk.data.dao.remote.api.RefreshRequest
-import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.ClienteApi
 import java.util.concurrent.TimeUnit
 import com.google.gson.Gson
 import dagger.Module
@@ -155,8 +155,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUsuarioApi(@Named("secure") retrofit: Retrofit): UsuarioApi =
-        retrofit.create(UsuarioApi::class.java)
+    fun provideUsuarioApi(@Named("secure") retrofit: Retrofit): ClienteApi =
+        retrofit.create(ClienteApi::class.java)
 
     @Provides
     @Singleton

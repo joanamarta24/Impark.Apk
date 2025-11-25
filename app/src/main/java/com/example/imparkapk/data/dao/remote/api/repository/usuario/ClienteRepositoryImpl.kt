@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.remote.api.repository.usuario
 
 import com.example.imparkapk.data.dao.local.dao.dao.ClienteDao
 import com.example.imparkapk.data.dao.local.dao.entity.ClienteEntity
-import com.example.imparkapk.data.dao.remote.api.api.usuarios.UsuarioApi
+import com.example.imparkapk.data.dao.remote.api.api.usuarios.ClienteApi
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest
 import com.example.imparktcc.model.Usuario
 import kotlinx.coroutines.delay
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class ClienteRepositoryImpl @Inject constructor(
     private val clienteDao: ClienteDao,
-    private val usuarioApi: UsuarioApi
+    private val clienteApi: ClienteApi
 ) : ClienteRepository {
 
     // Cache em memoria para simulação

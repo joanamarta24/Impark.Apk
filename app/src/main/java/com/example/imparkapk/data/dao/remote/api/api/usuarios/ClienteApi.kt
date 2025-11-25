@@ -11,31 +11,31 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface UsuarioApi {
+interface ClienteApi {
 
-    @POST("usuarios")
+    @POST("cliente")
     suspend fun criarUsuario(
         @Body request: UsuarioRequest
     ): Response<UsuarioResponse>
 
-    @GET("usuarios/{id}")
+    @GET("cliente/{id}")
     suspend fun getUsuario(
         @Path("id") id: String
     ): Response<UsuarioResponse>
 
     // Altere conforme o endpoint real do backend
-    @GET("usuarios")
+    @GET("cliente")
     suspend fun getUsuarioPorEmail(
         @Query("email") email: String
     ): Response<UsuarioResponse>
 
-    @PUT("usuarios/{id}")
+    @PUT("clientes/{id}")
     suspend fun atualizarUsuario(
         @Path("id") id: String,
         @Body request: UsuarioRequest
     ): Response<UsuarioResponse>
 
-    @DELETE("usuarios/{id}")
+    @DELETE("cliente/{id}")
     suspend fun deletarUsuario(
         @Path("id") id: String
     ): Response<Unit>

@@ -56,4 +56,4 @@ fun EstacionamentoEntity.toEstacionamento() = Estacionamento(
     ativo = this.ativo
 
 )
-fun EstacionamentoEntity.toEstacionamento
+fun EstacionamentoEntity.toEstacionamento()
