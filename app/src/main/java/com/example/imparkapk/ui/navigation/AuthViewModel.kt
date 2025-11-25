@@ -31,4 +31,11 @@ class AuthStateViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout() {
+        viewModelScope.launch {
+            repo.logout()
+            _state.value = AuthState.Unauthenticated
+        }
+    }
 }
