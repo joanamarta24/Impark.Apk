@@ -17,9 +17,6 @@ interface AuthApiService {
     @POST("auth/login")
     suspend fun login(@Body request: LoginRequest): TokenResponse
 
-    @GET("auth/me")
-    suspend fun me(): MeResponse
-
     @POST("auth/refresh")
     suspend fun refresh(@Body body: RefreshRequest): TokenResponse
 

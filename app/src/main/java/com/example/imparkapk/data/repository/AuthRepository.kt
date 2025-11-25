@@ -20,8 +20,6 @@ class AuthRepository @Inject constructor(
         val resp = authApi.login(LoginRequest(email, senha))
         store.saveTokens(resp.accessToken, resp.refreshToken)
 
-        val me = secureApi.me()
-        store.saveMeCached(me)
         return true
     }
 
@@ -41,12 +39,6 @@ class AuthRepository @Inject constructor(
             store.saveTokens(rt.accessToken, rt.refreshToken ?: refresh)
             true
         }.getOrDefault(false)
-    }
-
-    suspend fun meAndCache(): MeResponse {
-        val me = secureApi.me()
-        store.saveMeCached(me)
-        return me
     }
 
     suspend fun logout() = store.clearTokens()

@@ -172,7 +172,12 @@ class ClienteRepository @Inject constructor(
 
         pendentes.filter { it.operationType == "CREATE" && !it.ativo }.forEach { u ->
             try {
-                val dados = mapOf("nome" to u.nome, "email" to u.email, "senha" to u.senha)
+                val dados = mapOf(
+                    "nome" to u.nome,
+                    "email" to u.email,
+                    "senha" to u.senha,
+                    "dataNascimento" to u.dataNascimento.time
+                    )
                 val resp = api.create(
                     dadosJson = partJsonDados(dados),
                 )
@@ -188,6 +193,7 @@ class ClienteRepository @Inject constructor(
                     put("nome", u.nome)
                     put("email", u.email)
                     u.senha?.takeIf { it.isNotBlank() }?.let { put("senha", it) }
+                    put("dataNascimento", u.dataNascimento.time)
                 }
 
                 val resp = api.update(
@@ -256,7 +262,8 @@ class ClienteRepository @Inject constructor(
                     val dados = mapOf(
                         "nome" to e.nome,
                         "email" to e.email,
-                        "senha" to e.senha
+                        "senha" to e.senha,
+                        "dataNascimento" to e.dataNascimento.time
                     )
                     val resp = api.create(
                         dadosJson = partJsonDados(dados),
@@ -268,6 +275,7 @@ class ClienteRepository @Inject constructor(
                         put("nome", e.nome)
                         put("email", e.email)
                         e.senha?.let { put("senha", it) }
+                        put("dataNascimento", e.dataNascimento.time)
                     }
                     val resp = api.update(
                         id = e.id,
@@ -289,6 +297,7 @@ class ClienteRepository @Inject constructor(
             put("nome", e.nome)
             put("email", e.email)
             e.senha?.takeIf { it.isNotBlank() }?.let { put("senha", it) }
+            put("dataNascimento", e.dataNascimento.time)
         }
 
 
