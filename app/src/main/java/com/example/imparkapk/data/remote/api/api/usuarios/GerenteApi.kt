@@ -2,6 +2,7 @@ package com.example.imparkapk.data.remote.api.api.usuarios
 
 import com.example.imparkapk.data.remote.dto.usuarios.GerenteDto
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,12 +18,12 @@ interface GerenteApi {
     suspend fun getById(@Path("id") id: Long) : GerenteDto
 
     @POST("gerente")
-    suspend fun create(@Part(value = "dados") dadosJson: RequestBody) : GerenteDto
+    suspend fun create(@Body dadosJson: RequestBody) : GerenteDto
 
     @PUT("gerente/{id}")
     suspend fun update(
         @Path(value = "id") id: Long,
-        @Part(value = "dados") dadosJson: RequestBody
+        @Body dadosJson: RequestBody
     ) : GerenteDto
 
     @DELETE("gerente/{id}")

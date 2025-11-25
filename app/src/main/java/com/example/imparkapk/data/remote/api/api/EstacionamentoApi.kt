@@ -2,6 +2,7 @@ package com.example.imparkapk.data.remote.api.api
 
 import com.example.imparkapk.data.remote.dto.EstacionamentoDto
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,12 +18,12 @@ interface EstacionamentoApi {
     suspend fun getById(@Path("id") id: Long) : EstacionamentoDto
 
     @POST("estacionamento")
-    suspend fun create(@Part(value = "dados") dadosJson: RequestBody) : EstacionamentoDto
+    suspend fun create(@Body dadosJson: RequestBody) : EstacionamentoDto
 
     @PUT("estacionamento/{id}")
     suspend fun update(
         @Path(value = "id") id: Long,
-        @Part(value = "dados") dadosJson: RequestBody
+        @Body dadosJson: RequestBody
     ) : EstacionamentoDto
 
     @DELETE("estacionamento/{id}")

@@ -2,6 +2,7 @@ package com.example.imparkapk.data.remote.api.api.usuarios
 
 import com.example.imparkapk.data.remote.dto.usuarios.DonoDto
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,12 +18,12 @@ interface DonoApi {
     suspend fun getById(@Path("id") id: Long) : DonoDto
 
     @POST("dono")
-    suspend fun create(@Part(value = "dados") dadosJson: RequestBody) : DonoDto
+    suspend fun create(@Body dadosJson: RequestBody) : DonoDto
 
     @PUT("dono/{id}")
     suspend fun update(
         @Path(value = "id") id: Long,
-        @Part(value = "dados") dadosJson: RequestBody
+        @Body dadosJson: RequestBody
     ) : DonoDto
 
     @DELETE("dono/{id}")

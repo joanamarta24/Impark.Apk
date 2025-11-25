@@ -2,6 +2,7 @@ package com.example.imparkapk.data.remote.api.api
 
 import com.example.imparkapk.data.remote.dto.AcessoDto
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,12 +18,12 @@ interface AcessoApi {
     suspend fun getById(@Path("id") id: Long) : AcessoDto
 
     @POST("acesso")
-    suspend fun create(@Part(value = "dados") dadosJson: RequestBody) : AcessoDto
+    suspend fun create(@Body dadosJson: RequestBody) : AcessoDto
 
     @PUT("acesso/{id}")
     suspend fun update(
         @Path(value = "id") id: Long,
-        @Part(value = "dados") dadosJson: RequestBody
+        @Body dadosJson: RequestBody
     ) : AcessoDto
 
     @DELETE("acesso/{id}")
