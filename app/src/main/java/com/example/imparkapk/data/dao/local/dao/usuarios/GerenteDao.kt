@@ -1,9 +1,7 @@
 package com.example.imparkapk.data.dao.local.dao.usuarios
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.example.imparkapk.data.dao.model.Estacionamento
-import com.example.imparkapk.data.dao.model.enus.TipoDeUsuario
+import com.example.imparkapk.data.dao.model.enus.TipoUsuario
 import java.util.Date
 
 data class GerenteDao(
@@ -13,7 +11,7 @@ data class GerenteDao(
     val senha: String,
     val telefone: String,
     val dataNascimento: Date,
-    val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
+    val tipoUsuario: TipoUsuario = TipoUsuario.CLIENTE,
     val estacionamento: Estacionamento?,
     val ativo: Boolean
 )

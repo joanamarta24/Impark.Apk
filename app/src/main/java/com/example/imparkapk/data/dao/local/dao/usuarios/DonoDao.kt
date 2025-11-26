@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.local.dao.usuarios
 
 import com.example.imparkapk.data.dao.model.Estacionamento
-import com.example.imparkapk.data.dao.model.enus.TipoDeUsuario
+import com.example.imparkapk.data.dao.model.enus.TipoUsuario
 import java.util.Date
 
 data class DonoDao(
@@ -11,7 +11,7 @@ data class DonoDao(
     val senha: String,
     val telefone: String,
     val dataNascimento: Date,
-    val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
+    val tipoUsuario: TipoUsuario = TipoUsuario.CLIENTE,
     val estacionamentos: List<Estacionamento>?,
     val ativo: Boolean
 )

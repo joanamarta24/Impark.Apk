@@ -23,53 +23,42 @@ import java.util.UUID
         Index(value = ["cpf"], unique = true),
         Index(value = ["estacionamento_id"])
     ],
-            foreignKeys = [
-        ForeignKey(
-            entity = ClienteEntity::class, // Ou ClienteEntity, dependendo da sua estrutura
-            parentColumns = ["id"],
-            childColumns = ["usuario_id"],
-            onDelete = ForeignKey.CASCADE
-        ),
-    ]
+
 )
 data class GerenteEntity(
     @PrimaryKey
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
 
-    @ColumnInfo(name = "usuario_id")
-    val usuarioId: String,
+    @ColumnInfo(name = "nome")
+    val nome: String,
 
-    @ColumnInfo( "nome_completo")
-    val nomeCompleto: String,
-
-    @ColumnInfo( "email")
+    @ColumnInfo(name = "email")
     val email: String,
 
-    @ColumnInfo("cpf")
+    @ColumnInfo(name = "senha")
+    val senha: String,
+
+    @ColumnInfo(name = "cpf")
     val cpf: String,
 
-    @ColumnInfo("telefone")
+    @ColumnInfo(name = "telefone")
     val telefone: String,
 
-    @ColumnInfo("estacionamento_id")
+    @ColumnInfo(name = "usuario_id")
+    val usuarioId: String? = null,
+
+    @ColumnInfo(name = "estacionamento_id")
     val estacionamentoId: String,
 
-    @ColumnInfo("nivel_acesso")
-    val nivelDeAcesso: Int = 1,
+    @ColumnInfo(name = "nivel_acesso")
+    val nivelAcesso: Int = 1,
 
-    @ColumnInfo("cargo")
-    val cargo: String = "Gerente",
-
-    @ColumnInfo("ativo")
+    @ColumnInfo(name = "ativo")
     val ativo: Boolean = true,
+
     @ColumnInfo(name = "data_criacao")
     val dataCriacao: Date = Date(),
 
     @ColumnInfo(name = "data_atualizacao")
-    val dataAtualizacao: Date = Date(),
-
-    @ColumnInfo(name = "ultimo_login")
-    val ultimoLogin: Date? = null
-
-
+    val dataAtualizacao: Date = Date()
 )

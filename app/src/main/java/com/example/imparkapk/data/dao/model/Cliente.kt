@@ -2,14 +2,7 @@ package com.example.imparktcc.model
 
 
 
-enum class TipoUsuario {
-    CLIENTE,
-    ESTACIONAMENTO,
-    GERENTE,
-    DONO
-
-}
-data class Usuario(
+data class Cliente(
     val id: String ="",
     val nome: String ="",
     val email: String ="",

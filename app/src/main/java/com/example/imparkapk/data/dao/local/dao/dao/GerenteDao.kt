@@ -11,26 +11,25 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GerenteDao {
+    @Query("SELECT * FROm gerentes WHERE id = id")
+    suspend fun getGrtrnteByid(id: String): GerenteEntity?
 
-    // Buscas por ID (assumindo que id é String)
-    @Query("SELECT * FROM gerentes WHERE id = :id")
-    suspend fun getGerenteById(id: String): GerenteEntity?
-
-    // Buscas por usuário (se usar a abordagem de relação)
-    @Query("SELECT * FROM gerentes WHERE usuario_id = :usuarioId AND ativo = 1")
+    //Buscar por usuário
+    @Query("SELECT * FROM gerentes WHERE usuario_id AND ativo = 1")
     suspend fun getGerentePorUsuario(usuarioId: String): GerenteEntity?
 
-    // Buscas por estacionamento com Flow para observação em tempo real
-    @Query("SELECT * FROM gerentes WHERE estacionamento_id = :estacionamentoId AND ativo = 1")
+    //Buscar por estacionamento com Flow para observação em tempo real
+    @Query("SELECT * FROM gerentes WHERE estacionamento_id = estacionamento_id AND ativo =1")
     fun getGerentesPorEstacionamento(estacionamentoId: String): Flow<List<GerenteEntity>>
 
     // Buscas por estacionamento sem Flow (para operações únicas)
-    @Query("SELECT * FROM gerentes WHERE estacionamento_id = :estacionamentoId AND ativo = 1")
+    @Query("SELECT *FROM gerentes WHERE estacionamento_id = estacionamento_id AND ativo = 1")
     suspend fun getGerentesPorEstacionamentoList(estacionamentoId: String): List<GerenteEntity>
 
     // Buscas por email e CPF
-    @Query("SELECT * FROM gerentes WHERE email = :email AND ativo = 1")
+    @Query("SELECT * FROM gerentes WHERE email = email AND ativo = 1")
     suspend fun getGerentePorEmail(email: String): GerenteEntity?
+
 
     @Query("SELECT * FROM gerentes WHERE cpf = :cpf AND ativo = 1")
     suspend fun getGerentePorCpf(cpf: String): GerenteEntity?
@@ -53,14 +52,18 @@ interface GerenteDao {
     @Query("SELECT COUNT(*) FROM gerentes WHERE estacionamento_id = :estacionamentoId AND nivel_acesso = :nivelAcesso AND ativo = 1")
     suspend fun countGerentesPorNivelAcesso(estacionamentoId: String, nivelAcesso: Int): Int
 
-    // Listas observáveis
+// Listas observáveis
+
     @Query("SELECT * FROM gerentes WHERE ativo = 1")
     fun getGerentesAtivos(): Flow<List<GerenteEntity>>
 
     @Query("SELECT * FROM gerentes WHERE estacionamento_id = :estacionamentoId AND nivel_acesso = :nivelAcesso AND ativo = 1")
-    fun getGerentesPorNivelAcesso(estacionamentoId: String, nivelAcesso: Int): Flow<List<GerenteEntity>>
+    fun getGerentesPorNivelAcesso(
+        estacionamentoId: String,
+        nivelAcesso: Int
+    ): Flow<List<GerenteEntity>>
 
-    // Operações de exclusão (se necessário)
+    // Operações de exclusão
     @Query("DELETE FROM gerentes WHERE id = :id")
     suspend fun deleteGerente(id: String)
 
@@ -69,7 +72,10 @@ interface GerenteDao {
 
     // Buscas com filtros combinados
     @Query("SELECT * FROM gerentes WHERE estacionamento_id = :estacionamentoId AND ativo = :ativo")
-    fun getGerentesPorEstacionamentoEStatus(estacionamentoId: String, ativo: Boolean): Flow<List<GerenteEntity>>
+    fun getGerentesPorEstacionamentoEStatus(
+        estacionamentoId: String,
+        ativo: Boolean
+    ): Flow<List<GerenteEntity>>
 
     // Verificação de existência
     @Query("SELECT EXISTS(SELECT 1 FROM gerentes WHERE email = :email AND ativo = 1)")

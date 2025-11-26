@@ -19,58 +19,69 @@ class DonoRepositoryImpl: DonoRepository{
     }
 
     override fun findByEmail(email: String): Optional<DonoEntity> {
-        TODO("Not yet implemented")
+       return donosStorage.values.find { it.email == email }?.let { Optional.of(it) } ?: Optional.empty()
     }
 
     override fun findByCpf(cpf: String): Optional<DonoEntity> {
-        TODO("Not yet implemented")
+        return donosStorage.values.find { it.cpf == cpf }?.let { Optional.of(it) }?: Optional.empty()
     }
 
     override fun findByMatricula(matricula: String): Optional<DonoEntity> {
-        TODO("Not yet implemented")
+        return donosStorage.values.find { it.matricula == matricula }?.let { Optional.of(it) }?: Optional.empty()
     }
 
     override fun findByAtivo(ativo: Boolean): List<DonoEntity> {
-        TODO("Not yet implemented")
+        return donosStorage.values.filter { it.ativo == ativo }
     }
 
+
     override fun existsByEmail(email: String): Boolean {
-        TODO("Not yet implemented")
+        return donosStorage.values.any { it.email == email }
     }
 
     override fun existsByCpf(cpf: String): Boolean {
-        TODO("Not yet implemented")
+        return donosStorage.values.any { it.cpf == cpf }
     }
 
     override fun existsByMatricula(matricula: String): Boolean {
-        TODO("Not yet implemented")
+        return donosStorage.values.any { it.matricula == matricula }
     }
 
     override fun findByNomeContaining(nome: String): List<DonoEntity> {
-        TODO("Not yet implemented")
+        return donosStorage.values.filter { it.nome.contains(nome, ignoreCase = true) }
     }
 
     override fun findByPercentualParticipacaoGreaterThan(percentualMinimo: Double): List<DonoEntity> {
-        TODO("Not yet implemented")
+        return donosStorage.values.filter {
+            it.percentualParticipacao != null && it.percentualParticipacao > percentualMinimo
+        }
     }
 
     override fun countAtivos(): Long {
-        TODO("Not yet implemented")
+        return donosStorage.values.count { it.ativo }.toLong()
     }
 
     override fun save(dono: DonoEntity): DonoEntity {
-        TODO("Not yet implemented")
+        val id = idCounter.getAndIncrement()
+        val donoComId = dono.copy(id = id)
+        donosStorage[id] = donoComId
+        return donoComId
     }
 
     override fun update(dono: DonoEntity): DonoEntity {
-        TODO("Not yet implemented")
+        if (dono.id == null || !donosStorage.containsKey(dono.id)) {
+            throw IllegalArgumentException("Dono não encontrado para atualização")
+        }
+        donosStorage[dono.id!!] = dono
+        return dono
     }
 
     override fun delete(id: Long): Boolean {
-        TODO("Not yet implemented")
+        return donosStorage.remove(id) != null
     }
 
     override fun deleteByEmail(email: String): Boolean {
-        TODO("Not yet implemented")
+        val dono = findByEmail(email).orElse(null) ?: return false
+        return delete(dono.id!!)
     }
 }
