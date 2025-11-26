@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.local.dao.usuarios
 
 import com.example.imparkapk.data.dao.model.Avaliacao
 import com.example.imparkapk.data.dao.model.Reserva
-import com.example.imparkapk.data.dao.model.enus.TipoDeUsuario
+import com.example.imparkapk.data.dao.model.enus.TipoUsuario
 import com.example.imparktcc.model.Carro
 import java.util.Date
 
@@ -13,7 +13,7 @@ data class ClieteDao(
     val senha: String,
     val telefone: String,
     val dataNascimento: Date,
-    val tipoUsuario: TipoDeUsuario = TipoDeUsuario.CLIENTE,
+    val tipoUsuario: TipoUsuario = TipoUsuario.CLIENTE,
     val carros: List<Carro>?,
     val avaliacoes: List<Avaliacao>?,
     val reservas: List<Reserva>?,

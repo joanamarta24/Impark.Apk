@@ -5,9 +5,9 @@ data class Gerente(
     val usuarioId: String = "",
     val estacionamentoId: String = "",
     val nivelAcesso: Int = 1, // 1-Gerente, 2-Supervisor, 3-Funcionário
-    val ativo: Boolean = true
+    val ativo: Boolean = true,
+    val dataCriacao: String,
+    val dataAtualizacao: String
 ) {
-    val isGerente: Boolean get() = nivelAcesso == 1
-    val isSupervisor: Boolean get() = nivelAcesso == 2
-    val isFuncionario: Boolean get() = nivelAcesso == 3
+
 }

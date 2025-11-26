@@ -1,8 +1,8 @@
 package com.example.imparkapk.data.dao.model.enus
 
-enum class TipoDeUsuario {
+enum class TipoUsuario {
     CLIENTE,
+    ESTACIONAMENTO,
     GERENTE,
-    DONO,
-    ADMIN
+    DONO
 }

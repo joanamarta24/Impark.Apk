@@ -1,17 +1,16 @@
 package com.example.imparkapk.data.dao.remote.api.dto
 
+import com.example.imparkapk.data.dao.remote.api.response.EstacionamentoInfo
 
-import java.time.LocalDateTime
 
 data class GerenteDto(
-    val id: Long? = null,
+    val id: String,
     val nome: String,
     val email: String,
     val cpf: String,
     val telefone: String,
-    val dataNascimento: LocalDateTime? = null,
-    val dataCriacao: LocalDateTime? = LocalDateTime.now(),
-    val dataAtualizacao: LocalDateTime? = LocalDateTime.now(),
+    val nivelAcesso: Int, // Ou melhor: val nivelAcesso: NivelAcesso
+    val dataCriacao: String,
     val ativo: Boolean = true,
 
     // Relacionamentos (opcionais - podem ser IDs ou DTOs completos)
@@ -25,9 +24,6 @@ data class GerenteCreateDto(
     val email: String,
     val cpf: String,
     val telefone: String,
-    val matricula: String,
-    val salario: Double? = null,
-    val departamento: String? = null,
     val estacionamentoId: Long? = null
 )
 
@@ -37,9 +33,6 @@ data class GerenteResponseDto(
     val nome: String,
     val email: String,
     val telefone: String,
-    val matricula: String,
-    val departamento: String?,
-    val dataAdmissao: LocalDateTime?,
     val ativo: Boolean,
     val estacionamento: EstacionamentoDto? = null
 )
