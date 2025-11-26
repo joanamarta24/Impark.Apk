@@ -19,6 +19,7 @@ data class EstacionamentoInfo(
     val totalVagas: Int,
     val vagasOcupadas: Int
 )
+
 data class Endereco(
     val logradouro: String,
     val numero: String,
@@ -57,14 +58,16 @@ data class Endereco(
         return "%.1f%%".format(getTaxaOcupacao())
     }
 
+
     fun GerenteResponse.getNivelAcesso(): String {
         return when (nivelAcesso) {
-            GerenteResponse.NIVEL_ACESSO_TOTAL -> "Acesso Total"
+            GerenteResponse.NICEL_ACESSO_TOTAL -> "Acesso Total"
             GerenteResponse.NIVEL_ACESSO_PARCIAL -> "Acesso Parcial"
             GerenteResponse.NIVEL_ACESSO_BASICO -> "Acesso Básico"
             else -> "Desconhecido"
         }
     }
+
 
     fun GerenteResponse.podeGerenciarFuncionarios(): Boolean {
         return nivelAcesso <= GerenteResponse.NIVEL_ACESSO_PARCIAL
@@ -73,6 +76,7 @@ data class Endereco(
     fun GerenteResponse.podeAlterarConfiguracoes(): Boolean {
         return nivelAcesso == GerenteResponse.NIVEL_ACESSO_TOTAL
     }
+
 
     // Companion object dentro da classe
     companion object {
