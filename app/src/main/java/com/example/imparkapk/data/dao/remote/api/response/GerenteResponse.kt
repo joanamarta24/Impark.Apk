@@ -1,5 +1,7 @@
 package com.example.imparkapk.data.dao.remote.api.response
 
+import com.example.imparkapk.data.dao.model.enus.Permissao
+
 
 data class GerenteResponse(
     val id: String,
@@ -83,6 +85,49 @@ data class Endereco(
         const val NIVEL_ACESSO_TOTAL = 1
         const val NIVEL_ACESSO_PARCIAL = 2
         const val NIVEL_ACESSO_BASICO = 3
+    }
+
+    enum class NivelAcesso(
+        val valor: Int,
+        val descricao: String,
+        val permissoes: Set<Permissao>
+    ) {
+        TOTAL(
+            valor = 1,
+            descricao = "Acesso Total",
+            permissoes = setOf(
+                Permissao.GERENCIAR_FUNCIONARIOS,
+                Permissao.ALTERAR_CONFIGURACOES,
+                Permissao.VISUALIZAR_RELATORIOS,
+                Permissao.GERENCIAR_ESTACIONAMENTO,
+                Permissao.ACESSO_FINANCEIRO
+            )
+        ),
+
+        PARCIAL(
+            valor = 2,
+            descricao = "Acesso Parcial",
+            permissoes = setOf(
+                Permissao.GERENCIAR_FUNCIONARIOS,
+                Permissao.VISUALIZAR_RELATORIOS,
+                Permissao.GERENCIAR_ESTACIONAMENTO
+            )
+        ),
+
+        BASICO(
+            valor = 3,
+            descricao = "Acesso Básico",
+            permissoes = setOf(
+                Permissao.VISUALIZAR_RELATORIOS,
+                Permissao.GERENCIAR_ESTACIONAMENTO
+            )
+        );
+
+        companion object {
+            fun fromValor(valor: Int): NivelAcesso? {
+                return values().find { it.valor == valor }
+            }
+        }
     }
 }
 
