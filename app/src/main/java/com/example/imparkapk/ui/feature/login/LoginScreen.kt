@@ -1,5 +1,6 @@
 package com.example.imparkapk.ui.feature.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,11 +25,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.imparkapk.R
 import com.example.imparktcc.ui.components.ValidatedTextField
 
 @Preview(
@@ -65,18 +68,18 @@ fun LoginScreen(
                 // Logo e Título
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(40.dp)
                         .background(
-                            color = inParkGreen,
-                            shape = RoundedCornerShape(20.dp)
+                            color = Color.White,
+                            shape = RoundedCornerShape(10.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "P",
-                        fontSize = 48.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = inParkWhite
+                    Image(
+                        contentDescription = "Logo InPark",
+                        painter = painterResource(R.drawable.logo),
+                        modifier = Modifier
+                            .background(Color.White),
                     )
                 }
 
