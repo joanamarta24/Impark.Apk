@@ -2,6 +2,7 @@ package com.example.imparkapk.ui.feature.dashboard
 
 import com.example.imparkapk.domain.model.Estacionamento
 import com.example.imparkapk.domain.model.enuns.TipoDeUsuario
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 data class DashboardUiState(

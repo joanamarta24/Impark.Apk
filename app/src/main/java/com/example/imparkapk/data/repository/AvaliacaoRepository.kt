@@ -67,7 +67,7 @@ class AvaliacaoRepository @Inject constructor(
             list.map {
                 it.toDomain(
                     cliente = clienteRepository.observeUsuario(it.clienteId).toList().first(),
-                    estacionamento = estacionamentoRepository.observeUsuario(it.estacionamentoId)
+                    estacionamento = estacionamentoRepository.observeEstacionamento(it.estacionamentoId)
                         .toList().first(),
                 )
             }
@@ -77,7 +77,7 @@ class AvaliacaoRepository @Inject constructor(
                 dao.observeById(id).map {
                     it?.toDomain(
                         cliente = clienteRepository.observeUsuario(it.clienteId).toList().first(),
-                        estacionamento = estacionamentoRepository.observeUsuario(it.estacionamentoId)
+                        estacionamento = estacionamentoRepository.observeEstacionamento(it.estacionamentoId)
                             .toList().first(),
                     )
                 }
@@ -130,7 +130,7 @@ class AvaliacaoRepository @Inject constructor(
 
                     localUsuario.toDomain(
                         cliente = clienteRepository.observeUsuario(clienteId).toList().first(),
-                        estacionamento = estacionamentoRepository.observeUsuario(estacionamentoId)
+                        estacionamento = estacionamentoRepository.observeEstacionamento(estacionamentoId)
                             .toList().first()
                     )
                 }
@@ -155,7 +155,7 @@ class AvaliacaoRepository @Inject constructor(
                     updated.toDomain(
                         cliente = clienteRepository.observeUsuario(local.clienteId).toList()
                             .first(),
-                        estacionamento = estacionamentoRepository.observeUsuario(local.estacionamentoId)
+                        estacionamento = estacionamentoRepository.observeEstacionamento(local.estacionamentoId)
                             .toList().first()
                     )
                 }
@@ -210,7 +210,7 @@ class AvaliacaoRepository @Inject constructor(
                             put("clienteId", clienteRepository.observeUsuario(u.clienteId))
                             put(
                                 "estacionamentoId",
-                                estacionamentoRepository.observeUsuario(u.estacionamentoId)
+                                estacionamentoRepository.observeEstacionamento(u.estacionamentoId)
                             )
                             put("nota", u.nota)
                             put("comentario", u.comentario)

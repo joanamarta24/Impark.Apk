@@ -60,11 +60,11 @@ class EstacionamentoRepository @Inject constructor(
         return uris.mapNotNull { partFromUri("anexos", it) }
     }
 
-    fun observeUsuarios(): Flow<List<Estacionamento>> =
+    fun observeEstacionamentos(): Flow<List<Estacionamento>> =
         dao.observerAll().map { list -> list.map { it.toDomain() } }
 
-    fun observeUsuario(id: Long?): Flow<Estacionamento?> =
-        dao.observeById(id).map { it?.toDomain() }
+    fun observeEstacionamento(id: Long?): Flow<Estacionamento?> =
+        dao.observeById(id).map { it.toDomain() }
 
     suspend fun refresh(): Result<Unit> = runCatching {
         val remote = api.list()
@@ -170,7 +170,7 @@ class EstacionamentoRepository @Inject constructor(
         EstacionamentoSyncScheduler.enqueueNow(context)
     }
 
-    suspend fun sincronizarUsuarios() {
+    suspend fun sincronizarEstacionamentos() {
         val pendentes = dao.getByPending()
 
         pendentes.filter { it.operationType == "DELETE" }.forEach { u ->
