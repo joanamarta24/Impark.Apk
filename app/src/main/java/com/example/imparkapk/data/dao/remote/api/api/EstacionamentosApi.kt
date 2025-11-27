@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.dao.remote.api
+package com.example.imparkapk.data.dao.remote.api.api
 
 import com.example.imparkapk.data.dao.remote.api.dto.PaginationDto
 import com.example.imparkapk.data.dao.remote.api.request.AtualizarEstacionamentoRequest

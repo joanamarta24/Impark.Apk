@@ -5,7 +5,7 @@ import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
 import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
 import com.example.imparkapk.data.dao.local.dao.entity.toEstacionamento
 import com.example.imparkapk.data.dao.model.Estacionamento
-import com.example.imparkapk.data.dao.remote.api.EstacionamentosApi
+import com.example.imparkapk.data.dao.remote.api.api.EstacionamentosApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

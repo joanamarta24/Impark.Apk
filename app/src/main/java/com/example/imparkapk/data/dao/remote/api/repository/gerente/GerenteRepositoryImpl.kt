@@ -3,6 +3,7 @@ package com.example.imparkapk.data.dao.remote.api.repository.gerente
 import com.example.imparkapk.data.dao.local.dao.dao.GerenteDao
 import com.example.imparkapk.data.dao.local.dao.entity.GerenteEntity
 import com.example.imparkapk.data.dao.model.Gerente
+import com.example.imparkapk.data.dao.model.enus.NivelAcesso
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.GerenteApi
 import kotlinx.coroutines.delay
 import java.util.Date
@@ -19,9 +20,10 @@ class GerenteRepositoryImpl @Inject constructor(
     private val gerenteCache = mutableListOf<Gerente>()
 
     companion object {
-        const val NIVEL_GERENTE = 1
-        const val NIVEL_SUPERVISOR = 2
-        const val NIVEL_FUNCIONARIO = 3
+        const val Dono = 1
+        const val NIVEL_GERENTE = 2
+
+
 
         val PERMISSOES_GERENTE = listOf(
             "gerenciar_estacionamento",
@@ -29,15 +31,6 @@ class GerenteRepositoryImpl @Inject constructor(
             "visualizar_relatorios",
             "gerenciar_reservas",
             "configurar_precos"
-        )
-        val PERMISSOES_SUPERVISOR = listOf(
-            "gerenciar_funcionarios",
-            "visualizar_relatorios",
-            "gerenciar_reservas"
-        )
-        val PERMISSOES_FUNCIONARIO = listOf(
-            "visualizar_relatorios",
-            "registrar_entrada_saida"
         )
     }
 
@@ -97,6 +90,7 @@ class GerenteRepositoryImpl @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 val gerenteResponse = response.body()!!
 
+                // Converte Response para Model
                 val gerente = Gerente(
                     id = gerenteResponse.id,
                     nome = gerenteResponse.nome,
@@ -109,6 +103,11 @@ class GerenteRepositoryImpl @Inject constructor(
                     dataAtualizacao = gerenteResponse.dataAtualizacao ?: Date(),
                     ativo = gerenteResponse.ativo ?: true,
                     nivelAcesso = gerenteResponse.nivelAcesso ?: NIVEL_FUNCIONARIO
+                )
+                // Salva no banco local para cache
+                val entity = GerenteEntity(
+                    id = gerente.id,
+                    nome = gerente.no
                 )
             }
         }
@@ -163,13 +162,6 @@ class GerenteRepositoryImpl @Inject constructor(
             TODO("Not yet implemented")
         }
 
-        override suspend fun isSupervisor(gerenteId: String): Boolean {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun isFuncionario(gerenteId: String): Boolean {
-            TODO("Not yet implemented")
-        }
 
         override suspend fun countGerentesPorEstacionamento(estacionamentoId: String): Int {
             TODO("Not yet implemented")
@@ -193,13 +185,6 @@ class GerenteRepositoryImpl @Inject constructor(
             TODO("Not yet implemented")
         }
 
-        override suspend fun promoverGerente(gerenteId: String): Boolean {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun rebaixarGerente(gerenteId: String): Boolean {
-            TODO("Not yet implemented")
-        }
 
         override suspend fun getPermissoesPorNivel(nivel: Int): List<String> {
             TODO("Not yet implemented")

@@ -1,6 +1,7 @@
 package com.example.imparkapk.data.dao.remote.api.repository.gerente
 
 import com.example.imparkapk.data.dao.model.Gerente
+import com.example.imparkapk.data.dao.model.enus.NivelAcesso
 
 interface GerenteRepository {
     //OPERAÇÕES BÁSICAS DE GERENTE
@@ -28,13 +29,10 @@ interface GerenteRepository {
     suspend fun countGerentesPorNivel(estacionamentoId: String, nivel: Int): Int
     suspend fun getHierarquiaEstacionamento(estacionamentoId: String): Map<Int, List<Gerente>>
 
-    // Operações administrativas
-    suspend fun transferirGerencia(gerenteAtualId: String, novoGerenteId: String): Boolean
-    suspend fun promoverGerente(gerenteId: String): Boolean
-    suspend fun rebaixarGerente(gerenteId: String): Boolean
-
     // Permissões e funções
     suspend fun getPermissoesPorNivel(nivel: Int): List<String>
     suspend fun atualizarPermissoesGerente(gerenteId: String, permissoes: List<String>): Boolean
+
+    suspend fun getNivelAcesso(gerenteId: String,nivelAcesso: List<String>): Boolean
 }
 
