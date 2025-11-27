@@ -22,6 +22,8 @@ class GerenteRepositoryImpl @Inject constructor(
     companion object {
         const val Dono = 1
         const val NIVEL_GERENTE = 2
+        const val NIVEL_SUPERVISOR = 3
+        const val NIVEL_FUNCIONARIO = 4
 
 
 
