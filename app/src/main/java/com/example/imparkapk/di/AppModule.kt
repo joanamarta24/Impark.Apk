@@ -2,15 +2,15 @@ package com.example.imparkapk.di
 
 import android.content.Context
 import com.example.imparkapk.data.local.TokenStore
-import com.example.imparkapk.data.remote.api.api.AuthApiService
-import com.example.imparkapk.data.remote.api.api.AcessoApi
-import com.example.imparkapk.data.remote.api.api.AvaliacaoApi
-import com.example.imparkapk.data.remote.api.api.CarroApi
-import com.example.imparkapk.data.remote.api.api.EstacionamentoApi
-import com.example.imparkapk.data.remote.api.api.ReservaApi
-import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
-import com.example.imparkapk.data.remote.api.api.usuarios.DonoApi
-import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
+import com.example.imparkapk.data.remote.api.AuthApiService
+import com.example.imparkapk.data.remote.api.AcessoApi
+import com.example.imparkapk.data.remote.api.AvaliacaoApi
+import com.example.imparkapk.data.remote.api.CarroApi
+import com.example.imparkapk.data.remote.api.EstacionamentoApi
+import com.example.imparkapk.data.remote.api.ReservaApi
+import com.example.imparkapk.data.remote.api.usuarios.ClienteApi
+import com.example.imparkapk.data.remote.api.usuarios.DonoApi
+import com.example.imparkapk.data.remote.api.usuarios.GerenteApi
 import com.example.imparkapk.data.remote.dto.auth.RefreshRequest
 import com.google.gson.Gson
 import dagger.Module

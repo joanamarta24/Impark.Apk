@@ -8,7 +8,7 @@ import com.example.imparkapk.data.local.dao.CarroDao
 import com.example.imparkapk.data.local.entity.CarroEntity
 import com.example.imparkapk.data.mapper.toDomain
 import com.example.imparkapk.data.mapper.toEntity
-import com.example.imparkapk.data.remote.api.api.CarroApi
+import com.example.imparkapk.data.remote.api.CarroApi
 import com.example.imparkapk.data.worker.carro.CarroSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Carro

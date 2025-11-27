@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.remote.api.api
+package com.example.imparkapk.data.remote.api
 
 import com.example.imparkapk.data.remote.dto.AvaliacaoDto
 import okhttp3.RequestBody

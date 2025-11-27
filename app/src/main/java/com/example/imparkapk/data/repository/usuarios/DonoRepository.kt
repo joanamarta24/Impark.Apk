@@ -2,7 +2,7 @@ package com.example.imparkapk.data.repository.usuarios
 
 import com.example.imparkapk.data.local.dao.usuarios.DonoDao
 import com.example.imparkapk.data.local.entity.usuarios.DonoEntity
-import com.example.imparkapk.data.remote.api.api.usuarios.DonoApi
+import com.example.imparkapk.data.remote.api.usuarios.DonoApi
 import com.example.imparkapk.domain.model.usuarios.Dono
 
 import android.content.ContentResolver

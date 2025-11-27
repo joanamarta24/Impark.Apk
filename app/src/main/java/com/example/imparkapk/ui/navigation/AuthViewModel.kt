@@ -24,11 +24,7 @@ class AuthStateViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val me = repo.me()
-            if (me != null) {
-                _state.value = AuthState.Authenticated(me.nome, me.email)
-            } else {
-                _state.value = AuthState.Unauthenticated
-            }
+            _state.value = AuthState.Authenticated(me.nome, me.email)
         }
     }
 

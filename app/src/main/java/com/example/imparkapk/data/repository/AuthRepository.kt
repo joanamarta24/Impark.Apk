@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.repository
 
 import com.example.imparkapk.data.local.TokenStore
-import com.example.imparkapk.data.remote.api.api.AuthApiService
+import com.example.imparkapk.data.remote.api.AuthApiService
 import com.example.imparkapk.data.remote.dto.auth.LoginRequest
 import javax.inject.Inject
 

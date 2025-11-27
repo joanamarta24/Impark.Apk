@@ -8,7 +8,7 @@ import com.example.imparkapk.data.local.dao.usuarios.GerenteDao
 import com.example.imparkapk.data.local.entity.usuarios.GerenteEntity
 import com.example.imparkapk.data.mapper.usuarios.toDomain
 import com.example.imparkapk.data.mapper.usuarios.toEntity
-import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
+import com.example.imparkapk.data.remote.api.usuarios.GerenteApi
 import com.example.imparkapk.data.worker.usuarios.gerente.GerenteSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.enuns.TipoDeUsuario

@@ -8,7 +8,7 @@ import com.example.imparkapk.data.local.dao.EstacionamentoDao
 import com.example.imparkapk.data.local.entity.EstacionamentoEntity
 import com.example.imparkapk.data.mapper.toDomain
 import com.example.imparkapk.data.mapper.toEntity
-import com.example.imparkapk.data.remote.api.api.EstacionamentoApi
+import com.example.imparkapk.data.remote.api.EstacionamentoApi
 import com.example.imparkapk.data.worker.estacionamento.EstacionamentoSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Estacionamento

@@ -8,7 +8,7 @@ import com.example.imparkapk.data.local.dao.usuarios.ClienteDao
 import com.example.imparkapk.data.local.entity.usuarios.ClienteEntity
 import com.example.imparkapk.data.mapper.usuarios.toDomain
 import com.example.imparkapk.data.mapper.usuarios.toEntity
-import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
+import com.example.imparkapk.data.remote.api.usuarios.ClienteApi
 import com.example.imparkapk.data.repository.AvaliacaoRepository
 import com.example.imparkapk.data.worker.usuarios.cliente.ClienteSyncScheduler
 import com.example.imparkapk.di.IoDispatcher

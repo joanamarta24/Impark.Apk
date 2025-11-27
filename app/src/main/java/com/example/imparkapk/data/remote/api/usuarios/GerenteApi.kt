@@ -1,4 +1,4 @@
-package com.example.imparkapk.data.remote.api.api.usuarios
+package com.example.imparkapk.data.remote.api.usuarios
 
 import com.example.imparkapk.data.remote.dto.usuarios.GerenteDto
 import okhttp3.RequestBody

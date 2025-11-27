@@ -8,7 +8,7 @@ import com.example.imparkapk.data.local.dao.ReservaDao
 import com.example.imparkapk.data.local.entity.ReservaEntity
 import com.example.imparkapk.data.mapper.toDomain
 import com.example.imparkapk.data.mapper.toEntity
-import com.example.imparkapk.data.remote.api.api.ReservaApi
+import com.example.imparkapk.data.remote.api.ReservaApi
 import com.example.imparkapk.data.worker.reserva.ReservaSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Reserva

@@ -8,7 +8,7 @@ import com.example.imparkapk.data.local.dao.AvaliacaoDao
 import com.example.imparkapk.data.local.entity.AvaliacaoEntity
 import com.example.imparkapk.data.mapper.toDomain
 import com.example.imparkapk.data.mapper.toEntity
-import com.example.imparkapk.data.remote.api.api.AvaliacaoApi
+import com.example.imparkapk.data.remote.api.AvaliacaoApi
 import com.example.imparkapk.data.worker.avaliacoes.AvaliacoesSyncScheduler
 import com.example.imparkapk.di.IoDispatcher
 import com.example.imparkapk.domain.model.Avaliacao
