@@ -60,8 +60,9 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repo.syncAll()
-                repo.observeEstacionamentos().collect { estacioList -> {
-                    onEstacionamentosChange(estacionamentos = estacioList)
+                repo.observeEstacionamentos().collect { estacioList ->
+                    run {
+                        onEstacionamentosChange(estacionamentos = estacioList)
                     }
                 }
             } catch (e: Exception) {
