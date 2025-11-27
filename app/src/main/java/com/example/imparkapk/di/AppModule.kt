@@ -56,12 +56,11 @@ object AppModule {
     @Singleton
     fun provideAuthInterceptor(tokenStore: TokenStore): Interceptor = Interceptor { chain ->
         val original = chain.request()
-        val token = tokenStore.getAccessTokenSync()
-        val newRequest = if (!token.isNullOrBlank()) {
+        val token = tokenStore.token
+        val newRequest =
             original.newBuilder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()
-        } else original
         chain.proceed(newRequest)
     }
 
@@ -74,7 +73,7 @@ object AppModule {
         if (response.request.url.encodedPath.contains("/auth/refresh") || responseCount(response) >= 2)
             return@Authenticator null
 
-        val refresh = tokenStore.getRefreshTokenSync() ?: return@Authenticator null
+        val refresh = tokenStore.token
         val service = authRetrofit.create(AuthApiService::class.java)
 
         android.util.Log.d("Auth", "Tentando refresh do token...")
@@ -87,8 +86,8 @@ object AppModule {
         val newAccess = refreshed?.accessToken ?: return@Authenticator null
 
         kotlinx.coroutines.runBlocking {
-            tokenStore.saveAccessToken(newAccess)
-            refreshed.refreshToken?.let { tokenStore.saveRefreshToken(it) }
+            tokenStore.saveToken(newAccess)
+            refreshed.refreshToken?.let { tokenStore.saveToken(it) }
         }
 
         response.request.newBuilder()

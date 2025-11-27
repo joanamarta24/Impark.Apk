@@ -2,7 +2,7 @@ package com.example.imparkapk.ui.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.imparktcc.repository.AuthRepository
+import com.example.imparkapk.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class AuthStateViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val me = repo.bootstrapSession()
+            val me = repo.me()
             if (me != null) {
                 _state.value = AuthState.Authenticated(me.nome, me.email)
             } else {
