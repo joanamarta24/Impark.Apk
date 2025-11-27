@@ -2,9 +2,7 @@ package com.example.imparkapk.di
 
 import android.content.Context
 import com.example.imparkapk.data.local.TokenStore
-import java.util.concurrent.TimeUnit
-import com.example.imparkapk.data.remote.AuthApiService
-import com.example.imparkapk.data.remote.RefreshRequest
+import com.example.imparkapk.data.remote.api.api.AuthApiService
 import com.example.imparkapk.data.remote.api.api.AcessoApi
 import com.example.imparkapk.data.remote.api.api.AvaliacaoApi
 import com.example.imparkapk.data.remote.api.api.CarroApi
@@ -13,6 +11,7 @@ import com.example.imparkapk.data.remote.api.api.ReservaApi
 import com.example.imparkapk.data.remote.api.api.usuarios.ClienteApi
 import com.example.imparkapk.data.remote.api.api.usuarios.DonoApi
 import com.example.imparkapk.data.remote.api.api.usuarios.GerenteApi
+import com.example.imparkapk.data.remote.dto.auth.RefreshRequest
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -26,6 +25,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -34,16 +34,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    val baseUrl: String = "http://10.0.2.2:8080/"
+
     @Provides
     @Singleton
     @Named("baseUrl")
-    fun provideBaseUrl(): String = "http://10.0.2.2:8080/"
+    fun provideBaseUrl(): String = baseUrl
 
     @Provides
     @Singleton
     fun provideRetroFit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -161,12 +163,6 @@ object AppModule {
     @Singleton
     @Named("authApi")
     fun provideAuthApi(@Named("auth") retrofit: Retrofit): AuthApiService =
-        retrofit.create(AuthApiService::class.java)
-
-    @Provides
-    @Singleton
-    @Named("secureApi")
-    fun provideSecureApi(@Named("secure") retrofit: Retrofit): AuthApiService =
         retrofit.create(AuthApiService::class.java)
 
     @Provides

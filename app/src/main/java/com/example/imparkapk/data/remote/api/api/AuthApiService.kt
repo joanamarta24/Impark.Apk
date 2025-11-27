@@ -1,17 +1,14 @@
-package com.example.imparkapk.data.remote
+package com.example.imparkapk.data.remote.api.api
 
+import com.example.imparkapk.data.remote.dto.auth.LoginRequest
+import com.example.imparkapk.data.remote.dto.auth.MeResponse
+import com.example.imparkapk.data.remote.dto.auth.RefreshRequest
+import com.example.imparkapk.data.remote.dto.auth.TokenResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-
-
-// DTOs
-data class LoginRequest(val email: String, val senha: String)
-data class TokenResponse(val accessToken: String, val refreshToken: String?)
-data class RefreshRequest(val refreshToken: Flow<String?>)
-data class MeResponse(val nome: String, val email: String)
 
 interface AuthApiService {
 
