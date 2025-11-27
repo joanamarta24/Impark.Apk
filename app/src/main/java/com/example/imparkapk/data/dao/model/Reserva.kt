@@ -2,12 +2,6 @@ package com.example.imparkapk.data.dao.model
 
 import java.util.Date
 
-enum class StatusReserva{
-    PENDENTE,
-    CONFIRMADA,
-    CANCELADA,
-    FINALIZADA
-}
 data class Reserva(
     val id:String = "",
     val usuarioId:String ="",

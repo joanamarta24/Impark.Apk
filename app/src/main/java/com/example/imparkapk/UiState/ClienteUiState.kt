@@ -3,11 +3,12 @@ package com.example.imparkapk.UiState
 import com.example.imparkapk.data.dao.model.Estacionamento
 import com.example.imparkapk.data.dao.model.Reserva
 import com.example.imparktcc.model.Carro
-import com.example.imparktcc.model.Usuario
+import com.example.imparktcc.model.Cliente
 
-class ClienteUiState {
+
+class UsuarioUiState {
     //USUARIO
-    val usuarioLogado: Usuario? = null
+    val usuarioLogado:Cliente? = null
 
     //CARROS
     val carros: List<Carro> = emptyList()
@@ -31,7 +32,5 @@ class ClienteUiState {
     val estacionamentoDetalhesId: String? = null
     val reservaDetalhesId:String? = null
 
-    // LOCALIZAÇÃO
-    val localizacaoUsuario:CoordinatesDto?
 
 }

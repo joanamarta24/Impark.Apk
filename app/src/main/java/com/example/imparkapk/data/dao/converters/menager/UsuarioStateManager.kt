@@ -2,7 +2,7 @@ package com.example.imparkapk.data.dao.converters.menager
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.imparkapk.data.dao.remote.api.dto.ClienteDto
+import com.example.imparkapk.data.dao.remote.api.dto.usuario.ClienteDto
 import com.example.imparkapk.data.dao.remote.api.dto.usuario.DonoDto
 import com.google.gson.Gson
 

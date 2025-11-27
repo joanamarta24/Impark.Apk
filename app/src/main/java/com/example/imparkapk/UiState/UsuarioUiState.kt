@@ -1,13 +1,14 @@
 package com.example.imparkapk.UiState
 
 
-import com.example.imparktcc.model.Usuario
+import com.example.imparktcc.model.Cliente
 
-data class UsuarioUiState(
+
+data class ClienteUiState(
 
     // Dados do usuário
-    val usuario: Usuario? = null,
-    val usuarios:List<Usuario> = emptyList(),
+    val usuario: Cliente? = null,
+    val usuarios:List<Cliente> = emptyList(),
 
     // Formulários
     val nome:String ="",
@@ -27,7 +28,7 @@ data class UsuarioUiState(
     val emailValido: Boolean = true,
     val senhaValida: Boolean = true,
     val searchQuery: String = "",
-    val usuariosFiltrados: List<Usuario> = emptyList(),
-    val usuarioLogado: Usuario? = null,
+    val usuariosFiltrados: List<Cliente> = emptyList(),
+    val usuarioLogado: Cliente? = null,
     val sessaoAtiva: Boolean = false
 )

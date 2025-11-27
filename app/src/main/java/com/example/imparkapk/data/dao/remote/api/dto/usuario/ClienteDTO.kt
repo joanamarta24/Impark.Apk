@@ -28,3 +28,4 @@ data class ClienteDTO(
     val createdAt: LocalDateTime? = null,
     val updatedAt: LocalDateTime? = null
 )
+

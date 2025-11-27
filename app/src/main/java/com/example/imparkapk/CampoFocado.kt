@@ -1,16 +1,6 @@
-package com.example.imparktcc.ui.viewmodel
+package com.example.imparkta.ui.viewmodel
 
-
-enum class CampoFocado {
-    NONE,
-    NOME,
-    EMAIL,
-    SENHA,
-    CONFIRMAR_SENHA,
-    TERMOS,
-    POLITICA
-}
-
+import com.example.imparkapk.data.dao.model.enus.CampoFocado
 
 fun CampoFocado?.isCampoTexto(): Boolean {
     return this == CampoFocado.NOME ||

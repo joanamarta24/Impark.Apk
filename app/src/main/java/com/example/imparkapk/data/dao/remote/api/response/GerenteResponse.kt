@@ -3,23 +3,29 @@ package com.example.imparkapk.data.dao.remote.api.response
 
 data class GerenteResponse(
     val id: String,
+    val usuarioId: String,
     val nome: String,
     val email: String,
-    val cpf: String,
-    val telefone: String,
+    val estacionamentoId: String,
     val nivelAcesso: Int,
-    val estacionamento: EstacionamentoInfo? = null,
-    val dataCriacao: String,
-    val ativo: Boolean = true
-)
-data class EstacionamentoInfo(
-    val id: String,
-    val nome: String,
-    val endereco: Endereco?,
-    val totalVagas: Int,
-    val vagasOcupadas: Int
-)
+    val ativo: Boolean,
+    val dataCriacao: String?,
+    val dataAtualizacao: String?,
+    val cpf: String? = "",
+    val telefone: String? = "",
+    val dataNascimento: String? = null,
+    val estacionamento
 
+)
+data class GerenteRequest(
+    val usuarioId: String,
+    val nome: String,
+    val email: String,
+    val estacionamentoId: String,
+    val nivelAcesso: Int,
+    val cpf: String? = "",
+    val telefone: String? = ""
+)
 data class Endereco(
     val logradouro: String,
     val numero: String,

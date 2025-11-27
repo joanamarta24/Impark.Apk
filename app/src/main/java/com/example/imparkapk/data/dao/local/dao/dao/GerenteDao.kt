@@ -15,15 +15,15 @@ interface GerenteDao {
     suspend fun getGrtrnteByid(id: String): GerenteEntity?
 
     //Buscar por usuário
-    @Query("SELECT * FROM gerentes WHERE usuario_id AND ativo = 1")
+    @Query("SELECT * FROM gerentes WHERE usuarioId AND ativo = 1")
     suspend fun getGerentePorUsuario(usuarioId: String): GerenteEntity?
 
     //Buscar por estacionamento com Flow para observação em tempo real
-    @Query("SELECT * FROM gerentes WHERE estacionamento_id = estacionamento_id AND ativo =1")
+    @Query("SELECT * FROM gerentes WHERE estacionamentoId = estacionamentoId AND ativo =1")
     fun getGerentesPorEstacionamento(estacionamentoId: String): Flow<List<GerenteEntity>>
 
     // Buscas por estacionamento sem Flow (para operações únicas)
-    @Query("SELECT *FROM gerentes WHERE estacionamento_id = estacionamento_id AND ativo = 1")
+    @Query("SELECT *FROM gerentes WHERE estacionamentoId = estacionamentoId AND ativo = 1")
     suspend fun getGerentesPorEstacionamentoList(estacionamentoId: String): List<GerenteEntity>
 
     // Buscas por email e CPF
@@ -42,14 +42,14 @@ interface GerenteDao {
     suspend fun updateGerente(gerente: GerenteEntity)
 
     // Atualização de status
-    @Query("UPDATE gerentes SET ativo = :ativo, data_atualizacao = CURRENT_TIMESTAMP WHERE id = :id")
+    @Query("UPDATE gerentes SET ativo = :ativo, dataAtualizacao = CURRENT_TIMESTAMP WHERE id = :id")
     suspend fun updateStatusGerente(id: String, ativo: Boolean)
 
     // Contagens e estatísticas
-    @Query("SELECT COUNT(*) FROM gerentes WHERE estacionamento_id = :estacionamentoId AND ativo = 1")
+    @Query("SELECT COUNT(*) FROM gerentes WHERE estacionamentoId = :estacionamentoId AND ativo = 1")
     suspend fun countGerentesPorEstacionamento(estacionamentoId: String): Int
 
-    @Query("SELECT COUNT(*) FROM gerentes WHERE estacionamento_id = :estacionamentoId AND nivel_acesso = :nivelAcesso AND ativo = 1")
+    @Query("SELECT COUNT(*) FROM gerentes WHERE estacionamentoId = :estacionamentoId AND nivelAcesso = :nivelAcesso AND ativo = 1")
     suspend fun countGerentesPorNivelAcesso(estacionamentoId: String, nivelAcesso: Int): Int
 
 // Listas observáveis
@@ -57,7 +57,7 @@ interface GerenteDao {
     @Query("SELECT * FROM gerentes WHERE ativo = 1")
     fun getGerentesAtivos(): Flow<List<GerenteEntity>>
 
-    @Query("SELECT * FROM gerentes WHERE estacionamento_id = :estacionamentoId AND nivel_acesso = :nivelAcesso AND ativo = 1")
+    @Query("SELECT * FROM gerentes WHERE estacionamentoId = :estacionamentoId AND nivelAcesso = :nivelAcesso AND ativo = 1")
     fun getGerentesPorNivelAcesso(
         estacionamentoId: String,
         nivelAcesso: Int
@@ -71,7 +71,7 @@ interface GerenteDao {
     suspend fun softDeleteGerente(id: String)
 
     // Buscas com filtros combinados
-    @Query("SELECT * FROM gerentes WHERE estacionamento_id = :estacionamentoId AND ativo = :ativo")
+    @Query("SELECT * FROM gerentes WHERE estacionamentoId= :estacionamentoId AND ativo = :ativo")
     fun getGerentesPorEstacionamentoEStatus(
         estacionamentoId: String,
         ativo: Boolean

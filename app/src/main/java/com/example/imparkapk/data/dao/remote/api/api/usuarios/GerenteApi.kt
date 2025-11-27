@@ -17,6 +17,7 @@ import retrofit2.http.Query
 interface GerenteApi {
     @GET("gerente/estacionamento/{estacionamento_id}")
     suspend fun listarGerentesPorEstacionamento(
+
         @Path("estacionamento_id") estacionamento_id: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 20

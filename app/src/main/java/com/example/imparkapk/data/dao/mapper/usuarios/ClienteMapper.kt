@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.mapper.usuarios
 
 import com.example.imparkapk.data.dao.model.enus.Cliente
-import com.example.imparkapk.data.dao.remote.api.dto.ClienteDto
+import com.example.imparkapk.data.dao.remote.api.dto.usuario.ClienteDto
 import com.example.imparkapk.data.dao.remote.api.dto.usuario.ClienteDTO
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping

@@ -7,7 +7,7 @@ data class LoginResponse(
     val usuario: UsuarioResponse,
     val expiresIn: Long
 )
-data class UsuarioResponse(
+data class ClienteResponse(
     val id: String,
     val nome: String,
     val email: String,

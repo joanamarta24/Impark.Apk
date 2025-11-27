@@ -107,7 +107,8 @@ class GerenteRepositoryImpl @Inject constructor(
                 // Salva no banco local para cache
                 val entity = GerenteEntity(
                     id = gerente.id,
-                    nome = gerente.no
+                    nome = gerente.nome
+
                 )
             }
         }
@@ -295,6 +296,10 @@ class GerenteRepositoryImpl @Inject constructor(
         gerenteId: String,
         permissoes: List<String>
     ): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getNivelAcesso(gerenteId: String, nivelAcesso: List<String>): Boolean {
         TODO("Not yet implemented")
     }
 }
