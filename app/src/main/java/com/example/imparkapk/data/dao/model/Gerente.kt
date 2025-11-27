@@ -6,6 +6,7 @@ data class Gerente(
     val nome:String,
     val email:String,
     val estacionamentoId: String = "",
+    val cpf: String,
     val nivelAcesso: Int = 1, // 1-Gerente
     val ativo: Boolean = true,
     val dataCriacao: String,

@@ -14,7 +14,8 @@ data class GerenteResponse(
     val cpf: String? = "",
     val telefone: String? = "",
     val dataNascimento: String? = null,
-    val estacionamento
+    val estacionamento:String?,
+    val Endereco:String,
 
 )
 data class GerenteRequest(

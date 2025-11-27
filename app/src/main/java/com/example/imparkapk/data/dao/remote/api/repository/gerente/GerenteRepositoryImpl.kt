@@ -107,7 +107,12 @@ class GerenteRepositoryImpl @Inject constructor(
                 // Salva no banco local para cache
                 val entity = GerenteEntity(
                     id = gerente.id,
-                    nome = gerente.nome
+                    nome = gerente.nome,
+                    email = gerente.email,
+                    senha = "",
+                    estacionamentoId = gerente.estacionamentoId,
+                    cpf = gerente.cpf,
+                    telefone = gerente.
 
                 )
             }
