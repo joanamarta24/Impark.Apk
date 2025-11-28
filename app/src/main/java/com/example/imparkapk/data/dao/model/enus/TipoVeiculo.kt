@@ -8,5 +8,6 @@ enum class TipoVeiculo {
     ONIBUS,
     SUV,
     PICKUP,
-    OUTROS
+    OUTROS,
+    DESCRICAO
 }

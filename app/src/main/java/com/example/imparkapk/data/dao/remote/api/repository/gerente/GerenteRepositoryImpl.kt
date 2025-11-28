@@ -114,7 +114,7 @@ class GerenteRepositoryImpl @Inject constructor(
                     senha = "",
                     estacionamentoId = gerente.estacionamentoId,
                     cpf = gerente.cpf,
-                    telefone = gerente.
+                    telefone = gerente.te
 
                 )
             }

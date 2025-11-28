@@ -30,19 +30,24 @@ class ReservaViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val carros = carroRepository.listarCarrosPorUsuario(usuarioId)
-                _uiState.update { it.copy(
-                    isLoading = false,
-                    carros = carros,
-                    carroSelecionado = carros.firstOrNull()
-                ) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        carros = carros,
+                        carroSelecionado = carros.firstOrNull()
+                    )
+                }
             } catch (e: Exception) {
-                _uiState.update { it.copy(
-                    isLoading = false,
-                    mensagemErro = "Erro ao carregar carros"
-                ) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        mensagemErro = "Erro ao carregar carros"
+                    )
+                }
             }
         }
     }
+
 
     fun onCarroSelecionadoChange(carro: Carro) {
         _uiState.update { it.copy(carroSelecionado = carro) }
@@ -64,10 +69,12 @@ class ReservaViewModel @Inject constructor(
     }
 
     fun onEstacionamentoSelecionado(estacionamentoId: String, valorHora: Double) {
-        _uiState.update { it.copy(
-            estacionamentoId = estacionamentoId,
-            valorHora = valorHora
-        ) }
+        _uiState.update {
+            it.copy(
+                estacionamentoId = estacionamentoId,
+                valorHora = valorHora
+            )
+        }
         calcularValorReserva()
     }
 
@@ -77,10 +84,12 @@ class ReservaViewModel @Inject constructor(
             val horas = calcularHoras(estado.horaEntrada, estado.horaSaida)
             val valorTotal = horas * estado.valorHora
 
-            _uiState.update { it.copy(
-                horasContratadas = horas,
-                valorTotal = valorTotal
-            ) }
+            _uiState.update {
+                it.copy(
+                    horasContratadas = horas,
+                    valorTotal = valorTotal
+                )
+            }
         }
     }
 
@@ -112,24 +121,30 @@ class ReservaViewModel @Inject constructor(
                     val sucesso = reservaRepository.criarReserva(reserva)
 
                     if (sucesso) {
-                        _uiState.update { it.copy(
-                            isLoading = false,
-                            reservaCriada = true,
-                            reservaAtual = reserva,
-                            mensagemSucesso = "Reserva criada com sucesso!"
-                        ) }
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                reservaCriada = true,
+                                reservaAtual = reserva,
+                                mensagemSucesso = "Reserva criada com sucesso!"
+                            )
+                        }
                         onSuccess(reserva.id)
                     } else {
-                        _uiState.update { it.copy(
-                            isLoading = false,
-                            mensagemErro = "Erro ao criar reserva"
-                        ) }
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                mensagemErro = "Erro ao criar reserva"
+                            )
+                        }
                     }
                 } catch (e: Exception) {
-                    _uiState.update { it.copy(
-                        isLoading = false,
-                        mensagemErro = "Erro de conexão"
-                    ) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            mensagemErro = "Erro de conexão"
+                        )
+                    }
                 }
             }
         }
@@ -141,15 +156,19 @@ class ReservaViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val reservas = reservaRepository.listarReservasPorUsuario(usuarioId)
-                _uiState.update { it.copy(
-                    isLoading = false,
-                    reservas = reservas
-                ) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        reservas = reservas
+                    )
+                }
             } catch (e: Exception) {
-                _uiState.update { it.copy(
-                    isLoading = false,
-                    mensagemErro = "Erro ao carregar reservas"
-                ) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        mensagemErro = "Erro ao carregar reservas"
+                    )
+                }
             }
         }
     }
@@ -162,24 +181,32 @@ class ReservaViewModel @Inject constructor(
                 val sucesso = reservaRepository.cancelarReserva(reservaId)
 
                 if (sucesso) {
-                    _uiState.update { it.copy(
-                        isLoading = false,
-                        mensagemSucesso = "Reserva cancelada com sucesso!"
-                    ) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            mensagemSucesso = "Reserva cancelada com sucesso!"
+                        )
+                    }
                     // Recarregar lista de reservas
-                    carregarReservasDoUsuario(_uiState.value.reservas.firstOrNull()?.usuarioId ?: "")
+                    carregarReservasDoUsuario(
+                        _uiState.value.reservas.firstOrNull()?.usuarioId ?: ""
+                    )
                     onSuccess()
                 } else {
-                    _uiState.update { it.copy(
-                        isLoading = false,
-                        mensagemErro = "Erro ao cancelar reserva"
-                    ) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            mensagemErro = "Erro ao cancelar reserva"
+                        )
+                    }
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(
-                    isLoading = false,
-                    mensagemErro = "Erro de conexão"
-                ) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        mensagemErro = "Erro de conexão"
+                    )
+                }
             }
         }
     }
@@ -194,10 +221,12 @@ class ReservaViewModel @Inject constructor(
 
         val horariosValidos = estado.horaEntrada < estado.horaSaida
 
-        _uiState.update { it.copy(
-            camposValidos = camposValidos,
-            horariosValidos = horariosValidos
-        ) }
+        _uiState.update {
+            it.copy(
+                camposValidos = camposValidos,
+                horariosValidos = horariosValidos
+            )
+        }
 
         return camposValidos && horariosValidos
     }
@@ -223,7 +252,7 @@ data class ReservaUiState(
     val dataReserva: Date = Date(),
     val horaEntrada: String = "",
     val horaSaida: String = "",
-    valorHora: Double = 0.0,
+    val valorHora: Double = 0.0,
     val horasContratadas: Int = 0,
     val valorTotal: Double = 0.0,
     val isLoading: Boolean = false,

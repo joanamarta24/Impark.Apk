@@ -11,8 +11,7 @@ interface AvaliacaoMapper {
         val INSTANCE: AvaliacaoMapper = Mappers.getMapper(AvaliacaoMapper::class.java)
 
         fun toDto(avaliacao: Avaliacao): AvaliacaoDto {
-            return INSTANCE.toDto(avaliacao)
-        }
+
         fun toEntity(avaliacaoDto: AvaliacaoDto): Avaliacao {
             return INSTANCE.toEntity(avaliacaoDto)
         }

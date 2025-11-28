@@ -1,4 +1,4 @@
-package com.example.imparktcc.ui.viewmodel
+package com.example.imparktapk.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

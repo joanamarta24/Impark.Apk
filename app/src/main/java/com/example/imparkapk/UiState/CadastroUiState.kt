@@ -1,11 +1,10 @@
-package com.example.imparktcc.ui.viewmodel
-
-import com.example.imparktcc.model.Usuario
+package com.example.imparktapk.ui.viewmodel
 
 
-enum class CampoFocado {
-    NOME, EMAIL, SENHA, CONFIRMAR_SENHA, TERMOS, POLITICA, NONE
-}
+import com.example.imparkapk.data.dao.model.enus.CampoFocado
+import com.example.imparktcc.model.Cliente
+
+
 data class CadastroUiState(
     // Campos do formulário
     val nome: String = "",
@@ -205,11 +204,12 @@ data class CadastroUiState(
         }
     }
 
-    fun toUsuario(): Usuario {
-        return Usuario(
+    fun toCliente(): Cliente {
+        return Cliente(
             nome = nome.trim(),
             email = email.trim().lowercase(),
-            senha = senha.trim()
+            senha = senha.trim(),
+            tipo = TODO()
         )
     }
 
@@ -291,26 +291,22 @@ data class CadastroUiState(
         simulateApiCall: (callback: (Boolean) -> Unit) -> Unit
     ): CadastroUiState {
         return if (formularioValido) {
-            // Estado de loading
             this.copy(
                 isLoading = true,
                 mensagemErro = "",
                 timestampInicioCadastro = System.currentTimeMillis()
             ).also { loadingState ->
-                // Simula a chamada da API
+
                 simulateApiCall { sucesso ->
-                    // Esta parte seria tratada no ViewModel
-                    // pois envolve mudanças de estado assíncronas
+
                     if (sucesso) {
-                        // O sucesso será tratado pelo ViewModel
-                        // que chamará copyComSucesso() e triggerará a navegação
+
                     } else {
-                        // O erro será tratado pelo ViewModel
+
                     }
                 }
             }
         } else {
-            // Retorna estado com erro de validação
             this.copy(
                 mensagemErro = "Por favor, corrija os erros nos campos acima.",
                 tentativasCadastro = tentativasCadastro + 1
@@ -318,7 +314,6 @@ data class CadastroUiState(
         }
     }
 
-    // Versão alternativa mais simples para uso no ViewModel
     fun copyIniciandoCadastro(): CadastroUiState {
         return this.copy(
             isLoading = true,
@@ -351,65 +346,4 @@ data class CadastroUiState(
             cadastroSucesso = false
         )
     }
-
-    fun realizarCadastro(
-        onNavigateToCarro: () -> Unit,
-        simulateApiCall: (callback: (Boolean) -> Unit) -> Unit
-    ): CadastroUiState {
-        return if (formularioValido) {
-            // Estado de loading
-            this.copy(
-                isLoading = true,
-                mensagemErro = "",
-                timestampInicioCadastro = System.currentTimeMillis()
-            ).also { loadingState ->
-
-                simulateApiCall { sucesso ->
-
-                    if (sucesso) {
-
-                    } else {
-
-                    }
-                }
-            }
-        } else {
-            // Retorna estado com erro de validação
-            this.copy(
-                mensagemErro = "Por favor, corrija os erros nos campos acima.",
-                tentativasCadastro = tentativasCadastro + 1
-            )
-        }
-    }
-    fun copyIniciandoCadastro(): CadastroUiState{
-        return this.copy(
-            isLoading = true,
-            mensagemErro = "",
-            timestampInicioCadastro = System.currentTimeMillis()
-        )
-    }
-    fun copyComResultadoCadastro(sucesso: Boolean): CadastroUiState{
-        return if (sucesso){
-            this.copyComSucesso()
-        }else{
-            this.copy(
-                isLoading = false,
-                mensagemErro = "Falha no cadastro. Tente novamente mais tarde.",
-                tentativasCadastro = tentativasCadastro + 1,
-                timestampFimCadastro = System.currentTimeMillis()
-            )
-        }
-    }
-    fun copyComNavegacaoConcluida(): CadastroUiState{
-        return this.copy(
-            nome = "",
-            email = "",
-            senha = "",
-            confirmarSenha = "",
-            termosAceito = false,
-            politicaPrivacidadeAceita = false,
-            cadastroSucesso = false
-        )
-    }
 }
-

@@ -177,7 +177,7 @@ data class EstatisticasResponse(
     val faturamentoMensal: Double,
     val taxaOcupacao: Double,
     val tempoMedioPermanencia: Double,
-    veiculosPorTipo: Map<String, Int>
+    val veiculosPorTipo: Map<String, Int>
 )
 
 // Response para veículos

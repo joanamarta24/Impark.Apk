@@ -1,5 +1,6 @@
 package com.example.imparkapk.data.dao.remote.api.dto
 
+import com.example.imparkapk.data.dao.model.enus.NivelAcesso
 import com.example.imparkapk.data.dao.remote.api.response.EstacionamentoInfo
 
 
@@ -9,7 +10,7 @@ data class GerenteDto(
     val email: String,
     val cpf: String,
     val telefone: String,
-    val nivelAcesso: Int, // Ou melhor: val nivelAcesso: NivelAcesso
+    val nivelAcesso: Int,
     val dataCriacao: String,
     val ativo: Boolean = true,
 
@@ -34,5 +35,7 @@ data class GerenteResponseDto(
     val email: String,
     val telefone: String,
     val ativo: Boolean,
-    val estacionamento: EstacionamentoDto? = null
+    val estacionamento: EstacionamentoDto? = null,
+    val nivelAcesso: NivelAcesso
 )
+
