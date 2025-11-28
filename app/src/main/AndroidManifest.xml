@@ -26,7 +26,8 @@
         <!-- Remove o InitializationProvider (App Startup) -->
         <provider
             android:name="androidx.startup.InitializationProvider"
-            tools:node="remove" />
+            tools:node="remove"
+            />
 
         <!-- Remove o meta-data que aciona o WorkManagerInitializer -->
         <meta-data
@@ -38,8 +39,13 @@
             android:name="androidx.work.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
             android:exported="false"
-            tools:node="remove" />
-
+            tools:node="merge"
+            tools:ignore="Instantiatable">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
         <activity
             android:name=".MainActivity"
             android:exported="true"
