@@ -39,7 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -93,7 +92,7 @@ fun RegisterScreen(
                 item {
                     Box(
                         modifier = Modifier
-                            .size(80.dp)
+                            .size(40.dp)
                             .background(
                                 color = Color.White,
                                 shape = RoundedCornerShape(10.dp)
@@ -105,7 +104,6 @@ fun RegisterScreen(
                             painter = painterResource(R.drawable.logo),
                             modifier = Modifier
                                 .background(Color.White),
-                            contentScale = ContentScale.FillHeight
                         )
                     }
                 }
