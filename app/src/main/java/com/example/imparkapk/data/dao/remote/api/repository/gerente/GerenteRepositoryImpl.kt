@@ -111,13 +111,19 @@ class GerenteRepositoryImpl @Inject constructor(
                     id = gerente.id,
                     nome = gerente.nome,
                     email = gerente.email,
-                    senha = "",
+                    senha = "", // Não salvar senha no cache por segurança
                     estacionamentoId = gerente.estacionamentoId,
                     cpf = gerente.cpf,
-                    telefone = gerente.te
+                    telefone = gerente.telefone,
+                    dataCriacao = gerente.dataCriacao,
+                    dataAtualizacao = gerente.dataAtualizacao,
+                    ativo = gerente.ativo,
+                    nivelAcesso = gerente.nivelAcesso
 
                 )
+                gerenteDao.insertGerente(entity)
             }
+
         }
 
         override suspend fun getGerentePorUsuarioEEstacionamento(

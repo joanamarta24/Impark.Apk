@@ -7,12 +7,18 @@ import org.mapstruct.factory.Mappers
 
 @Mapper
 interface AvaliacaoMapper {
-    companion object{
+
+    fun toDto(avaliacao: Avaliacao): AvaliacaoDto
+    fun toEntity(avaliacaoDto: AvaliacaoDto): Avaliacao
+
+    companion object {
         val INSTANCE: AvaliacaoMapper = Mappers.getMapper(AvaliacaoMapper::class.java)
 
-        fun toDto(avaliacao: Avaliacao): AvaliacaoDto {
+        fun toDtoStatic(avaliacao: Avaliacao): AvaliacaoDto {
+            return INSTANCE.toDto(avaliacao)
+        }
 
-        fun toEntity(avaliacaoDto: AvaliacaoDto): Avaliacao {
+        fun toEntityStatic(avaliacaoDto: AvaliacaoDto): Avaliacao {
             return INSTANCE.toEntity(avaliacaoDto)
         }
     }

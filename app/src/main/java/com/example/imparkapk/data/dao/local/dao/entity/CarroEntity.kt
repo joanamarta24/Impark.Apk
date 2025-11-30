@@ -31,6 +31,14 @@ data class CarroEntity(
 
     @ColumnInfo (name = "cor")
     val cor: String,
+    @ColumnInfo(name = "ano")
+    val ano: String,
+
+    @ColumnInfo(name = "marca")
+    val marca: String,
+
+    @ColumnInfo(name = "principal")
+    val principal: Boolean,
 
     @ColumnInfo(name = "data_criacao")
     val dataCriacao: Date,

@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.mapper
 
 import com.example.imparkapk.data.dao.remote.api.dto.carro.CarroDto
-import com.example.imparktcc.model.Carro
+import com.example.imparkapk.domain.model.Carro
 import org.mapstruct.Mapper
 import org.mapstruct.factory.Mappers
 

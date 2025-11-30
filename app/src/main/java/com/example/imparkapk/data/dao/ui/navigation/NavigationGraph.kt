@@ -1,24 +1,33 @@
-package com.example.imparktcc.ui.navigation
+package com.example.imparkapk.ui.navigation
 
-import android.window.SplashScreen
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.imparkApp.CadastroUsuarioScreen
 import com.example.imparkapk.data.dao.ui.Screen.avaliacao.AvaliacaoScreen
+import com.example.imparkapk.data.dao.ui.Screen.avaliacao.ListaAvaliacoesScreen
 import com.example.imparkapk.data.dao.ui.Screen.cadastro.CadastroEstacionamentoScreen
 import com.example.imparkapk.data.dao.ui.Screen.cadastro.CadastroGerenteScreen
 import com.example.imparkapk.data.dao.ui.Screen.estacionamento.ListaEstacionamentosScreen
 import com.example.imparkapk.data.dao.ui.Screen.perfil.EditarPerfilScreen
+import com.example.imparkapk.data.dao.ui.Screen.perfil.MeusCarrosScreen
+import com.example.imparkapk.data.dao.ui.Screen.perfil.MinhasReservasScreen
 import com.example.imparkapk.data.dao.ui.Screen.recuperacao.RecuperacaoScreen
 import com.example.imparkapk.data.dao.ui.Screen.recuperacao.RedefinirSenhaScreen
+import com.example.imparkapk.data.dao.ui.Screen.reserva.ListaReservasScreen
 import com.example.imparkapk.data.dao.ui.Screen.reserva.ReservaScreen
+import com.example.imparkapk.data.dao.ui.Screen.splash.SplashScreen
 import com.example.imparkapk.data.dao.ui.feature.login.home.HomeScreen
 import com.example.imparkapk.data.dao.ui.feature.login.login.LoginScreen
+import com.example.imparkapk.ui.screen.splash.SplashScreen // Adicione esta importação
 import com.example.imparktcc.ui.screen.estacionamento.DetalhesEstacionamentoScreen
+import com.example.imparktcc.ui.screen.recuperacao.CodigoVerificacaoScreen
 
 object AppRoutes {
     // Navegação principal
@@ -34,6 +43,7 @@ object AppRoutes {
 
     // Estacionamentos
     const val LISTA_ESTACIONAMENTOS = "lista_estacionamentos"
+
     const val DETALHES_ESTACIONAMENTO = "detalhes_estacionamento"
 
     // Reservas
@@ -43,6 +53,7 @@ object AppRoutes {
     // Avaliações
     const val AVALIACAO = "avaliacao"
     const val LISTA_AVALIACOES = "lista_avaliacoes"
+
     // Perfil
     const val EDITAR_PERFIL = "editar_perfil"
     const val MEUS_CARROS = "meus_carros"
@@ -54,51 +65,63 @@ object AppRoutes {
     const val REDEFINIR_SENHA = "redefinir_senha"
 }
 
-
-
-// Parâmetros das rotas
-object RoutrParams {
+// Parâmetros das rotas - NOME CORRIGIDO
+object RouteParams {
     const val ESTACIONAMENTO_ID = "estacionamentoId"
     const val RESERVA_ID = "reservaId"
     const val AVALIACAO_ID = "avaliacaoId"
-    const val USUARIO_ID = "usuarioId"
+    const val CLIENTE_ID = "clienteId"
 }
 
-//Rotas com parãmentos
+// Rotas com parâmetros - NOME CORRIGIDO
 object RoutePatterns {
-    const val DETALHES_ESTACIONAMENTO =
-        "detatalhes_estacionamento/{${RoutrParams.ESTACIONAMENTO_ID}}"
-    const val AVALIACAO = "avaliacao/{${RoutrParams.ESTACIONAMENTO_ID}}"
-    const val RESERVA = "reservas/{${RoutrParams.RESERVA_ID}"
+    const val DETALHES_ESTACIONAMENTO = "detalhes_estacionamento/{${RouteParams.ESTACIONAMENTO_ID}}"
+    const val AVALIACAO = "avaliacao/{${RouteParams.ESTACIONAMENTO_ID}}"
+    const val RESERVA = "reserva/{${RouteParams.ESTACIONAMENTO_ID}}"
+}
+
+@Composable
+fun AppNavigation(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = AppRoutes.SPLASH
+    ) {
+        appNavigation(navController)
+        recuperacaoGraph(navController)
+    }
 }
 
 fun NavGraphBuilder.appNavigation(navController: NavController) {
     composable(route = AppRoutes.SPLASH) {
         SplashScreen(
-            onNavigateToLogin = { navController.navigate.(AppRoutes.LOGIN) },
+            onNavigateToLogin = { navController.navigate(AppRoutes.LOGIN) },
             onNavigateToHome = { navController.navigate(AppRoutes.HOME) }
-
         )
     }
-    //Tela de login
+
+    // Tela de login
     composable(route = AppRoutes.LOGIN) {
         LoginScreen(
             onNavigateToHome = { navController.navigate(AppRoutes.HOME) },
             onNavigateToCadastro = { navController.navigate(AppRoutes.CADASTRO_USUARIO) },
-            onNavigateToRecuperarSenha = {}
-
-
+            onNavigateToRecuperarSenha = { navController.navigate(AppRoutes.RECUPERACAO_SENHA) }
         )
     }
-    //Tela principal
+
+    // Tela principal
     composable(route = AppRoutes.HOME) {
         HomeScreen(
-            onNavigateToEstacionamentos = { navController.navigate(AppRoutes.LISTA_ESTACIONAMENTO) },
+            onNavigateToEstacionamentos = { navController.navigate(AppRoutes.LISTA_ESTACIONAMENTOS) },
             onNavigateToMinhasReservas = { navController.navigate(AppRoutes.MINHAS_RESERVAS) },
             onNavigateToPerfil = { navController.navigate(AppRoutes.EDITAR_PERFIL) },
-            onNavigateToLogin = { navController.navigate(AppRoutes.LOGIN) }
+            onNavigateToLogin = {
+                navController.navigate(AppRoutes.LOGIN) {
+                    popUpTo(AppRoutes.HOME) { inclusive = true }
+                }
+            }
         )
     }
+
     // Graph de cadastros
     cadastroGraph(navController)
 
@@ -113,7 +136,6 @@ fun NavGraphBuilder.appNavigation(navController: NavController) {
 
     // Graph de perfil
     perfilGraph(navController)
-
 }
 
 // Graph de cadastros
@@ -135,13 +157,13 @@ fun NavGraphBuilder.cadastroGraph(navController: NavController) {
         }
         composable(route = AppRoutes.CADASTRO_ESTACIONAMENTO) {
             CadastroEstacionamentoScreen(
-                onNavigateBack { navController.popBackStack() },
+                onNavigateBack = { navController.popBackStack() },
                 onNavigateToHome = {
                     navController.navigate(AppRoutes.HOME) {
                         popUpTo(0) { inclusive = true }
                     }
                 },
-                navControllerToCadastroGrante = { navController.navigate(AppRoutes.CADASTRO_GERENTE) }
+                navControllerToCadastroGerente = { navController.navigate(AppRoutes.CADASTRO_GERENTE) }
             )
         }
         composable(route = AppRoutes.CADASTRO_GERENTE) {
@@ -163,7 +185,7 @@ fun NavGraphBuilder.estacionamentoGraph(navController: NavController) {
         startDestination = AppRoutes.LISTA_ESTACIONAMENTOS,
         route = "estacionamento_graph"
     ) {
-        composable(route = AppRoutes.LISTA_ESTACIONAMENTO) {
+        composable(route = AppRoutes.LISTA_ESTACIONAMENTOS) { // NOME CORRIGIDO
             ListaEstacionamentosScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetalhesEstacionamento = { estacionamentoId ->
@@ -177,25 +199,30 @@ fun NavGraphBuilder.estacionamentoGraph(navController: NavController) {
                 }
             )
         }
-    }
-    composable(
-        route = RoutePatterns.DETALHES_ESTACIONAMENTO
-    ) { backStackEntry ->
-        val estacionamentoId =
-            backStackEntry.arguments?.getString(RouteParams.ESTACIONAMENTO_ID) ?: ""
-        DetalhesEstacionamentoScreen(
-            estacionamentoId = estacionamentoId,
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateToReserva = {
-                navController.navigate("reserva/$estacionamentoId")
-            },
-            onNavigateToAvaliacoes = {
-                navController.navigate(AppRoutes.LISTA_AVALIACOES)
-            },
-            onNavigateToAvaliar = {
-                navController.navigate("avaliacao/$estacionamentoId")
-            }
-        )
+
+        composable(
+            route = RoutePatterns.DETALHES_ESTACIONAMENTO,
+            arguments = listOf(
+                navArgument(RouteParams.ESTACIONAMENTO_ID) {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val estacionamentoId = backStackEntry.arguments?.getString(RouteParams.ESTACIONAMENTO_ID) ?: ""
+            DetalhesEstacionamentoScreen(
+                estacionamentoId = estacionamentoId,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToReserva = {
+                    navController.navigate("reserva/$estacionamentoId")
+                },
+                onNavigateToAvaliacoes = {
+                    navController.navigate(AppRoutes.LISTA_AVALIACOES)
+                },
+                onNavigateToAvaliar = {
+                    navController.navigate("avaliacao/$estacionamentoId")
+                }
+            )
+        }
     }
 }
 
@@ -216,25 +243,30 @@ fun NavGraphBuilder.reservaGraph(navController: NavController) {
                 }
             )
         }
-    }
-    composable(
-        route = RoutePatterns.RESERVA
-    ) { backStackEntry ->
-        val estacionamentoId =
-            backStackEntry.arguments?.getString(RouteParams.ESTACIONAMENTO_ID) ?: ""
-        ReservaScreen(
-            estacionamentoId = estacionamentoId,
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateToConfirmacao = { reservaId ->
-                // Navegar para tela de confirmação (pode ser implementada depois)
-                navController.navigate(AppRoutes.LISTA_RESERVAS) {
-                    popUpTo(AppRoutes.LISTA_ESTACIONAMENTOS) { inclusive = false }
+
+        composable(
+            route = RoutePatterns.RESERVA,
+            arguments = listOf(
+                navArgument(RouteParams.ESTACIONAMENTO_ID) {
+                    type = NavType.StringType
                 }
-            },
-            onNavigateToAdicionarCarro = {
-                navController.navigate(AppRoutes.CADASTRO_CARRO)
-            }
-        )
+            )
+        ) { backStackEntry ->
+            val estacionamentoId = backStackEntry.arguments?.getString(RouteParams.ESTACIONAMENTO_ID) ?: ""
+            ReservaScreen(
+                estacionamentoId = estacionamentoId,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToConfirmacao = { reservaId ->
+                    // Navegar para tela de confirmação
+                    navController.navigate(AppRoutes.LISTA_RESERVAS) {
+                        popUpTo(AppRoutes.LISTA_ESTACIONAMENTOS) { inclusive = false }
+                    }
+                },
+                onNavigateToAdicionarCarro = {
+                    navController.navigate(AppRoutes.CADASTRO_CARRO)
+                }
+            )
+        }
     }
 }
 
@@ -256,22 +288,28 @@ fun NavGraphBuilder.avaliacaoGraph(navController: NavController) {
             )
         }
 
-    }
-    composable(
-        route = RoutePatterns.AVALIACAO
-    ) { backStackEntry ->
-        val estacionamentoId = backStackEntry.arguments?.getString(RouteParams.ESTACIONAMENTO_ID) ?: ""
-        AvaliacaoScreen(
-            estacionamentoId = estacionamentoId,
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateToConfirmacao = {
-                navController.navigate(AppRoutes.LISTA_AVALIACOES) {
-                    popUpTo(AppRoutes.LISTA_AVALIACOES) { inclusive = false }
+        composable(
+            route = RoutePatterns.AVALIACAO,
+            arguments = listOf(
+                navArgument(RouteParams.ESTACIONAMENTO_ID) {
+                    type = NavType.StringType
                 }
-            }
-        )
+            )
+        ) { backStackEntry ->
+            val estacionamentoId = backStackEntry.arguments?.getString(RouteParams.ESTACIONAMENTO_ID) ?: ""
+            AvaliacaoScreen(
+                estacionamentoId = estacionamentoId,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToConfirmacao = {
+                    navController.navigate(AppRoutes.LISTA_AVALIACOES) {
+                        popUpTo(AppRoutes.LISTA_AVALIACOES) { inclusive = false }
+                    }
+                }
+            )
+        }
     }
 }
+
 // Graph de perfil
 fun NavGraphBuilder.perfilGraph(navController: NavController) {
     navigation(
@@ -290,57 +328,35 @@ fun NavGraphBuilder.perfilGraph(navController: NavController) {
                 }
             )
         }
-    }
-    composable(route = AppRoutes.MEUS_CARROS) {
-        MeusCarrosScreen(
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateToAdicionarCarro = { navController.navigate(AppRoutes.CADASTRO_CARRO) },
-            onNavigateToEditarCarro = { carroId ->
-                // Navegar para edição de carro (pode ser implementada depois)
-                navController.navigate(AppRoutes.CADASTRO_CARRO)
-            }
-        )
-    }
-    composable(route = AppRoutes.MINHAS_RESERVAS) {
-        MinhasReservasScreen(
-            onNavigateBack ={navController.popBackStack()},
-            onNavigateToDetalhesEstacionamento = {estacionamentoId ->
-                navController.navigate(AppRoutes.LISTA_RESERVAS)
-            },
-            onNavigateToAvaliar = {
-                navController.navigate("avaliacao/$estacionamentoId")
-            },
-            onNavigateToNovaReserva = {
-                navController.navigate(AppRoutes.LISTA_ESTACIONAMENTOS)
-            }
-        )
-    }
-}
-// Navegação para desenvolvedores (telas de debug/administração)
-fun NavGraphBuilder.devNavigation(navController: NavController) {
-    navigation(
-        startDestination = "dev_dashboard",
-        route = "dev_graph"
-    ) {
-        composable(route = "dev_dashboard") {
-            // Tela de dashboard para desenvolvedores
-            // Pode conter links para todas as telas do app
+
+        composable(route = AppRoutes.MEUS_CARROS) {
+            MeusCarrosScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToAdicionarCarro = { navController.navigate(AppRoutes.CADASTRO_CARRO) },
+                onNavigateToEditarCarro = { carroId ->
+                    navController.navigate("${AppRoutes.CADASTRO_CARRO}?carroId=$carroId")
+                }
+            )
         }
 
-        composable(route = "dev_estacionamentos") {
-            // Tela de administração de estacionamentos
-        }
-
-        composable(route = "dev_usuarios") {
-            // Tela de administração de usuários
-        }
-
-        composable(route = "dev_relatorios") {
-            // Tela de relatórios e métricas
+        composable(route = AppRoutes.MINHAS_RESERVAS) {
+            MinhasReservasScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToDetalhesEstacionamento = { estacionamentoId ->
+                    navController.navigate("detalhes_estacionamento/$estacionamentoId")
+                },
+                onNavigateToAvaliar = { estacionamentoId ->
+                    navController.navigate("avaliacao/$estacionamentoId")
+                },
+                onNavigateToNovaReserva = {
+                    navController.navigate(AppRoutes.LISTA_ESTACIONAMENTOS)
+                }
+            )
         }
     }
 }
-// Adicionar no NavGraphBuilder
+
+// Graph de recuperação de senha
 fun NavGraphBuilder.recuperacaoGraph(navController: NavController) {
     navigation(
         startDestination = AppRoutes.RECUPERACAO_SENHA,

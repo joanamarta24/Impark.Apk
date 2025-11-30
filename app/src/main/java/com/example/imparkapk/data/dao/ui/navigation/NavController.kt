@@ -1,7 +1,8 @@
 package com.example.imparkapk.data.dao.ui.navigation
 
 import androidx.navigation.NavController
-import com.example.imparktcc.ui.navigation.AppRoutes
+import com.example.imparkapk.ui.navigation.AppRoutes
+
 
 fun NavController.navigateToEstacionamentoDetalhes(estacionamentoId: String) {
   this.navigate("detalhes_estacionamento/$estacionamentoId")
@@ -30,3 +31,4 @@ fun NavController.isUserOnHomeScreen(): Boolean {
 fun NavController.isUserOnLoginScreen(): Boolean {
     return currentDestination?.route == AppRoutes.LOGIN
 }
+

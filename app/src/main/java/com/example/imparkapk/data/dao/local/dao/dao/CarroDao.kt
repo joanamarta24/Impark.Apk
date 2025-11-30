@@ -16,8 +16,6 @@ interface CarroDao {
     @Query("SELECT * FROM carros WHERE cor LIKE :cor AND ativo = 1")
     suspend fun searchCarrosPorCor(cor: String): List<CarroEntity>
 
-    @Query("SELECT * FROM carros WHERE placa = :placa AND ativo = 1")
-    suspend fun getCarroPorPlaca(placa: String): CarroEntity?
     @Query("SELECT * FROM carros WHERE id = :id")
     suspend fun getCarroById(id: String): CarroEntity?
 
@@ -41,4 +39,49 @@ interface CarroDao {
 
     @Query("SELECT COUNT(*) FROM carros WHERE usuario_id = :usuarioId AND ativo = 1")
     suspend fun countCarrosPorUsuario(usuarioId: String): Int
+
+    @Query("SELECT *FROM carros WHERE id = id")
+    suspend fun buscarPorId(id: String): CarroEntity?
+
+    @Query("SELECT * FROM carros WHERE usuario_id = :usuarioId AND principal = 1 AND ativo = 1 LIMIT 1")
+    suspend fun buscarPrincipalPorUsuario(usuarioId: String): CarroEntity?
+
+    @Query("UPDATE carros SET principal = 0 WHERE usuario_id = :usuarioId")
+    suspend fun removerPrincipalDeUsuario(usuarioId: String)
+
+    @Query("UPDATE carros SET principal = 1 WHERE id = :carroId")
+    suspend fun definirComoPrincipal(carroId: String)
+
+    @Query("SELECT * FROM carros WHERE modelo LIKE :modelo AND ativo = 1")
+    suspend fun buscarPorModelo(modelo: String): List<CarroEntity>
+
+    @Query("SELECT * FROM carros WHERE marca LIKE :marca AND ativo = 1")
+    suspend fun buscarPorMarca(marca: String): List<CarroEntity>
+
+    @Query("SELECT * FROM carros WHERE cor LIKE :cor AND ativo = 1")
+    suspend fun buscarPorCor(cor: String): List<CarroEntity>
+
+    @Query("SELECT * FROM carros WHERE ano = :ano AND ativo = 1")
+    suspend fun buscarPorAno(ano: Int): List<CarroEntity>
+
+    @Query("UPDATE carros SET ativo = 0 WHERE id = :id")
+    suspend fun marcarComoInativo(id: String)
+
+    @Query("DELETE FROM carros WHERE usuario_id = :usuarioId")
+    suspend fun limparPorUsuario(usuarioId: String)
+
+    @Query("DELETE FROM carros")
+    suspend fun limparTodos()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun inserir(carro: CarroEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun inserirTodos(carros: List<CarroEntity>)
+
+    @Update
+    suspend fun atualizar(carro: CarroEntity)
+
+    @Update
+    suspend fun atualizarTodos(carros: List<CarroEntity>)
 }

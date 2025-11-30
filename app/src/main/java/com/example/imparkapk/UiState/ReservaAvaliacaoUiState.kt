@@ -16,7 +16,7 @@ data class ReservaAvaliacaoUiState(
     val avaliacoes:List<AvalicaoDTO> = emptyList(),
     val minhasAvaliacoes: List<AvalicaoDTO> = emptyList(),
     val avaliacaoSelecionadaId: String? = null,
-    val isLoadingAvaliacoes: Boolean = false
+    val isLoadingAvaliacoes: Boolean = false,
 
     val valorCalculado: ReservaValorResponse? = null,
 

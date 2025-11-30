@@ -7,7 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.imparktcc.ui.viewmodel.ReservaViewModel
 
@@ -15,7 +14,7 @@ import com.example.imparktcc.ui.viewmodel.ReservaViewModel
 @Composable
 
 fun MinhasReservasScreen(
-    navController: NavController,
+   navController: NavController,
     viewModel: ReservaViewModel = hiltViewModel()
 ){
     val uiState by viewModel.uiState.collectAsState()

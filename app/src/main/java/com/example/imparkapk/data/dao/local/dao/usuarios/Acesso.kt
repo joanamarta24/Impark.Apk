@@ -1,7 +1,7 @@
 package com.example.imparkapk.data.dao.local.dao.usuarios
 
 import com.example.imparkapk.data.dao.model.Estacionamento
-import com.example.imparktcc.model.Carro
+import com.example.imparkapk.domain.model.Carro
 import java.util.Date
 
 data class Acesso(

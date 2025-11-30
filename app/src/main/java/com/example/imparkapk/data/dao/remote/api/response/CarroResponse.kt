@@ -1,5 +1,6 @@
 package com.example.imparkapk.data.dao.remote.api.response
 
+import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
@@ -26,5 +27,14 @@ data class CarroResponse(
     val dataAtualizacao: Date,
 
     @SerializedName("ativo")
-    val ativo: Boolean
+    val ativo: Boolean,
+
+    @ColumnInfo(name = "ano")
+    val ano: String,
+
+    @ColumnInfo(name = "marca")
+    val marca: String,
+
+    @ColumnInfo(name = "principal")
+    val principal: Boolean
 )
