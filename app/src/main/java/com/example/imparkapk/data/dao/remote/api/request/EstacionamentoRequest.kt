@@ -1,35 +1,33 @@
 package com.example.imparkapk.data.dao.remote.api.request
 
-import com.example.imparkapk.data.dao.model.enus.TipoVeiculo
-import com.example.imparkapk.data.dao.remote.api.response.GerenteResponse
+import TipoVeiculo
 import com.google.gson.annotations.SerializedName
-import kotlin.let
 
-data class EstacionamentoRequest (
+
+data class EstacionamentoRequest(
     @SerializedName("nome")
     val nome: String,
 
     @SerializedName("endereco")
-    val endereco:String,
+    val endereco: String,
 
     @SerializedName("latitude")
-    val latitude:Double,
+    val latitude: Double,
 
     @SerializedName("longitude")
-    val longitude:Double,
+    val longitude: Double,
 
     @SerializedName("total_vagas")
-    val totalVagas:Int,
+    val totalVagas: Int,
 
     @SerializedName("vagas_disponiveis")
-    val vagasDisponiveis:Int,
+    val vagasDisponiveis: Int,
 
     @SerializedName("valor_hora")
-    val valorHora:Double,
-
+    val valorHora: Double,
 
     @SerializedName("telefone")
-    val telefone:String,
+    val telefone: String,
 
     @SerializedName("horario_abertura")
     val horarioAbertura: String,
@@ -38,15 +36,16 @@ data class EstacionamentoRequest (
     val horarioFechamento: String,
 
     @SerializedName("descricao")
-    val descricao:String? = null,
+    val descricao: String? = null,
 
     @SerializedName("fotos")
-    val fotos:List<String>? =null,
+    val fotos: List<String>? = null,
 
     @SerializedName("servicos")
     val servicos: List<String>? = null
 )
-data class AtualizarEstacionamentoReques(
+
+data class AtualizarEstacionamentoRequest(
     @SerializedName("nome")
     val nome: String? = null,
 
@@ -91,6 +90,7 @@ data class BuscarEstacionamentosRequest(
     @SerializedName("servicos")
     val servicos: List<String>? = null
 )
+
 data class EstacionamentoResponse(
     @SerializedName("id")
     val id: String,
@@ -122,6 +122,7 @@ data class EstacionamentoResponse(
     @SerializedName("horario_funcionamento")
     val horarioFuncionamento: HorarioFuncionamentoResponse?
 )
+
 data class EnderecoResponse(
     @SerializedName("cep")
     val cep: String,
@@ -144,86 +145,172 @@ data class EnderecoResponse(
     @SerializedName("estado")
     val estado: String
 )
+
 data class HorarioFuncionamentoResponse(
     @SerializedName("segunda_a_sexta")
-    val segundaASexta: Boolean,
+    val segundaASexta: HorarioDiaResponse?,
 
     @SerializedName("sabado")
-    val sabado: Boolean,
+    val sabado: HorarioDiaResponse?,
 
-    @SerializedName("domingos")
-    val domingos: Boolean,
+    @SerializedName("domingo")
+    val domingo: HorarioDiaResponse?,
 
     @SerializedName("feriados")
-    val feriados: Boolean
+    val feriados: HorarioDiaResponse?
 )
 
-// Request para atualizar estacionamento
-data class AtualizarEstacionamentoRequest(
+data class HorarioDiaResponse(
+    @SerializedName("abertura")
+    val abertura: String,
+
+    @SerializedName("fechamento")
+    val fechamento: String,
+
+    @SerializedName("funcionando")
+    val funcionando: Boolean
+)
+
+// Request para atualizar estacionamento (versão completa)
+data class AtualizarEstacionamentoCompletoRequest(
+    @SerializedName("nome")
     val nome: String? = null,
+
+    @SerializedName("cnpj")
     val cnpj: String? = null,
+
+    @SerializedName("telefone")
     val telefone: String? = null,
+
+    @SerializedName("email")
     val email: String? = null,
+
+    @SerializedName("total_vagas")
     val totalVagas: Int? = null,
+
+    @SerializedName("endereco")
     val endereco: EnderecoRequest? = null,
+
+    @SerializedName("horario_funcionamento")
     val horarioFuncionamento: HorarioFuncionamentoRequest? = null
 )
 
 // Response para estatísticas
 data class EstatisticasResponse(
+    @SerializedName("total_veiculos")
     val totalVeiculos: Int,
+
+    @SerializedName("veiculos_ativos")
     val veiculosAtivos: Int,
+
+    @SerializedName("faturamento_diario")
     val faturamentoDiario: Double,
+
+    @SerializedName("faturamento_mensal")
     val faturamentoMensal: Double,
+
+    @SerializedName("taxa_ocupacao")
     val taxaOcupacao: Double,
+
+    @SerializedName("tempo_medio_permanencia")
     val tempoMedioPermanencia: Double,
+
+    @SerializedName("veiculos_por_tipo")
     val veiculosPorTipo: Map<String, Int>
 )
 
 // Response para veículos
 data class VeiculoResponse(
+    @SerializedName("id")
     val id: String,
+
+    @SerializedName("placa")
     val placa: String,
+
+    @SerializedName("modelo")
     val modelo: String,
+
+    @SerializedName("cor")
     val cor: String,
+
+    @SerializedName("tipo")
     val tipo: String,
+
+    @SerializedName("data_entrada")
     val dataEntrada: String,
+
+    @SerializedName("data_saida")
     val dataSaida: String?,
+
+    @SerializedName("valor_pago")
     val valorPago: Double?,
+
+    @SerializedName("status")
     val status: String
 )
 
 // Request para horário de funcionamento
 data class HorarioFuncionamentoRequest(
-    val segundaASexta: String,
-    val sabado: String?,
-    val domingo: String?,
-    val feriados: String?
+    @SerializedName("segunda_a_sexta")
+    val segundaASexta: HorarioDiaRequest?,
+
+    @SerializedName("sabado")
+    val sabado: HorarioDiaRequest?,
+
+    @SerializedName("domingo")
+    val domingo: HorarioDiaRequest?,
+
+    @SerializedName("feriados")
+    val feriados: HorarioDiaRequest?
 )
+
+data class HorarioDiaRequest(
+    @SerializedName("abertura")
+    val abertura: String,
+
+    @SerializedName("fechamento")
+    val fechamento: String,
+
+    @SerializedName("funcionando")
+    val funcionando: Boolean = true
+)
+
 // Request para endereço
 data class EnderecoRequest(
+    @SerializedName("cep")
     val cep: String,
+
+    @SerializedName("logradouro")
     val logradouro: String,
+
+    @SerializedName("numero")
     val numero: String,
+
+    @SerializedName("complemento")
     val complemento: String?,
+
+    @SerializedName("bairro")
     val bairro: String,
+
+    @SerializedName("cidade")
     val cidade: String,
+
+    @SerializedName("estado")
     val estado: String
 )
 
-companion object {
-    fun fromString(value: String): TipoVeiculo {
-        return (value.find { it.descricao.equals(value, ignoreCase = true) } ?: TipoVeiculo.OUTROS) as TipoVeiculo
-    }
-
-    fun toMapString(veiculosPorTipo: Map<TipoVeiculo, Int>): Map<String, Int> {
-        return veiculosPorTipo.mapKeys { it.key.descricao }
-    }
-
-    fun fromMapString(veiculosPorTipo: Map<String, Int>): Map<TipoVeiculo, Int> {
-        return veiculosPorTipo.mapKeys { (key, _) -> fromString(key) }
-    }
-
+// Extensions para TipoVeiculo (deve estar no arquivo do enum ou em um arquivo separado)
+fun TipoVeiculo.Companion.fromString(value: String): TipoVeiculo {
+    return TipoVeiculo.values().find {
+        it.descricao.equals(value, ignoreCase = true)
+    } ?: TipoVeiculo.OUTROS
 }
 
+fun TipoVeiculo.Companion.toMapString(veiculosPorTipo: Map<TipoVeiculo, Int>): Map<String, Int> {
+    return veiculosPorTipo.mapKeys { it.key.descricao }
+}
+
+fun TipoVeiculo.Companion.fromMapString(veiculosPorTipo: Map<String, Int>): Map<TipoVeiculo, Int> {
+    return veiculosPorTipo.mapKeys { (key, _) -> fromString(key) }
+}
 

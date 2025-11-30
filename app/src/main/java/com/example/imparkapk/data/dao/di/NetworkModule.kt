@@ -84,7 +84,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUsuarioApi(retrofit: Retrofit): ClienteApi = retrofit.create()
+    fun provideClienteApi(retrofit: Retrofit): ClienteApi = retrofit.create()
 
     @Provides
     @Singleton
@@ -105,7 +105,8 @@ object NetworkModule {
 
 }
 private inline fun <reified T> Retrofit.create(): T = create(T::class.java)
-object NewtworkModelu{
+
+object NewtworkModelu
     @Provides
     @Singleton
     fun  provideEstacionamentoApi(retrofit: Retrofit): EstacionamentosApi{
@@ -144,10 +145,23 @@ object NewtworkModelu{
     }
     @Provides
     @Singleton
+    fun provideRetrofit(): Retrofit{
+        return Retrofit.Builder()
+            .baseUrl("https://api.impark.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    @Provides
+    @Singleton
+    fun provideGerenteApi(retrofit: Retrofit): GerenteApi {
+        return retrofit.create(GerenteApi::class.java)
+    }
+    @Provides
+    @Singleton
     fun provideGson(): Gson{
         return GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             .create()
     }
 
-}
+

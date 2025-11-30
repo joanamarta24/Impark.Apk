@@ -1,5 +1,7 @@
 package com.example.imparkapk.data.dao.remote.api.response
 
+import java.util.Date
+
 
 data class GerenteResponse(
     val id: String,
@@ -9,14 +11,21 @@ data class GerenteResponse(
     val estacionamentoId: String,
     val nivelAcesso: Int,
     val ativo: Boolean,
-    val dataCriacao: String?,
-    val dataAtualizacao: String?,
+    val dataCriacao: Date = Date(),
+    val dataAtualizacao: Date = Date(),
     val cpf: String? = "",
     val telefone: String? = "",
-    val dataNascimento: String? = null,
+    val dataNascimento: Date? = null,
     val estacionamento: EstacionamentoInfo? = null,
 
-)
+){
+    companion object{
+        const val NICEL_ACESSO_TOTAL = 1
+        const val NIVEL_ACESSO_PARCIAL = 2
+        const val NIVEL_ACESSO_BASICO = 3
+    }
+}
+
 data class GerenteRequest(
     val usuarioId: String,
     val nome: String,
@@ -88,7 +97,7 @@ data class Endereco(
     }
 
     fun GerenteResponse.podeAlterarConfiguracoes(): Boolean {
-        return nivelAcesso == GerenteResponse.NIVEL_ACESSO_TOTAL
+        return nivelAcesso == GerenteResponse.NICEL_ACESSO_TOTAL
     }
 }
 

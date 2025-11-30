@@ -58,5 +58,4 @@ interface GerenteApi {
         @Path("id") id: String,
         @Body permissoes: List<String>
     ): Response<ApiResponse<GerenteResponse>>
-
 }

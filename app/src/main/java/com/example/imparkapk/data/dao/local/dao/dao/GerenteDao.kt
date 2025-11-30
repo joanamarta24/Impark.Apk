@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GerenteDao {
-    @Query("SELECT * FROm gerentes WHERE id = id")
-    suspend fun getGrtrnteByid(id: String): GerenteEntity?
+    @Query("SELECT * FROM gerentes WHERE id = :id")
+    suspend fun getGerenteById(id: String): GerenteEntity?
 
     //Buscar por usuário
     @Query("SELECT * FROM gerentes WHERE usuarioId AND ativo = 1")
@@ -35,11 +35,20 @@ interface GerenteDao {
     suspend fun getGerentePorCpf(cpf: String): GerenteEntity?
 
     // Operações de inserção e atualização
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGerente(gerente: GerenteEntity)
 
     @Update
     suspend fun updateGerente(gerente: GerenteEntity)
+
+    suspend fun upsertGerente(gerente: GerenteEntity) {
+        if (getGerenteById(gerente.id) != null) {
+            updateGerente(gerente)
+        } else {
+            insertGerente(gerente)
+        }
+    }
 
     // Atualização de status
     @Query("UPDATE gerentes SET ativo = :ativo, dataAtualizacao = CURRENT_TIMESTAMP WHERE id = :id")

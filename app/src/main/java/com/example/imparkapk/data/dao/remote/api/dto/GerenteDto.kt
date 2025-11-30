@@ -2,6 +2,7 @@ package com.example.imparkapk.data.dao.remote.api.dto
 
 import com.example.imparkapk.data.dao.model.enus.NivelAcesso
 import com.example.imparkapk.data.dao.remote.api.response.EstacionamentoInfo
+import java.util.Date
 
 
 data class GerenteDto(
@@ -11,7 +12,8 @@ data class GerenteDto(
     val cpf: String,
     val telefone: String,
     val nivelAcesso: Int,
-    val dataCriacao: String,
+    val dataCriacao: Date,
+    val dataAtualizacao: Date,
     val ativo: Boolean = true,
 
     // Relacionamentos (opcionais - podem ser IDs ou DTOs completos)
