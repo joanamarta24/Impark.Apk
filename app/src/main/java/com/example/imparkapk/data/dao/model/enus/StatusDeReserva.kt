@@ -1,8 +1,10 @@
 package com.example.imparkapk.data.dao.model.enus
 
-enum class StatusDeReserva {
+
+enum class StatusReserva {
     PENDENTE,
-    ACEITA,
-    RECUSADA,
-    ENCERRADA
+    CONFIRMADA,
+    CANCELADA,
+    FINALIZADA,
+    EM_ANDAMENTO
 }

@@ -1,8 +1,11 @@
+package com.example.imparkapk.di
+
 import android.content.Context
-import androidx.browser.trusted.TokenStore
+import com.example.imparkapk.data.dao.local.dao.TokenStore
 import com.example.imparkapk.data.dao.remote.api.AuthApiService
 import com.example.imparkapk.data.dao.remote.api.RefreshRequest
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.ClienteApi
+import com.google.firebase.BuildConfig
 import java.util.concurrent.TimeUnit
 import com.google.gson.Gson
 import dagger.Module
@@ -19,12 +22,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.jvm.java
-
+import kotlinx.coroutines.runBlocking // Import adicionado
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
     @Named("baseUrl")
@@ -32,19 +35,29 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLogging(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
 
     @Provides
     @Singleton
     fun provideAuthInterceptor(tokenStore: TokenStore): Interceptor = Interceptor { chain ->
         val original = chain.request()
-        val token = tokenStore.getAccessTokenSync()
+        val token = runBlocking {
+            tokenStore.getAccessToken()
+        }
         val newRequest = if (!token.isNullOrBlank()) {
             original.newBuilder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()
-        } else original
+        } else {
+            original
+        }
         chain.proceed(newRequest)
     }
 
@@ -54,8 +67,10 @@ object AppModule {
         tokenStore: TokenStore,
         @Named("auth") authRetrofit: Retrofit
     ): Authenticator = Authenticator { _, response ->
-        if (response.request.url.encodedPath.contains("/auth/refresh") || responseCount(response) >= 2)
+        if (response.request.url.encodedPath.contains("/auth/refresh") ||
+            responseCount(response) >= 2) {
             return@Authenticator null
+        }
 
         val refresh = tokenStore.getRefreshTokenSync() ?: return@Authenticator null
         val service = authRetrofit.create(AuthApiService::class.java)
@@ -65,14 +80,16 @@ object AppModule {
         val refreshed = try {
             val resp = service.refreshCall(RefreshRequest(refresh)).execute()
             if (resp.isSuccessful) resp.body() else null
-        } catch (_: Exception) { null }
+        } catch (e: Exception) {
+            android.util.Log.e("Auth", "Erro no refresh: ${e.message}")
+            null
+        }
 
         val newAccess = refreshed?.accessToken ?: return@Authenticator null
 
-        kotlinx.coroutines.runBlocking {
-            tokenStore.saveAccessToken(newAccess)
-            refreshed.refreshToken?.let { tokenStore.saveRefreshToken(it) }
-        }
+        // Usar métodos síncronos
+        tokenStore.saveRefreshTokenSync(newAccess)
+        refreshed.refreshToken?.let { tokenStore.saveRefreshTokenSync(it) }
 
         response.request.newBuilder()
             .header("Authorization", "Bearer $newAccess")
@@ -92,27 +109,31 @@ object AppModule {
     @Provides
     @Singleton
     @Named("authClient")
-    fun provideAuthClient(logging: HttpLoggingInterceptor): OkHttpClient =
+    fun provideAuthClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient =
         OkHttpClient.Builder()
-            .addInterceptor(logging)
+            .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
     @Provides
     @Singleton
     @Named("secureClient")
     fun provideSecureClient(
-        logging: HttpLoggingInterceptor,
+        loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: Interceptor,
         authenticator: Authenticator
     ): OkHttpClient =
         OkHttpClient.Builder()
-            .addInterceptor(logging)
+            .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .authenticator(authenticator)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
     @Provides
@@ -143,27 +164,23 @@ object AppModule {
 
     @Provides
     @Singleton
-    @Named("authApi")
-    fun provideAuthApi(@Named("auth") retrofit: Retrofit): AuthApiService =
+    fun provideAuthApiService(@Named("auth") retrofit: Retrofit): AuthApiService =
         retrofit.create(AuthApiService::class.java)
 
     @Provides
     @Singleton
-    @Named("secureApi")
-    fun provideSecureApi(@Named("secure") retrofit: Retrofit): AuthApiService =
-        retrofit.create(AuthApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideUsuarioApi(@Named("secure") retrofit: Retrofit): ClienteApi =
+    fun provideClienteApi(@Named("secure") retrofit: Retrofit): ClienteApi =
         retrofit.create(ClienteApi::class.java)
 
     @Provides
     @Singleton
-    fun provideTokenStore(@ApplicationContext context: Context): TokenStore =
-        _root_ide_package_.androidx.browser.trusted.TokenStore(context)
+    fun provideTokenStore(
+        @ApplicationContext context: Context,
+        gson: Gson
+    ): TokenStore = TokenStore(context, gson)
 
     @Provides
     @Singleton
     fun provideGson(): Gson = Gson()
+
 }

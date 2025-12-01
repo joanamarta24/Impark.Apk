@@ -1,6 +1,6 @@
 package com.example.imparkapk.data.dao.remote.api.response
 
-import com.example.imparkapk.data.dao.model.enus.TipoVeiculo
+import TipoVeiculo
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 

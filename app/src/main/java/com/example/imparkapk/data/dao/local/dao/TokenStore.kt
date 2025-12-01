@@ -2,10 +2,12 @@ package com.example.imparkapk.data.dao.local.dao
 
 import android.content.Context
 import android.util.Base64
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.work.Data
 import com.example.imparkapk.data.dao.remote.api.MeResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
@@ -19,16 +21,21 @@ val Context.dataStore by preferencesDataStore(name = "auth_prefs")
 
 class TokenStore(
     private val context: Context,
-    private val gson: Gson = Gson()
+    private val gson: Gson = Gson(),
 ) {
+
 
     companion object {
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
-        private val ACCESS_EXP   = longPreferencesKey("access_exp")
-        private val REFRESH_EXP  = longPreferencesKey("refresh_exp")
-        private val ME_CACHED    = stringPreferencesKey("me_cached_json")
+        private val ACCESS_EXP = longPreferencesKey("access_exp")
+        private val REFRESH_EXP = longPreferencesKey("refresh_exp")
+        private val ME_CACHED = stringPreferencesKey("me_cached_json")
+
+        val LAST_REFRESH_ATTEMPT = longPreferencesKey("last_refresh_attempt")
+        val REFRESH_FAIL_COUNT = longPreferencesKey("refresh_fail_count")
     }
+
     val token: Flow<String?> = context.dataStore.data.map { it[ACCESS_TOKEN] }
 
     suspend fun saveTokens(access: String, refresh: String?) {
@@ -92,6 +99,7 @@ class TokenStore(
     suspend fun saveMeCached(me: MeResponse) {
         context.dataStore.edit { it[ME_CACHED] = gson.toJson(me) }
     }
+
     suspend fun getMeCached(): MeResponse? {
         val json = context.dataStore.data.first()[ME_CACHED] ?: return null
         return runCatching { gson.fromJson(json, MeResponse::class.java) }.getOrNull()
@@ -118,5 +126,56 @@ class TokenStore(
             val expNum = (map["exp"] as? Number)?.toLong()
             expNum
         }.getOrNull()
+    }
+
+    suspend fun saveTokens(
+        accessToken: String,
+        refreshToken: String,
+        accessExp: Long? = null,
+        refreshExp: Long? = null
+    ) {
+        context.dataStore.edit { preferences ->
+            preferences[ACCESS_TOKEN] = accessToken
+            preferences[REFRESH_TOKEN] = refreshToken
+            accessExp?.let { preferences[ACCESS_EXP] = it }
+            refreshExp?.let { preferences[REFRESH_EXP] = it }
+        }
+    }
+
+    suspend fun clearMeCached() {
+        context.dataStore.edit {
+            it.remove(ME_CACHED)
+        }
+    }
+
+    // Métodos para controlar tentativas de refresh
+    suspend fun recordRefreshAttempt() {
+        context.dataStore.edit {
+            it[LAST_REFRESH_ATTEMPT] = epochSeconds()
+            val currentCount = it[REFRESH_FAIL_COUNT] ?: 0L
+            it[REFRESH_FAIL_COUNT] = currentCount + 1
+        }
+    }
+
+    suspend fun resetRefreshFailCount() {
+        context.dataStore.edit {
+            it[REFRESH_FAIL_COUNT] = 0L
+        }
+    }
+
+    suspend fun shouldAttemptRefresh(): Boolean {
+        val lastAttempt = context.dataStore.data.first()[LAST_REFRESH_ATTEMPT] ?: 0L
+        val failCount = context.dataStore.data.first()[REFRESH_FAIL_COUNT] ?: 0L
+
+        // Se houve muitas falhas recentes, aguarda mais tempo
+        val waitTime = when {
+            failCount > 5 -> 300 // 5 minutos
+            failCount > 3 -> 120 // 2 minutos
+            failCount > 1 -> 60  // 1 minuto
+            else -> 30           // 30 segundos
+        }
+
+        return epochSeconds() - lastAttempt > waitTime
+
     }
 }

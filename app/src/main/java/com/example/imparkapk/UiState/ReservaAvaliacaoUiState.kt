@@ -1,33 +1,34 @@
-package com.example.imparkapk.UiState
+import com.example.imparkapk.data.dao.model.enus.StatusReserva
 
-import com.example.imparkapk.data.dto.reserva.AvalicaoDTO
-import com.example.imparkapk.data.dto.reserva.ReservaDTO
-import com.example.imparkapk.data.dto.reserva.ReservaValorResponse
+data class ReservaUiState(
+    // Dados da reserva
+    val id: String = "",
+    val idUsuario: String = "",
+    val idEstabelecimento: String = "",
+    val nomeEstabelecimento: String = "",
+    val dataReserva: String = "",
+    val horaReserva: String = "",
+    val numeroPessoas: Int = 1,
+    val status: StatusReserva = StatusReserva.PENDENTE,
+    val observacoes: String = "",
+    val mesa: String = "",
 
-data class ReservaAvaliacaoUiState(
-    //Reservas
-    val reservas: List<ReservaDTO> = emptyList(),
-    val reservaSelecionadaId: String? = null,
-    val reservaCriada: ReservaDTO? = null,
-    val isLoadingReservas: Boolean = false,
-    val isLoadingCalculo: Boolean = false,
+    // Estado da UI
+    val isLoading: Boolean = false,
+    val isSuccess: Boolean = false,
+    val errorMessage: String? = null,
+    val isDataValid: Boolean = false,
 
-    //Avalições
-    val avaliacoes:List<AvalicaoDTO> = emptyList(),
-    val minhasAvaliacoes: List<AvalicaoDTO> = emptyList(),
-    val avaliacaoSelecionadaId: String? = null,
-    val isLoadingAvaliacoes: Boolean = false,
+    // Validações de campos
+    val dataError: String? = null,
+    val horaError: String? = null,
+    val pessoasError: String? = null,
 
-    val valorCalculado: ReservaValorResponse? = null,
+    // Navegação
+    val shouldNavigateToConfirmacao: Boolean = false,
+    val shouldNavigateToDetalhes: Boolean = false,
 
-    val qrCodeReserva: String? = null,
-
-    //MENSAGENS
-    val mensagemErro: String ="",
-    val mensagemSucesso: String ="",
-
-    //FILTRONS
-    val filtroStatusReserva: String = "TODAS",
-    val filtroNotaAvaliacao: Int? = null,
-    val serchQuery: String = ""
+    // Data e hora como objetos
+    val selectedDate: Long? = null,
+    val selectedTime: Long? = null
 )

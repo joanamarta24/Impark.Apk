@@ -2,26 +2,34 @@ package com.example.imparkapk.data.dao.local.dao.entity.ClienteWithAvaliações
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
+import com.example.imparkapk.data.dao.local.dao.entity.AvaliacaoEntity
+import com.example.imparktcc.model.Cliente
 
 @Entity(
-    tableName = "cliente_reserva_cross_ref",
-    primaryKeys = ["clienteId","reservaId"],
-    foreignKeys = [
-        ForeignKey(
-            entity = com.example.imparkapk.data.local.entity.usuarios.ClienteEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["clienteId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = com.example.imparkapk.data.local.entity.AvaliacaoEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["avaliacaoId"],
-            onDelete = ForeignKey.CASCADE
-        )
+   tableName = "cliente_avaliacao_ref",
+   primaryKeys = ["clienteId","avaliacaoId"],
+   foreignKeys =[
+       ForeignKey(
+           entity = Cliente::class,
+           parentColumns = ["id"],
+           childColumns = ["clienteId"],
+           onDelete = ForeignKey.CASCADE
+       ),
+       ForeignKey(
+           entity = AvaliacaoEntity::class,
+           parentColumns = ["id"],
+           childColumns = ["avaliacaoId"],
+           onDelete = ForeignKey.CASCADE
+       )
+   ],
+    indices = [
+        Index(value = ["clienteId"]),
+        Index(value = ["avaliacaoId"]),
+        Index(value = ["clienteId", "avaliacaoId"], unique = true)
     ]
 )
-data class ClienteWithAvaliacoes(
-    val clienteId: Long,
-    val avaliacaoId: Long
+data class ClienteAvaliacaoCrossRef(
+    val clienteId: String, // Alterado para String
+    val avaliacaoId: String // Alterado para String
 )

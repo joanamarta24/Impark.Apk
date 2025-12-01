@@ -3,8 +3,8 @@ package com.example.imparkapk.data.dao.ui.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.imparkapk.data.dao.ui.viewmodel.AvaliacaoViewModel
-import com.example.imparkapk.data.dao.ui.viewmodel.CarroViewModel
-import com.example.imparkapk.data.dao.ui.viewmodel.ClienteViewModel
+import com.example.imparkapk.presentation.viewmodels.CarrosViewModel
+import com.example.imparkapk.ui.viewmodel.ClienteViewModel
 import com.example.imparktcc.ui.viewmodel.ReservaViewModel
 import dagger.Binds
 import dagger.Module
@@ -27,7 +27,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @HiltViewModelMap
-    abstract fun bindCarroViewModel(carroViewModel: CarroViewModel): ViewModel
+    abstract fun bindCarroViewModel(carroViewModel: CarrosViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -1,6 +1,5 @@
 package com.example.imparkapk.data.dao.remote.api.api
 
-import com.example.imparkapk.data.dao.remote.api.dto.PaginationDto
 import com.example.imparkapk.data.dao.remote.api.request.AtualizarEstacionamentoRequest
 import com.example.imparkapk.data.dao.remote.api.request.BuscarEstacionamentosRequest
 import com.example.imparkapk.data.dao.remote.api.request.EstacionamentoRequest
@@ -31,19 +30,14 @@ interface EstacionamentosApi {
     @POST("estacionamentos/buscar")
     suspend fun buscarEstacionamentos(
         @Body request: BuscarEstacionamentosRequest
-    ): Response<ApiResponse<PaginationDto<EstacionamentoResponse>>>
+    ): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
 
     @GET("estacionamentos/{id}/veiculos")
     suspend fun getVeiculosEstacionamento(
         @Path("id") id: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 50
-    ): Response<ApiResponse<PaginationDto<VeiculoResponse>>>
-
-    @POST("estacionamentos/buscar")
-    suspend fun buscarEstacionamentos(
-        @Body request: BuscarEstacionamentosRequest
-    ): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
+    ): Response<ApiResponse<PaginatedResponse<VeiculoResponse>>>
 
     @GET("estacionamentos/{id}")
     suspend fun getEstacionamento(@Path("id") id: String): Response<ApiResponse<EstacionamentoResponse>>
@@ -83,4 +77,16 @@ interface EstacionamentosApi {
     // Serviços
     @GET("estacionamentos/servicos")
     suspend fun listarServicos(): Response<ApiResponse<List<String>>>
+
+    // Filtros adicionais
+    @GET("estacionamentos/filtrar")
+    suspend fun filtrarEstacionamentos(
+        @Query("cidade") cidade: String? = null,
+        @Query("bairro") bairro: String? = null,
+        @Query("preco_min") precoMin: Double? = null,
+        @Query("preco_max") precoMax: Double? = null,
+        @Query("servicos") servicos: List<String>? = null,
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 20
+    ): Response<ApiResponse<PaginatedResponse<EstacionamentoResponse>>>
 }

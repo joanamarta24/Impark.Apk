@@ -2,6 +2,7 @@ package com.example.imparkapk.data.dao.remote.api.repository.usuario
 
 import com.example.imparkapk.data.dao.local.dao.dao.ClienteDao
 import com.example.imparkapk.data.dao.local.dao.entity.ClienteEntity
+import com.example.imparkapk.data.dao.model.enus.Cliente
 import com.example.imparkapk.data.dao.remote.api.api.usuarios.ClienteApi
 import com.example.imparkapk.data.dao.remote.api.request.UsuarioRequest
 import com.example.imparktcc.model.Usuario
@@ -86,7 +87,7 @@ class ClienteRepositoryImpl @Inject constructor(
     }
 
     // MÉTODOS EXISTENTES (mantidos)
-    override suspend fun cadastrarUsuario(usuario: Usuario): Result<Boolean> {
+    override suspend fun cadastrarCliente(usuario: Cliente): Result<Boolean> {
         return try {
             delay(2000)
 
@@ -270,7 +271,7 @@ class ClienteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun recuperacaoSessaoUsuarios(): Result<Usuario?> {
+    override suspend fun recuperacaoSessaoCliente(): Result<Cliente?> {
         return try {
             Result.success(usuarioLogado)
         } catch (e: Exception) {
