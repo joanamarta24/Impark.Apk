@@ -5,4 +5,6 @@ enum class OrdemEstacionamento {
     MAIOR_PRECO,
     MAIS_VAGAS,
     MAIS_PROXIMO
+
+
 }

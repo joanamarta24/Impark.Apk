@@ -36,23 +36,23 @@ interface ReservaApi {
     ): Response<ApiResponse<PaginatedResponse<ReservaResponse>>>
 
     // Obter reserva por ID
+    @GET("reservas")
+    suspend fun getReservas(): Response<ApiResponse<List<ReservaResponse>>>
+
     @GET("reservas/{id}")
     suspend fun getReserva(@Path("id") id: String): Response<ApiResponse<ReservaResponse>>
 
-    // Criar reserva
+    @GET("reservas/usuario/{usuarioId}")
+    suspend fun getReservasPorUsuario(@Path("usuarioId") usuarioId: String): Response<ApiResponse<List<ReservaResponse>>>
+
     @POST("reservas")
-    suspend fun criarReserva(@Body request: ReservaRequest): Response<ApiResponse<ConfirmacaoReservaResponse>>
+    suspend fun criarReserva(@Body request: ReservaRequest): Response<ApiResponse<ReservaResponse>>
 
-    // Atualizar reserva
     @PUT("reservas/{id}")
-    suspend fun atualizarReserva(
-        @Path("id") id: String,
-        @Body request: AtualizarReservaRequest
-    ): Response<ApiResponse<ReservaResponse>>
+    suspend fun atualizarReserva(@Path("id") id: String, @Body request: ReservaRequest): Response<ApiResponse<ReservaResponse>>
 
-    // Cancelar reserva
-    @POST("reservas/{id}/cancelar")
-    suspend fun cancelarReserva(@Path("id") id: String): Response<ApiResponse<ReservaResponse>>
+    @PUT("reservas/{id}/cancelar")
+    suspend fun cancelarReserva(@Path("id") id: String): Response<ApiResponse<Unit>>
 
     // Confirmar reserva
     @POST("reservas/{id}/confirmar")
@@ -81,4 +81,5 @@ interface ReservaApi {
         @Query("mes") mes: Int,
         @Query("ano") ano: Int
     ): Response<ApiResponse<PaginatedResponse<ReservaResponse>>>
+
 }

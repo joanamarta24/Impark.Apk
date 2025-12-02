@@ -4,7 +4,8 @@ import java.util.Date
 
 data class Reserva(
     val id:String = "",
-    val usuarioId:String ="",
+    val usuarioId: String,
+    val clienteId: String? = null,
     val carroId:String = "",
     val estacionamentoId:String = "",
     val dataReserva: Date = Date(),

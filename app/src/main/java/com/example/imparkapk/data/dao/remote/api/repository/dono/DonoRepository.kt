@@ -21,6 +21,8 @@ interface DonoRepository {
     fun existsByCpf(cpf: String): Boolean
 
     fun existsByMatricula(matricula: String): Boolean
+    fun sincronizarClientes(): Boolean
+
 
     fun findByNomeContaining(nome: String): List<DonoEntity>
 

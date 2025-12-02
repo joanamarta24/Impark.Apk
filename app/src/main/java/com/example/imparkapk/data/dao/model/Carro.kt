@@ -2,6 +2,8 @@ package com.example.imparkapk.domain.model
 
 data class Carro(
     val id: String,
+    val usuarioId: String,
+    val clienteId: String? = null,
     val placa: String,
     val marca: String,
     val modelo: String,
@@ -12,7 +14,8 @@ data class Carro(
     val dataCriacao: Long = System.currentTimeMillis(),
     val dataAtualizacao: Long = System.currentTimeMillis(),
     val fotoUrl: String? = null,
-    val observacoes: String? = null
+    val observacoes: String? = null,
+    val salvarCarro: Boolean = false
 ) {
     val nomeCompleto: String
         get() = "$marca $modelo"

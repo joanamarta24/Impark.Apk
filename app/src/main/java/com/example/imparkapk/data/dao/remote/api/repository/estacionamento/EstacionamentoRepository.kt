@@ -13,6 +13,7 @@ interface EstacionamentoRepository {
 
     //BUSCAS E FILTROS
     suspend fun buscarEstacionamentoPorId(id: String): Estacionamento?
+    suspend fun sincronizarEstacionamentos(): Boolean
     suspend fun buscarEstacionamentoPorNome(nome: String): List<Estacionamento>
     suspend fun buscarEstacionamentoProximos(
         latitude: Double,

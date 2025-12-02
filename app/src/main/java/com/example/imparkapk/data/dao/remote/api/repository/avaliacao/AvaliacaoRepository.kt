@@ -10,6 +10,8 @@ interface AvaliacaoRepository {
     suspend fun listarMinhasAvaliacoes(usuarioId: String): List<Avaliacao>
     suspend fun atualizarAvaliacao(avaliacao: Avaliacao): Boolean
     suspend fun deletarAvaliacao(avaliacaoId: String): Boolean
+    suspend fun sincronizarUsuarios()
+
 
     //CONSULTAS E ESTATISTICAS
     suspend fun calcularMediaAvaliacoes(estacionamentoId: String): Result <Double>

@@ -115,7 +115,7 @@ class CarroRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCarrosPorUsuario(usuarioId: String): Flow<List<Carro>> {
+    override fun getobterCarrosPorUsuario(usuarioId: String): Flow<List<Carro>> {
         return carroDao.getCarrosPorUsuario(usuarioId).map { entities ->
             entities.map { it.toCarro() }
         }

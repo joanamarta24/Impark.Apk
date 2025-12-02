@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.hilt.common)
     ksp("com.google.dagger:hilt-compiler:2.48.1")
 
     // Navigation

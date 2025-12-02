@@ -1,68 +1,59 @@
+// ReservaEntity.kt
 package com.example.imparkapk.data.dao.local.dao.entity
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity(
-    tableName = "reserva",
-    foreignKeys = [
-        ForeignKey(
-            entity = ClienteEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["usuario_id"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = CarroEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["carro_id"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = EstacionamentoEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["estacionamento_id"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
+@Entity(tableName = "reservas")
 data class ReservaEntity(
     @PrimaryKey
     val id: String,
-
-    @ColumnInfo(name = "usuario_id")
     val usuarioId: String,
-
-    @ColumnInfo(name = "carro_id")
     val carroId: String,
-
-    @ColumnInfo(name = "estacionamento_id")
     val estacionamentoId: String,
-
-    @ColumnInfo(name = "data_reserva")
     val dataReserva: Date,
-
-    @ColumnInfo(name = "hora_entrada")
-    val horaEntrada: String, // "14:30"
-
-    @ColumnInfo(name = "hora_saida")
-    val horaSaida: String, // "16:30"
-
-    @ColumnInfo(name = "valor_total")
+    val horaEntrada: String,
+    val horaSaida: String,
     val valorTotal: Double,
-
-    @ColumnInfo(name = "status")
-    val status: String, // "pendente", "confirmada", "ativa", "concluida", "cancelada"
-
-    @ColumnInfo(name = "codigo_reserva")
+    val status: String,
     val codigoReserva: String,
-
-    @ColumnInfo(name = "data_criacao")
     val dataCriacao: Date,
-
-    @ColumnInfo(name = "data_atualizacao")
     val dataAtualizacao: Date
+)
+
+// ReservaResponse.kt
+
+data class ReservaResponse(
+    val id: String? = null,
+    val usuarioId: String? = null,
+    val carroId: String? = null,
+    val estacionamentoId: String? = null,
+    val dataReserva: Date? = null,
+    val horaEntrada: String? = null,
+    val horaSaida: String? = null,
+    val valorTotal: Double? = null,
+    val status: String? = null,
+    val codigoReserva: String? = null,
+    val dataCriacao: Date? = null,
+    val dataAtualizacao: Date? = null
+)
+
+// ApiResponse.kt (para respostas paginadas)
+data class ApiResponse<T>(
+    val success: Boolean,
+    val data: T,
+    val message: String? = null
+)
+
+// ReservaRequest.kt
+
+data class ReservaRequest(
+    val usuarioId: String,
+    val carroId: String,
+    val estacionamentoId: String,
+    val dataReserva: Date,
+    val horaEntrada: String,
+    val horaSaida: String,
+    val status: String = "pendente"
 )

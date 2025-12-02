@@ -1,0 +1,20 @@
+package com.example.imparkapk.data.dao.work.reserva
+
+import android.content.Context
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+
+object ReservaSyncScheduler {
+    fun enqueueNow(context: Context) {
+        val req = OneTimeWorkRequestBuilder<ReservaSyncWorker>()
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .build()
+        WorkManager.getInstance(context).enqueue(req)
+    }
+}

@@ -40,5 +40,6 @@ interface ClienteRepository {
     suspend fun bloquearUsuario(id:String):Result<Boolean>
     suspend fun desbloquearUsuario(id: String):Result<Boolean>
     suspend fun atualizarUtimoAcesso(id: String):Result<Boolean>
-    fun existeUsuario(usuarioId: String?)
+    suspend fun sincronizarUsuarios():Result<Boolean>
+    suspend fun existeUsuario(usuarioId: String?)
 }
