@@ -1,15 +1,20 @@
 package com.example.imparkapk.data.dao.remote.api.repository.avaliacao
 
 import com.example.imparkapk.data.dao.local.dao.dao.AvaliacaoDao
+import com.example.imparkapk.data.dao.local.dao.entity.AvaliacaoEntity
 import com.example.imparkapk.data.dao.model.Avaliacao
 import com.example.imparkapk.data.dao.remote.api.api.AvaliacaoApi
 import com.example.imparkapk.data.dao.remote.api.repository.reserva.ReservaRepository
+import com.example.imparkapk.data.dao.remote.api.request.AvaliacaoRequest
+import com.example.imparkapk.domain.util.Result
 import kotlinx.coroutines.delay
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AvaliacaoRepositoryImpl @Inject constructor(
     private val avaliacaoDao: AvaliacaoDao,
     private val avaliacaoApi: AvaliacaoApi,
@@ -24,7 +29,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
         avaliacoesCache.addAll(
             listOf(
                 Avaliacao(
-                    id = 1,
+                    id = "1",
                     usuarioId = "1",
                     estacionamentoId = "1",
                     nota = 5,
@@ -32,7 +37,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = Date()
                 ),
                 Avaliacao(
-                    id = 2,
+                    id = "2",
                     usuarioId = "2",
                     estacionamentoId = "1",
                     nota = 4,
@@ -40,7 +45,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = calendario.time
                 ),
                 Avaliacao(
-                    id = 3,
+                    id = "3",
                     usuarioId = "3",
                     estacionamentoId = "1",
                     nota = 3,
@@ -48,7 +53,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = calendario.time
                 ),
                 Avaliacao(
-                    id = 4,
+                    id = "4",
                     usuarioId = "1",
                     estacionamentoId = "2",
                     nota = 5,
@@ -56,7 +61,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
                     dataAvaliacao = Date()
                 ),
                 Avaliacao(
-                    id = 5,
+                    id = "5",
                     usuarioId = "2",
                     estacionamentoId = "2",
                     nota = 4,
@@ -67,79 +72,170 @@ class AvaliacaoRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun criarAvaliacao(avaliacao: Avaliacao): Boolean {
+    override suspend fun criarAvaliacao(avaliacao: Avaliacao): Result<Avaliacao> {
         return try {
             delay(1500)
+
             // Verifica se usuário já avaliou este estacionamento
             val jaAvaliou = avaliacoesCache.any {
                 it.usuarioId == avaliacao.usuarioId &&
                         it.estacionamentoId == avaliacao.estacionamentoId
             }
+
             if (jaAvaliou) {
-                return false
+                return Result.failure(Exception("Usuário já avaliou este estacionamento"))
             }
+
             // Verifica se usuário pode avaliar (teve reserva neste estacionamento)
             val podeAvaliar = verificarPodeAvaliar(avaliacao.usuarioId, avaliacao.estacionamentoId)
+
             if (!podeAvaliar) {
-                return false
+                return Result.failure(Exception("Usuário não pode avaliar este estacionamento"))
             }
 
             val novaAvaliacao = avaliacao.copy(
                 id = UUID.randomUUID().toString(),
                 dataAvaliacao = Date()
             )
+
             avaliacoesCache.add(novaAvaliacao)
-            true
+
+            // Salvar no banco local
+            avaliacaoDao.inserirAvaliacao(novaAvaliacao.toEntity())
+
+            Result.success(novaAvaliacao)
+
         } catch (e: Exception) {
-            false
+            Result.failure(Exception("Erro ao criar avaliação: ${e.message}"))
         }
     }
 
     override suspend fun getAvaliacaoPorId(id: String): Result<Avaliacao?> {
         return try {
-            val avaliacao = avaliacoesCache.find { it.id == id }
-            Result.success(avaliacao)
+            // Primeiro tenta da API
+            val response = avaliacaoApi.getAvaliacao(id)
+            if (response.isSuccessful && response.body() != null) {
+                val avaliacaoResponse = response.body()!!
+                val avaliacao = fromResponse(avaliacaoResponse)
+
+                // Atualiza cache
+                val index = avaliacoesCache.indexOfFirst { it.id == id }
+                if (index != -1) {
+                    avaliacoesCache[index] = avaliacao
+                } else {
+                    avaliacoesCache.add(avaliacao)
+                }
+
+                Result.success(avaliacao)
+            } else {
+                // Fallback: busca do cache
+                val avaliacaoCacheEncontrada = avaliacoesCache.find { it.id == id }
+                if (avaliacaoCacheEncontrada != null) {
+                    Result.success(avaliacaoCacheEncontrada)
+                } else {
+                    Result.success(null)
+                }
+            }
+        } catch (e: Exception) {
+            // Fallback final: busca do banco local
+            val entity = avaliacaoDao.getAvaliacaoById(id)
+            if (entity != null) {
+                val avaliacao = fromEntity(entity)
+                Result.success(avaliacao)
+            } else {
+                Result.failure(Exception("Avaliação não encontrada"))
+            }
+        }
+    }
+
+    override suspend fun listarAvaliacoesPorEstacionamento(estacionamentoId: String): Result<List<Avaliacao>> {
+        return try {
+            delay(1200)
+            val avaliacoes = avaliacoesCache
+                .filter { it.estacionamentoId == estacionamentoId }
+                .sortedByDescending { it.dataAvaliacao }
+            Result.success(avaliacoes)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun listarAvaliacoesPorEstacionamento(estacionamentoId: String): List<Avaliacao> {
-        delay(1200)
-        return avaliacoesCache
-            .filter { it.estacionamentoId == estacionamentoId }
-            .sortedByDescending { it.dataAvaliacao }
+    override suspend fun listarMinhasAvaliacoes(usuarioId: String): Result<List<Avaliacao>> {
+        return try {
+            delay(1000)
+            val avaliacoes = avaliacoesCache
+                .filter { it.usuarioId == usuarioId }
+                .sortedByDescending { it.dataAvaliacao }
+            Result.success(avaliacoes)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    override suspend fun listarMinhasAvaliacoes(usuarioId: String): List<Avaliacao> {
-        delay(1000)
-        return avaliacoesCache
-            .filter { it.usuarioId == usuarioId }
-            .sortedByDescending { it.dataAvaliacao }
-    }
-
-    override suspend fun atualizarAvaliacao(avaliacao: Avaliacao): Boolean {
+    override suspend fun atualizarAvaliacao(avaliacao: Avaliacao): Result<Boolean> {
         return try {
             delay(1200)
             val index = avaliacoesCache.indexOfFirst { it.id == avaliacao.id }
             if (index != -1) {
-                avaliacoesCache[index] = avaliacao.copy(dataAvaliacao = Date())
-                true
+                val avaliacaoAtualizada = avaliacao.copy(dataAvaliacao = Date())
+                avaliacoesCache[index] = avaliacaoAtualizada
+
+                // Atualizar na API
+                avaliacaoApi.atualizarAvaliacao(avaliacao.id, avaliacao.toRequest())
+
+                // Atualizar no banco local
+                avaliacaoDao.atualizarAvaliacao(avaliacaoAtualizada.toEntity())
+
+                Result.success(true)
             } else {
-                false
+                Result.success(false)
             }
         } catch (e: Exception) {
-            false
+            Result.failure(Exception("Erro ao atualizar avaliação: ${e.message}"))
         }
     }
 
-    override suspend fun deletarAvaliacao(avaliacaoId: String): Boolean {
+    override suspend fun deletarAvaliacao(avaliacaoId: String): Result<Boolean> {
         return try {
             delay(800)
+            // CORREÇÃO: estava usando = em vez de ==
             val removed = avaliacoesCache.removeAll { it.id == avaliacaoId }
-            removed
+
+            // Deletar da API
+            avaliacaoApi.deletarAvaliacao(avaliacaoId)
+
+            // Deletar do banco local
+            avaliacaoDao.deletarAvaliacao(avaliacaoId)
+
+            Result.success(removed)
         } catch (e: Exception) {
-            false
+            Result.failure(Exception("Erro ao deletar avaliação: ${e.message}"))
+        }
+    }
+
+    override suspend fun sincronizarAvaliacoes(): Result<Boolean> {
+        return try {
+            delay(2000)
+            // Busca todas as avaliações da API
+            val response = avaliacaoApi.getAvaliacoes()
+            if (response.isSuccessful && response.body() != null) {
+                val avaliacoesResponse = response.body()!!
+                val avaliacoes = avaliacoesResponse.data.map { fromResponse(it) }
+
+                // Atualiza cache
+                avaliacoesCache.clear()
+                avaliacoesCache.addAll(avaliacoes)
+
+                // Atualiza banco local
+                val entities = avaliacoes.map { it.toEntity() }
+                avaliacaoDao.inserirAvaliacoesEmLote(entities)
+
+                Result.success(true)
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Erro na sincronização: ${e.message}"))
         }
     }
 
@@ -148,7 +244,7 @@ class AvaliacaoRepositoryImpl @Inject constructor(
             delay(600)
             val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
             val media = if (avaliacoes.isNotEmpty()) {
-                avaliacoes.map { it.nota }.average()
+                avaliacoes.map { it.nota.toDouble() }.average()
             } else {
                 0.0
             }
@@ -158,14 +254,24 @@ class AvaliacaoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun countAvaliacoesPorEstacionamento(estacionamentoId: String): Int {
-        delay(300)
-        return avaliacoesCache.count { it.estacionamentoId == estacionamentoId }
+    override suspend fun countAvaliacoesPorEstacionamento(estacionamentoId: String): Result<Int> {
+        return try {
+            delay(300)
+            val count = avaliacoesCache.count { it.estacionamentoId == estacionamentoId }
+            Result.success(count)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    override suspend fun countMinhasAvaliacoes(usuarioId: String): Int {
-        delay(300)
-        return avaliacoesCache.count { it.usuarioId == usuarioId }
+    override suspend fun countMinhasAvaliacoes(usuarioId: String): Result<Int> {
+        return try {
+            delay(300)
+            val count = avaliacoesCache.count { it.usuarioId == usuarioId }
+            Result.success(count)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun getAvaliacoesPorUsuarioEEstacionamento(
@@ -188,19 +294,27 @@ class AvaliacaoRepositoryImpl @Inject constructor(
         usuarioId: String,
         estacionamentoId: String
     ): Boolean {
-        delay(800)
-        // Verifica se usuário já avaliou
-        val jaAvaliou = avaliacoesCache.any {
-            it.usuarioId == usuarioId &&
-                    it.estacionamentoId == estacionamentoId
-        }
-        if (jaAvaliou) {
-            return false
-        }
-        // Verifica se usuário teve pelo menos uma reserva neste estacionamento
-        val teveReserva = true // reservaRepository.temReservaNoEstacionamento(usuarioId, estacionamentoId)
+        return try {
+            delay(800)
 
-        return teveReserva
+            // Verifica se usuário já avaliou
+            val jaAvaliou = avaliacoesCache.any {
+                it.usuarioId == usuarioId &&
+                        it.estacionamentoId == estacionamentoId
+            }
+
+            if (jaAvaliou) {
+                return false
+            }
+
+            // Simulação para teste
+            val teveReserva = true
+
+            return teveReserva
+
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override fun validarNota(nota: Int): Boolean {
@@ -214,88 +328,99 @@ class AvaliacaoRepositoryImpl @Inject constructor(
     override suspend fun getAvaliacoesRecentes(
         estacionamentoId: String,
         limite: Int
-    ): List<Avaliacao> {
-        delay(700)
-        return avaliacoesCache
-            .filter { it.estacionamentoId == estacionamentoId }
-            .sortedByDescending { it.dataAvaliacao }
-            .take(limite)
-    }
-
-    override suspend fun getDistribuicaoNotas(estacionamentoId: String): Map<Int, Int> {
-        delay(500)
-        val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
-        return (1..5).associateWith { nota ->
-            avaliacoes.count { it.nota == nota }
-        }
-    }
-
-    override suspend fun getAvaliacoesComComentario(estacionamentoId: String): List<Avaliacao> {
-        delay(600)
-        return avaliacoesCache
-            .filter {
-                it.estacionamentoId == estacionamentoId &&
-                        it.comentario.isNotBlank()
-            }
-            .sortedByDescending { it.dataAvaliacao }
-    }
-
-    override suspend fun sincronizarAvaliacoes(usuarioId: String): Result<Boolean> {
+    ): Result<List<Avaliacao>> {
         return try {
-            delay(2000)
-            // Simula sincronização com servidor
-            Result.success(true)
+            delay(700)
+            val avaliacoes = avaliacoesCache
+                .filter { it.estacionamentoId == estacionamentoId }
+                .sortedByDescending { it.dataAvaliacao }
+                .take(limite)
+            Result.success(avaliacoes)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    // Métodos auxiliares para análise de sentimentos
-    suspend fun analisarSentimentoAvaliacoes(estacionamentoId: String): Map<String, Any> {
-        delay(1000)
-        val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
-        val comentarios = avaliacoes.mapNotNull { it.comentario }
-
-        // Simulação simples de análise de sentimentos
-        val palavrasPositivas = listOf("excelente", "ótimo", "bom", "recomendo", "ótima")
-        val palavrasNegativas = listOf("ruim", "péssimo", "horrível", "problema", "falta")
-
-        var sentimentoPositivo = 0
-        var sentimentoNegativo = 0
-        var sentimentoNeutro = 0
-
-        comentarios.forEach { comentario ->
-            val palavras = comentario.lowercase().split(" ")
-            val positivas = palavras.count { it in palavrasPositivas }
-            val negativas = palavras.count { it in palavrasNegativas }
-
-            when {
-                positivas > negativas -> sentimentoPositivo++
-                negativas > positivas -> sentimentoNegativo++
-                else -> sentimentoNeutro++
+    override suspend fun getDistribuicaoNotas(estacionamentoId: String): Result<Map<Int, Int>> {
+        return try {
+            delay(500)
+            val avaliacoes = avaliacoesCache.filter { it.estacionamentoId == estacionamentoId }
+            val distribuicao = (1..5).associateWith { nota ->
+                avaliacoes.count { it.nota == nota }
             }
+            Result.success(distribuicao)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 
-        return mapOf(
-            "total_avaliacoes" to avaliacoes.size,
-            "sentimento_positivo" to sentimentoPositivo,
-            "sentimento_negativo" to sentimentoNegativo,
-            "sentimento_neutro" to sentimentoNeutro,
-            "palavras_chave" to extrairPalavrasChave(comentarios)
+    override suspend fun getAvaliacoesComComentario(estacionamentoId: String): Result<List<Avaliacao>> {
+        return try {
+            delay(600)
+            val avaliacoes = avaliacoesCache
+                .filter {
+                    it.estacionamentoId == estacionamentoId &&
+                            it.comentario.isNotBlank()
+                }
+                .sortedByDescending { it.dataAvaliacao }
+            Result.success(avaliacoes)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun sincronizarAvaliacoes(usuarioId: String): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    // Métodos auxiliares
+    private fun fromResponse(response: AvaliacaoResponse): Avaliacao {
+        return Avaliacao(
+            id = response.id ?: "",
+            usuarioId = response.usuarioId ?: "",
+            estacionamentoId = response.estacionamentoId ?: "",
+            nota = response.nota ?: 0,
+            comentario = response.comentario ?: "",
+            dataAvaliacao = response.dataAvaliacao ?: Date()
         )
     }
 
-    private fun extrairPalavrasChave(comentarios: List<String>): List<String> {
-        val todasPalavras = comentarios.flatMap { it.lowercase().split(" ") }
-        val palavrasFrequentes = todasPalavras
-            .filter { it.length > 3 }
-            .groupingBy { it }
-            .eachCount()
-            .entries
-            .sortedByDescending { it.value }
-            .take(10)
-            .map { it.key }
+    private fun fromEntity(entity: AvaliacaoEntity): Avaliacao {
+        return Avaliacao(
+            id = entity.id,
+            usuarioId = entity.usuarioId,
+            estacionamentoId = entity.estacionamentoId,
+            nota = entity.nota,
+            comentario = entity.comentario,
+            dataAvaliacao = entity.dataAvaliacao
+        )
+    }
 
-        return palavrasFrequentes
+    private fun Avaliacao.toEntity(): AvaliacaoEntity {
+        return AvaliacaoEntity(
+            id = this.id,
+            usuarioId = this.usuarioId,
+            estacionamentoId = this.estacionamentoId,
+            nota = this.nota,
+            comentario = this.comentario,
+            dataAvaliacao = this.dataAvaliacao
+        )
+    }
+
+    private fun Avaliacao.toRequest(): AvaliacaoRequest {
+        return AvaliacaoRequest(
+            usuarioId = this.usuarioId,
+            estacionamentoId = this.estacionamentoId,
+            nota = this.nota,
+            comentario = this.comentario
+        )
+    }
+
+    // Implementação do método sincronizarUsuarios (corrigido)
+    override suspend fun sincronizarUsuarios() {
+        // Este método parece não fazer sentido aqui,
+        // pois avaliações não sincronizam usuários.
+        // Talvez seja um método herdado incorretamente.
+        // Vamos implementar como no-op ou remover da interface
     }
 }

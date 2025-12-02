@@ -1,34 +1,53 @@
-package com.example.imparkapk.data.dao.local.dao.db
-
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.imparkapk.data.dao.local.dao.dao.AvaliacaoDao
-import com.example.imparkapk.data.dao.local.dao.dao.CarroDao
+import androidx.room.TypeConverters
 import com.example.imparkapk.data.dao.local.dao.dao.ClienteDao
 import com.example.imparkapk.data.dao.local.dao.dao.EstacionamentoDao
-import com.example.imparkapk.data.dao.local.dao.dao.ReservaDao
-import com.example.imparkapk.data.dao.local.dao.entity.AvaliacaoEntity
-import com.example.imparkapk.data.dao.local.dao.entity.CarroEntity
+import com.example.imparkapk.data.dao.local.dao.db.Converters
+import com.example.imparkapk.data.dao.local.dao.entity.AcessoEntity
 import com.example.imparkapk.data.dao.local.dao.entity.ClienteEntity
 import com.example.imparkapk.data.dao.local.dao.entity.EstacionamentoEntity
-import com.example.imparkapk.data.dao.local.dao.entity.ReservaEntity
+import com.example.imparkapk.data.dao.local.dao.entity.VeiculoEntity
+import com.example.imparkapk.data.dao.remote.api.repository.acesso.AcessoDao
 
 @Database(
     entities = [
+        AcessoEntity::class,
         ClienteEntity::class,
-        CarroEntity::class,
         EstacionamentoEntity::class,
-        ReservaEntity::class,
-        AvaliacaoEntity::class
+        VeiculoEntity::class,
+        // ... outras entidades
     ],
-    version = 1,
+    version = 2, // Incrementar versão
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun clienteDao(): ClienteDao
-    abstract fun carroDao(): CarroDao
-    abstract fun estacionamentoDao(): EstacionamentoDao
-    abstract fun reservaDao(): ReservaDao
-    abstract fun avaliacaoDao(): AvaliacaoDao
 
+    abstract fun acessoDao(): AcessoDao
+    abstract fun usuarioDao(): ClienteDao
+    abstract fun estacionamentoDao(): EstacionamentoDao
+    abstract fun veiculoDao(): VeiculoDao
+    // ... outros DAOs
+
+    companion object {
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
+
+        fun getInstance(context: Context): AppDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::class.java,
+                    "impark_database"
+                )
+                    .fallbackToDestructiveMigration() // Ou criar migrations manuais
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }

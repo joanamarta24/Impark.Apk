@@ -7,7 +7,7 @@ interface AvaliacaoRepository {
     suspend fun criarAvaliacao(avaliacao: Avaliacao): Boolean
     suspend fun getAvaliacaoPorId(id: String): Result<Avaliacao?>
     suspend fun listarAvaliacoesPorEstacionamento(estacionamentoId: String): List<Avaliacao>
-    suspend fun listarMinhasAvaliacoes(usuarioId: String): List<Avaliacao>
+    suspend fun listarMinhasAvaliacoes(usuarioId: String): Result<List<Avaliacao>>
     suspend fun atualizarAvaliacao(avaliacao: Avaliacao): Boolean
     suspend fun deletarAvaliacao(avaliacaoId: String): Boolean
     suspend fun sincronizarUsuarios()

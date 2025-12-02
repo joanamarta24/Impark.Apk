@@ -1,13 +1,15 @@
 package com.example.imparktcc.repository
 
-import com.example.imparktcc.model.Carro
-import com.example.imparktcc.model.Usuario
+
+import com.example.imparkapk.domain.model.Carro
+import com.example.imparkapk.model.Cliente
+
 import kotlinx.coroutines.delay
 
 
 
 class CadastroRepository {
-    suspend fun cadastrarUsuario(usuario: Usuario): Boolean{
+    suspend fun cadastrarUsuario(usuario: Cliente): Boolean{
         // Simula chamada API/banco de dados
         delay(2000)
         return (0.9).random!=0  // 90% de chance de sucesso

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.example.imparkapk.data.dao.local.dao.entity.AvaliacaoEntity
-import com.example.imparktcc.model.Cliente
+import com.example.imparkapk.data.dao.model.enus.Cliente
 
 @Entity(
    tableName = "cliente_avaliacao_ref",
