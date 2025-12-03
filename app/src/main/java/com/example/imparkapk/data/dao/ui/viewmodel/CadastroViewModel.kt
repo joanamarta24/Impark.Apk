@@ -1,8 +1,11 @@
-package com.example.imparktcc.ui.viewmodel
+package com.example.imparkapk.ui.viewmodel.CadastroViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.imparktcc.repository.CadastroRepository
+import com.example.imparkapk.data.dao.model.enus.CampoFocado
+import com.example.imparkapk.data.repository.CadastroRepository
+import com.example.imparkapk.model.Cliente
+import com.example.imparktapk.ui.viewmodel.CadastroUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,32 +58,35 @@ class CadastroViewModel @Inject constructor(
     fun onMostrarDicasChange(mostrar: Boolean){
      _uiState.update { it.copy(mostrarDicas = mostrar) }
     }
-    fun cadastrarUsuario(onSuccess: () -> Unit = {}){
-        if (_uiState.value.botaoCadastroHabilitado){
-            _uiState.update { it.copyComLoading() }
-            viewModelScope.launch {
-                val usuario = _uiState.value.toUsuario()
-                val resultado = repository.cadastrarUsuario(usuario)
+    fun cadastrarUsuario(onSuccess: () -> Unit = {}) {
+        if (!_uiState.value.botaoCadastroHabilitado) {
+            _uiState.update { it.copyComValidacao() }
+            return
+        }
 
-               resultado.fold(
-                   onSuccess = { sucesso ->
-                       if (sucesso){
-                           _uiState.update { it.copyComSucesso() }
-                           onSuccess(usuario)
-                       }else{
-                           _uiState.update { it.copyComErro("Falha no cadastro. Tente novamente")
-                           }
-                       }
-                   },
-                   onFailure ={ erro ->
-                       _uiState.copyComErro("Erro: ${erro.message ?: "Tente novamente mais tarde."}")
-                   }
-               )
+        _uiState.update { it.copyComLoading() }
+
+        viewModelScope.launch {
+            val usuario = _uiState.value.toCliente()
+
+            val resultado = runCatching {
+                repository.cadastrarUsuario(usuario)
             }
-        }else{
-            _uiState.update { currentState ->
-                currentState.copyComValidacao()
-            }
+
+            resultado
+                .onSuccess { sucesso ->
+                    if (sucesso) {
+                        _uiState.update { it.copyComSucesso() }
+                        onSuccess()
+                    } else {
+                        _uiState.update { it.copyComErro("Falha no cadastro. Tente novamente") }
+                    }
+                }
+                .onFailure { erro ->
+                    _uiState.update {
+                        it.copyComErro("Erro: ${erro.message ?: "Tente novamente mais tarde."}")
+                    }
+                }
         }
     }
     fun limparErros() {

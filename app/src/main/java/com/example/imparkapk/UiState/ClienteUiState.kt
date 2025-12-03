@@ -3,12 +3,12 @@ package com.example.imparkapk.UiState
 import com.example.imparkapk.data.dao.model.Estacionamento
 import com.example.imparkapk.data.dao.model.Reserva
 import com.example.imparkapk.domain.model.Carro
-import com.example.imparktcc.model.Cliente
+import com.example.imparkapk.model.Cliente
 
 
 class UsuarioUiState {
     //USUARIO
-    val usuarioLogado:Cliente? = null
+    val usuarioLogado: Cliente? = null
 
     //CARROS
     val carros: List<Carro> = emptyList()

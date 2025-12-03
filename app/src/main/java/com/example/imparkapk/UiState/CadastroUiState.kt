@@ -2,7 +2,7 @@ package com.example.imparktapk.ui.viewmodel
 
 
 import com.example.imparkapk.data.dao.model.enus.CampoFocado
-import com.example.imparktcc.model.Cliente
+import com.example.imparkapk.model.Cliente
 
 
 data class CadastroUiState(
@@ -11,6 +11,7 @@ data class CadastroUiState(
     val email: String = "",
     val senha: String = "",
     val confirmarSenha: String = "",
+
 
     // Estados de validação
     val emailValido: Boolean = true,
@@ -22,6 +23,9 @@ data class CadastroUiState(
     val cadastroSucesso: Boolean = false,
     val isLoading: Boolean = false,
     val mensagemErro: String = "",
+    val isSuccess: Boolean = false,
+    val errorMessage: String? = null,
+    val isFormValid: Boolean = false,
 
     // Estados avançados
     val campoComFoco: CampoFocado? = null,
@@ -114,6 +118,14 @@ data class CadastroUiState(
             timestampFimCadastro = System.currentTimeMillis()
         )
     }
+    fun copyComErro(mensagem: String): CadastroUiState {
+        return this.copy(
+            isLoading = false,
+            isSuccess = false,
+            errorMessage = mensagem
+        )
+    }
+
 
     fun copyComFoco(campo: CampoFocado): CadastroUiState {
         return this.copy(
@@ -124,6 +136,11 @@ data class CadastroUiState(
 
     fun copyComEstadoConexao(conectado: Boolean): CadastroUiState {
         return this.copy(conexaoInternet = conectado)
+    }
+    fun copyComValidacao(): CadastroUiState {
+        return this.copy(
+            errorMessage = "Por favor, preencha todos os campos corretamente."
+        )
     }
 
     fun getMensagemErroCampo(campo: CampoFocado? = null): String? {

@@ -1,4 +1,4 @@
-package com.example.imparktcc.repository
+package com.example.imparkapk.data.repository
 
 
 import com.example.imparkapk.domain.model.Carro
@@ -12,7 +12,8 @@ class CadastroRepository {
     suspend fun cadastrarUsuario(usuario: Cliente): Boolean{
         // Simula chamada API/banco de dados
         delay(2000)
-        return (0.9).random!=0  // 90% de chance de sucesso
+        return (0..9).random() !=0  // 90% de chance de sucesso
+
     }
     suspend fun cadastrarCarro(carro: Carro): Boolean{
         // Simula chamada API/banco de dados

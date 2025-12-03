@@ -16,7 +16,8 @@ data class AvaliacaoDto(
     val usuarioNome: String? = null,
     val estacionamentoNome: String? = null,
     val likeCount: Int = 0,
-    val usuarioCurtiu: Boolean = false
+    val usuarioCurtiu: Boolean = false,
+
 )
 data class EstatisticasAvaliacaoDTO(
     val mediaGeral: Double,

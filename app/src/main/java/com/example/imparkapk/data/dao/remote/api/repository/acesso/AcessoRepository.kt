@@ -1,3 +1,5 @@
+import com.example.imparkapk.data.dao.model.Acesso
+import com.example.imparkapk.data.dao.model.enus.TipoAcesso
 import kotlinx.coroutines.flow.Flow
 
 interface AcessoRepository {

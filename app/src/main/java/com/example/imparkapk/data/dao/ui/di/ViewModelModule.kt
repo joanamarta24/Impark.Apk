@@ -19,28 +19,27 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class ViewModelModule {
-    @Binds
     @IntoMap
     @HiltViewModelMap
     abstract fun bindUsuarioViewModel(clienteViewModel: ClienteViewModel): ViewModel
 
-    @Binds
+
     @IntoMap
     @HiltViewModelMap
     abstract fun bindCarroViewModel(carroViewModel: CarrosViewModel): ViewModel
 
-    @Binds
+
     @IntoMap
     @HiltViewModelMap
     abstract fun bindReservaViewModel(reservaViewModel: ReservaViewModel): ViewModel
 
-    @Binds
+
     @IntoMap
     @HiltViewModelMap
     abstract fun bindAvaliacaoViewModel(avaliacaoViewModel: AvaliacaoViewModel): ViewModel
 
     //ClienteViewModel
-    @Binds
+
     @IntoMap
     @HiltViewModelMap
     abstract fun bindClienteViewModel(clienteViewModel: ClienteViewModel): ViewModel

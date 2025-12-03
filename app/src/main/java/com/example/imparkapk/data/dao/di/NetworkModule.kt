@@ -21,6 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
+import kotlin.jvm.java
 
 
 @Module
@@ -108,10 +109,8 @@ object NetworkModule {
 
 private inline fun <reified T> Retrofit.create(): T = create(T::class.java)
 
-object NewtworkModelu
-
-@Provides
 @Singleton
+@Provides
 fun provideEstacionamentoApi(retrofit: Retrofit): EstacionamentosApi {
     return retrofit.create(EstacionamentosApi::class.java)
 }

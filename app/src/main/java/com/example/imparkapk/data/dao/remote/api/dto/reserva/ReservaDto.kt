@@ -65,7 +65,7 @@ data class ReservaDetailResponse(
 
 data class ReservaListResponse(
     val reservas: List<ReservaDTO>,
-    val pagination: PaginationDto
+    val pagination: PaginationDto,
 )
 
 data class ReservaCreateResponse(
@@ -146,4 +146,3 @@ data class AvalicaoDTO(
     val likeCount: Int = 0,
     val usuarioCurtiu: Boolean = false
     )
-data class Avaliacao

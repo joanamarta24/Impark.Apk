@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.internal.config.AnalysisFlags.optIn
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -37,10 +39,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+
+
     }
 
     kotlinOptions {
         jvmTarget = "17"
+
     }
 
     buildFeatures {
@@ -53,6 +58,9 @@ android {
 }
 
 dependencies {
+
+    implementation("com.google.dagger:dagger-compiler:2.51.1")
+    ksp("com.google.dagger:dagger-compiler:2.51.1")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.0")
     
@@ -100,6 +108,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.hilt.common)
     ksp("com.google.dagger:hilt-compiler:2.48.1")
+
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
