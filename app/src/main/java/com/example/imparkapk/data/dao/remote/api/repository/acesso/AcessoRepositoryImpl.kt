@@ -22,24 +22,7 @@ class AcessoRepositoryImpl @Inject constructor(
     override suspend fun criarAcesso(acesso: Acesso): Result<Acesso> {
         TODO("Not yet implemented")
     }
-
-    override suspend fun criarAcesso(acesso: Acesso): Result<Acesso> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun criarAcesso(acesso: Acesso): Result<Acesso> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun obterAcessoPorId(id: String): Result<Acesso> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun atualizarAcesso(acesso: Acesso): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun atualizarAcesso(acesso: Acesso): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
@@ -59,6 +42,7 @@ class AcessoRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+
     override suspend fun obterAcessosPorVeiculo(veiculoId: String): Result<List<Acesso>> {
         TODO("Not yet implemented")
     }
@@ -66,15 +50,6 @@ class AcessoRepositoryImpl @Inject constructor(
     override suspend fun obterAcessosPorTipo(tipo: TipoAcesso): Result<List<Acesso>> {
         TODO("Not yet implemented")
     }
-
-    override suspend fun obterAcessosPorTipo(tipo: TipoAcesso): Result<List<Acesso>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun obterAcessosPorTipo(tipo: TipoAcesso): Result<List<Acesso>> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun obterAcessosPorData(data: String): Result<List<Acesso>> {
         TODO("Not yet implemented")
     }
@@ -144,13 +119,6 @@ class AcessoRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun registrarEntrada(acesso: Acesso): Result<Acesso> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun registrarEntrada(acesso: Acesso): Result<Acesso> {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun registrarSaida(
         acessoId: String,

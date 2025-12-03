@@ -54,6 +54,9 @@ android {
 
 dependencies {
 
+    implementation("com.google.dagger:dagger-compiler:2.51.1")
+    ksp("com.google.dagger:dagger-compiler:2.51.1")
+
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.0")
     
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -100,6 +103,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.hilt.common)
     ksp("com.google.dagger:hilt-compiler:2.48.1")
+
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
